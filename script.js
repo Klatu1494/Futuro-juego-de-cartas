@@ -1,0 +1,1 @@
+window.addEventListener('load', GameManager.onload.bind(GameManager));
