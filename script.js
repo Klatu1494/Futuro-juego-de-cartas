@@ -48,25 +48,15 @@ window.addEventListener('load', async function() {
 		firstPlayer.formation = null;
 		secondPlayer.formation = null;
 		if (level.against === HUMAN) {
-			while (!(firstPlayer.deckTemplate && secondPlayer.deckTemplate /*&& this.firstPlayer.formation && this.secondPlayer.formation*/ || pressedEscOnFirstAsk)) {
+			while (!(this.firstPlayer.formation && this.secondPlayer.formation || pressedEscOnFirstAsk)) {
 				action = await askForDeck(true) || new DeckTemplate();
 				if (action instanceof DeckTemplate) firstPlayer.deckTemplate = action;
 				else pressedEscOnFirstAsk = true;
-				/*while (!(this.firstPlayer.deckTemplate && this.secondPlayer.deckTemplate && this.firstPlayer.formation && this.secondPlayer.formation || pressedEscOnFirstAsk)) {
-					action = await this.askForFormation(true);
-					if (action instanceof DeckTemplate) this.firstPlayer.formation = action;
-					else pressedEscOnFirstAsk = true;*/
-				while (!(firstPlayer.deckTemplate && secondPlayer.deckTemplate /*&& this.firstPlayer.formation && this.secondPlayer.formation*/ || pressedEscOnFirstAsk)) {
+				while (!(this.firstPlayer.formation && this.secondPlayer.formation || pressedEscOnFirstAsk)) {
 					action = await askForDeck(true) || new DeckTemplate();
 					if (action instanceof DeckTemplate) secondPlayer.deckTemplate = action;
 					else pressedEscOnFirstAsk = true;
-					/*while (!(this.firstPlayer.deckTemplate && this.secondPlayer.deckTemplate && this.firstPlayer.formation && this.secondPlayer.formation || pressedEscOnFirstAsk)) {
-						action = await this.askForFormation(true);
-						if (action instanceof DeckTemplate) this.firstPlayer.formation = action;
-						else pressedEscOnFirstAsk = true;
-					}*/
 				}
-				/*}*/
 			}
 		} else if (level.against === PLAYER) {
 			while (!(firstPlayer.deckTemplate && firstPlayer.formation || pressedEscOnFirstAsk)) {
