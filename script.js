@@ -65,16 +65,16 @@ window.addEventListener('load', async function() {
     currentResolver,
     currentDeck,
     currentPromise,
-    tileSide,             // The length of any tile.
-    leftMargin,           // Left margin of the grid relative to the canvas.
-    topMargin,            // Top margin of the grid relative to the canvas.
+    tileSide, // The length of any tile.
+    leftMargin, // Left margin of the grid relative to the canvas.
+    topMargin, // Top margin of the grid relative to the canvas.
     firstPlayerTurn,
     firstPlayer,
     secondPlayer,
     currentLevel,
     currentDeckTemplate,
-    levelWidth,           // Level width in tiles.  
-    levelHeight;          // Level height in tiles.
+    levelWidth, // Level width in tiles.  
+    levelHeight; // Level height in tiles.
 
   function drawGrid(canvas, levelWidth, levelHeight) {
     var ctx = canvas.getContext('2d');
@@ -92,11 +92,11 @@ window.addEventListener('load', async function() {
   /// Converts screen coordinates to grid coordinates
   /// Where c is Coordinates
   /// Returns Coordinates
-  function screenToGrid (c) {
+  function screenToGrid(c) {
     var retX = Math.floor((c.x - leftMargin) / tileSide);
     var retY = Math.floor((c.y - topMargin) / tileSide);
 
-    return new Coordinates (retX, retY);
+    return new Coordinates(retX, retY);
   }
 
 
