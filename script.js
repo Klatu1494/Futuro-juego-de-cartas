@@ -92,11 +92,11 @@ window.addEventListener('load', async function() {
   /// Converts screen coordinates to grid coordinates
   /// Where c is Coordinates
   /// Returns Coordinates
-  function screenToGrid(c) {
-    var retX = Math.floor((c.x - leftMargin) / tileSide);
-    var retY = Math.floor((c.y - topMargin) / tileSide);
+  function screenToGrid(screenCoordinates) {
+    var gridX = Math.floor((screenCoordinates.x - leftMargin) / tileSide);
+    var gridY = Math.floor((screenCoordinates.y - topMargin) / tileSide);
 
-    return new Coordinates(retX, retY);
+    return new Coordinates(gridX, gridY);
   }
 
 
