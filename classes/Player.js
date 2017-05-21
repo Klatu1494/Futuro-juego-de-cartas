@@ -1,8 +1,14 @@
 class Player {
-  constructor(controller, color) {
+  constructor(args) {
+    var {
+      color,
+      controller,
+      availableUnits
+    } = args;
     this.color = color;
     this._controller = controller;
     this._deckTemplate = JSON.parse(window.localStorage.getItem('deck'));
+    this.availableUnits = new Map(availableUnits);
   }
 
   startGame() {

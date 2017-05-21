@@ -31,7 +31,7 @@ canvas{
     display: inline-block;
     height: 124px;
     line-height: 124px;
-    width: 220px;
+    width: 184px; /* 184px = 200px - 8px * 2 */
     margin: 8px;
     cursor: pointer;
 }
@@ -67,4 +67,12 @@ canvas{
 }
 .confirm:before{
     content:'Confirm';
+}
+#formation-editor{
+    align-content: center;
+}
+.unit-type{
+    border-radius: 50%;
+    position: absolute;
+    visibility: hidden;
 }

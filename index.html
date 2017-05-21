@@ -6,6 +6,7 @@
 		<script type="text/javascript" src="classes/DeckTemplate.js"></script>
 		<script type="text/javascript" src="classes/Level.js"></script>
 		<script type="text/javascript" src="classes/Player.js"></script>
+		<script type="text/javascript" src="classes/UnitType.js"></script>
 		<script type="text/javascript" src="constants.js"></script>
 		<script type="text/javascript" src="script.js"></script>
 	</head>
@@ -21,12 +22,14 @@
 				<div id="deck-editor-button" class="confirm button"></div>
 			</div>
 			<div id="formation-editor">
-				<canvas></canvas>
+				<div id="board">
+					<canvas id="formation-editor-tiles-canvas">Your browser doesn't support canvas elements.</canvas>
+				</div>
 				<div id="formation-editor-button" class="confirm button"></div>
 			</div>
 			<div id="play-mode">
 				<div id="board">
-					<canvas id="tilesCanvas">Your browser doesn't support canvas elements.</canvas>
+					<canvas id="game-tiles-canvas">Your browser doesn't support canvas elements.</canvas>
 				</div>
 				<div id="hand"></div>
 			</div>

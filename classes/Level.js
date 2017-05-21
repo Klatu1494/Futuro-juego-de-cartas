@@ -1,8 +1,13 @@
 class Level {
-	constructor(width, height) {
+	constructor(args) {
+		var {
+			width,
+			height,
+			against
+		} = args;
 		this.width = width;
 		this.height = height;
 		this.units = new Set();
-		this.against = HUMAN;
+		this.against = against;
 	}
 }
