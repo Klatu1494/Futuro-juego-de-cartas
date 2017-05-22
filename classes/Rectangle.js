@@ -15,7 +15,9 @@ class Rectangle {
       this.topLeft = topLeftCoordinates.clone() //in case that we want to modify coordinates1 later;
       this.horizontalSize = horizontalSize;
       this.verticalSize = verticalSize;
-      this.bottomRight = this.calculateBottomRight();
+
+      this.bottomRight = new Coordinates(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);
+      this.center = new ScreenCoordinates((this.left + this.right) / 2, (this.top + this.bottom) / 2);
     } else throw new Error("Invalid size");
   }
 
@@ -49,14 +51,6 @@ class Rectangle {
    */
   get bottom() {
     return this.bottomRight.y;
-  }
-
-  /**
-   * Computes the coordinates of the bottom right point from the values of topLeft and sideLength.
-   * @return {Coordinates}
-   */
-  calculateBottomRight() {
-    return new Coordinates(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);
   }
 
   /**
