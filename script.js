@@ -79,17 +79,6 @@ window.addEventListener('load', async function() {
       }
   }
 
-  /// Converts screen coordinates to grid coordinates
-  /// Where c is Coordinates
-  /// Returns Coordinates
-  function screenToGrid(screenCoordinates) {
-    var gridX = Math.floor((screenCoordinates.x - leftMargin) / tileSide);
-    var gridY = Math.floor((screenCoordinates.y - topMargin) / tileSide);
-
-    return new Coordinates(gridX, gridY);
-  }
-
-
   function show(id) {
     for (var child of document.getElementById('game').children) child.style.display = 'none';
     document.getElementById(id).style.display = 'flex';
