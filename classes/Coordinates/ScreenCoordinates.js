@@ -28,10 +28,14 @@ class ScreenCoordinates extends Coordinates {
    * @return {bool} true whenever this point can be assiged to a tile of the specified grid.
    */
   isInsideGridArea(grid) {
-    return grid.leftGridArea <= this.x &&
-      this.x <= grid.rightGridArea &&
-      grid.topGridArea <= this.y &&
-      this.y <= grid.bottomGridArea;
+    return grid.getGridArea().contains(this);
   }
 
+  /**
+   * Clones and returns this coordinates
+   * @return {ScreenCoordinates} a copy of this coordinates
+   */
+  clone() {
+    return new ScreenCoordinates(this.x, this.y);
+  }
 }

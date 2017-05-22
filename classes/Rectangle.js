@@ -1,21 +1,22 @@
 /**
- * Represents a square
+ * Represents a rectangle
  */
-class Square {
+class Rectangle {
   /**
    * Initializes a new Square given the topleft coordinates and the length of a side.
-   * @param {Coordinates} topLeftCoordinates Top-left coordinates
-   * @param {number} sideLength Length of any side
+   * @param {Coordinates} topLeftCoordinates Top-left coordinates.
+   * @param {number} horizontalSize the X size.
+   * @param {number} verticalSize the Y size.
    */
-  constructor(topLeftCoordinates, sideLength) {
+  constructor(topLeftCoordinates, horizontalSize, verticalSize) {
     if (!(topLeftCoordinates instanceof ScreenCoordinates)) throw new Error("topLeftCoordinates must be ScreenCoordinates");
 
-    else if (0 < sideLength && isFinite(sideLength)) {
-      this.topLeft = topLeftCoordinates.clone(); //in case that we want to modify coordinates1 later;
-      this.sideLength = sideLength;
+    else if (0 < horizontalSize && 0 < verticalSize && isFinite(horizontalSize + verticalSize)) {
+      this.topLeft = topLeftCoordinates.clone() //in case that we want to modify coordinates1 later;
+      this.horizontalSize = horizontalSize;
+      this.verticalSize = verticalSize;
       this.bottomRight = this.calculateBottomRight();
-      this.center = new ScreenCoordinates((this.left + this.right) / 2, (this.top + this.bottom) / 2);
-    } else throw new Error("Side length must be a positive number");
+    } else throw new Error("Invalid size");
   }
 
   /**
@@ -55,7 +56,7 @@ class Square {
    * @return {Coordinates}
    */
   calculateBottomRight() {
-    return new Coordinates(this.topLeft.x + this.sideLength, this.topLeft.y + this.sideLength);
+    return new Coordinates(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);
   }
 
   /**
