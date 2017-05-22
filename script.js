@@ -66,17 +66,19 @@ window.addEventListener('load', async function() {
     levelWidth, // Level width in tiles.  
     levelHeight; // Level height in tiles.
 
-  function drawGrid(canvas, levelWidth, levelHeight) {
-    var ctx = canvas.getContext('2d');
-    tileSide = Math.min(canvas.width / levelWidth, canvas.height / levelHeight);
-    leftMargin = (canvas.width - tileSide * levelWidth) / 2;
-    topMargin = (canvas.height - tileSide * levelHeight) / 2;
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  function createGrid(canvas, levelWidth, levelHeight) {
+    var tileSide = Math.min(canvas.width / levelWidth, canvas.height / levelHeight);
+    grid = new Grid({
+      canvas: canvas,
+      width: levelWidth,
+      height: levelHeight,
+      tileSide: tileSide,
+      leftMargin: (canvas.width - tileSide * levelWidth) / 2,
+      topMargin: (canvas.height - tileSide * levelHeight) / 2
+    });
     for (var i = 0; i < levelWidth; i++)
-      for (var j = 0; j < levelHeight; j++) {
-        ctx.fillRect(leftMargin + tileSide * i, topMargin + tileSide * j, tileSide, tileSide);
-        ctx.strokeRect(leftMargin + tileSide * i, topMargin + tileSide * j, tileSide, tileSide);
-      }
+      for (var j = 0; j < levelHeight; j++)
+        grid.addTile(new Tile({ grid: grid, unit: null, x: i, y: j }), i, j);
   }
 
   function show(id) {
@@ -99,7 +101,7 @@ window.addEventListener('load', async function() {
   async function askForFormation() {
     currentPromise = new Promise(getResolver);
     await executeMenuFunction(async function() {
-      drawGrid(document.getElementById('formation-editor-tiles-canvas'), levelWidth, FORMATION_ROWS);
+      createGrid(document.getElementById('formation-editor-tiles-canvas'), levelWidth, FORMATION_ROWS);
       show('formation-editor');
     });
     return currentPromise;
@@ -110,7 +112,7 @@ window.addEventListener('load', async function() {
     var pressedEscOnFirstAsk = false;
     levelWidth = level.width;
     levelHeight = level.height;
-    drawGrid(document.getElementById('game-tiles-canvas'), levelWidth, levelHeight);
+    createGrid(document.getElementById('game-tiles-canvas'), levelWidth, levelHeight);
     firstPlayerTurn = Boolean(Math.floor(Math.random() * 2));
     firstPlayer.deckTemplate = null;
     secondPlayer.deckTemplate = null;
