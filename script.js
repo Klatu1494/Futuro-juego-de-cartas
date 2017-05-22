@@ -241,7 +241,13 @@ window.addEventListener('load', async function() {
       });
     });
     document.getElementById('formation-editor-tiles-canvas').addEventListener('click', e => {
-      var clickedTileBoundingSquare = new ScreenCoordinates(e.clientX, e.clientY).toGrid(grid).toScreen();
+      var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
+
+      // Do nothing if clicked outside the grid area
+      if (!clickCoordinates.isInsideGridArea(grid))
+        return;
+
+      var clickedTileBoundingSquare = clickCoordinates.toGrid(grid).toScreen();
       var center = clickedTileBoundingSquare.center;
       var centerX = center.x;
       var centerY = center.y;

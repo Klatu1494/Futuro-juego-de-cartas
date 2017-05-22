@@ -19,6 +19,22 @@ class Grid {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
+  get leftGridArea() {
+    return this.leftMargin;
+  }
+
+  get rightGridArea() {
+    return this.leftMargin + this.tileSide * this.width;
+  }
+
+  get topGridArea() {
+    return this.topMargin;
+  }
+
+  get bottomGridArea() {
+    return this.topMargin + this.tileSide * this.height;
+  }
+
   addTile(tile, x, y) {
     this.tiles[x][y] = tile;
   }

@@ -1,10 +1,17 @@
+/**
+ * Represents coordinates based on the screen
+ */
 class ScreenCoordinates extends Coordinates {
   constructor(x, y) {
     super(x, y);
   }
 
-  /// Converts screen coordinates to grid coordinates
-  /// Returns Coordinates
+
+  /**
+   * Converts screen coordinates to grid coordinates.
+   * @param {Grid} grid Grid used to transform the coordinates.
+   * @return {TileCoordinates}
+   */
   toGrid(grid) {
     var leftMargin = grid.leftMargin;
     var topMargin = grid.topMargin;
@@ -14,4 +21,17 @@ class ScreenCoordinates extends Coordinates {
 
     return new TileCoordinates(gridX, gridY, grid);
   }
+
+  /**
+   * Determines whether this point allows a transformation to a TileCoordinates.
+   * @param {Grid} grid Grid used to transform the coordinates.
+   * @return {bool} true whenever this point can be assiged to a tile of the specified grid.
+   */
+  isInsideGridArea(grid) {
+    return grid.leftGridArea <= this.x &&
+      this.x <= grid.rightGridArea &&
+      grid.topGridArea <= this.y &&
+      this.y <= grid.bottomGridArea;
+  }
+
 }
