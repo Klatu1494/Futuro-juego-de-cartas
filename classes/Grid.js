@@ -45,10 +45,17 @@ class Grid {
   }
 
   /**
+   * Gets a rectangle that represents the grid area
+   * @return Rectangle
+   */
+  getGridArea() {
+    var topleft = new ScreenCoordinates(this.leftMargin, this.topMargin);
+    return new Rectangle(topleft, this.width * this.tileSide, this.height * this.tileSide);
+  }
+
+  /**
    * Adds a tile to the grid in the specified position.
    * @param {Tile} tile An object that has
-   * @param {number} x An object that has
-   * @param {number} y An object that has
    */
   addTile(tile) {
     this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;

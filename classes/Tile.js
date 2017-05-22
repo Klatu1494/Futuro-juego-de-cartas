@@ -41,7 +41,7 @@ class Tile {
     var leftMargin = grid.leftMargin;
     var topMargin = grid.topMargin;
     var boundingSquare = this.coordinates.toScreen();
-    ctx.fillRect(boundingSquare.left, boundingSquare.top, boundingSquare.sideLength, boundingSquare.sideLength);
-    ctx.strokeRect(boundingSquare.left, boundingSquare.top, boundingSquare.sideLength, boundingSquare.sideLength);
+    ctx.fillRect(boundingSquare.left, boundingSquare.top, boundingSquare.horizontalSize, boundingSquare.verticalSize);
+    ctx.strokeRect(boundingSquare.left, boundingSquare.top, boundingSquare.horizontalSize, boundingSquare.verticalSize);
   }
 }
