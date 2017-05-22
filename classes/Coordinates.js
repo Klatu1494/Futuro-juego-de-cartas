@@ -17,6 +17,15 @@ class Coordinates {
     if (0 <= x && isFinite(x) && 0 <= y && isFinite(y)) {
       this.x = x;
       this.y = y;
+      this.args = arguments;
     } else throw new Error();
+  }
+
+  /**
+   * Clones and returns this coordinates
+   * @return {Coordinates} a copy of this coordinates
+   */
+  clone() {
+    return new this.constructor(...this.args);
   }
 }

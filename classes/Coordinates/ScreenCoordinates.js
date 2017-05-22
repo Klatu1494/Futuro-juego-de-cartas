@@ -30,12 +30,4 @@ class ScreenCoordinates extends Coordinates {
   isInsideGridArea(grid) {
     return grid.getGridArea().contains(this);
   }
-
-  /**
-   * Clones and returns this coordinates
-   * @return {ScreenCoordinates} a copy of this coordinates
-   */
-  clone() {
-    return new ScreenCoordinates(this.x, this.y);
-  }
 }
