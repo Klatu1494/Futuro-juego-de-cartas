@@ -1,28 +1,54 @@
+/**
+ * Represents a square
+ */
 class Square {
-  constructor(args) {
-    var {
-      coordinates1,
-      coordinates2,
-      side,
-    } = args;
-    if (!(coordinates1 instanceof Coordinates)) throw new Error();
-    else if (0 < side && isFinite(side)) {
-      this.topLeftCoordinates = new Coordinates(coordinates1.x, coordinates1.y); //in case that we want to modify coordinates1 later;
-      this.bottomRightCoordinates = new Coordinates(coordinates1.x + side, coordinates1.y + side);
-      this.width = side;
-      this.height = side;
-    } else if (coordinates2 instanceof Coordinates) {
-      this.topLeftCoordinates = new Coordinates(Math.min(coordinates1.x, coordinates2.x), Math.min(coordinates1.y, coordinates2.y));
-      this.bottomRightCoordinates = new Coordinates(Math.max(coordinates1.x, coordinates2.x), Math.max(coordinates1.y, coordinates2.y));
-      var width = this.bottomRightCoordinates.x - this.topLeftCoordinates.x;
-      var height = this.bottomRightCoordinates.x - this.topLeftCoordinates.x;
-      if (width === height) {
-        this.width = width;
-        this.height = height;
-      } else throw new Error();
-    } else throw new Error();
+  /**
+   * Initializes a new Square given the topleft coordinates and the length of a side.
+   * @param {Coordinates} coordinatesTopLeft Top-left coordinates
+   * @param {number} sideLength Length of any side
+   */
+  constructor(coordinatesTopLeft, sideLength) {
+    if (!(coordinatesTopLeft instanceof Coordinates)) throw new Error("CoordinatesTopLeft must be Coordinates");
+
+    else if (0 < sideLength && isFinite(sideLength)) {
+      this.topLeft = new Coordinates(coordinatesTopLeft.x, coordinatesTopLeft.y); //in case that we want to modify coordinates1 later;
+      this.sideLength = sideLength;
+    } else throw new Error("Side length must be non negative and finite");
   }
 
+  /**
+   * Gets the location of the left edge.
+   */
+  get left() {
+    return this.topLeft.x;
+  }
+
+  /**
+   * Gets the location of the top edge.
+   */
+  get top() {
+    return this.topLeft.y;
+  }
+
+  /**
+   * Gets the location of the right edge.
+   */
+  get right() {
+    return this.left + this.sideLength;
+  }
+
+  /**
+   * Gets the location of the bottom edge.
+   */
+  get bottom() {
+    return this.top + this.sideLength;
+  }
+
+
+  /**
+   * TODO
+   * @param {Coordinates} coordinates 
+   */
   contains(coordinates) {
     return this.topLeftCoordinates.x <= coordinates.x &&
       coordinates.x <= this.bottomRightCoordinates.x &&
