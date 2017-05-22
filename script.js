@@ -29,16 +29,6 @@ window.addEventListener('load', async function() {
     initialQuantity: 5
   })).
   add(new UnitType({
-    name: 'Test',
-    imageSrc: 'images/shambling-zombie.png',
-    initialQuantity: 5
-  })).
-  add(new UnitType({
-    name: 'Test 2',
-    imageSrc: 'images/shambling-zombie.png',
-    initialQuantity: 5
-  })).
-  add(new UnitType({
     name: 'Farmer',
     imageSrc: 'images/unit1.png'
   })).
@@ -289,13 +279,11 @@ window.addEventListener('load', async function() {
     //create the first player
     firstPlayer = new Player({
       controller: HUMAN,
-      color: FIRST_COLOR,
-      availableUnits: availableUnits
+      color: FIRST_COLOR
     });
     secondPlayer = new Player({
       controller: null,
-      color: SECOND_COLOR,
-      availableUnits: MULTIPLAYER_AVAILABLE_UNITS
+      color: SECOND_COLOR
     });
     //assign images to unit types
     await assignImages(promises);

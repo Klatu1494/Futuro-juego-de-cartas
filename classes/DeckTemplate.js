@@ -1,9 +1,9 @@
 class DeckTemplate {
-	constructor() {
-		this.cards = [];
-	}
+  constructor() {
+    this.cards = [];
+  }
 
-	empty() {
-		return !this.cards.length;
-	}
+  empty() {
+    return !this.cards.length;
+  }
 }
