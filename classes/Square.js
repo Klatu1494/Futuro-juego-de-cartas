@@ -18,6 +18,7 @@ class Square {
 
   /**
    * Gets the location of the left edge.
+   * @type {number}
    */
   get left() {
     return this.topLeft.x;
@@ -25,6 +26,7 @@ class Square {
 
   /**
    * Gets the location of the top edge.
+   * @type {number}
    */
   get top() {
     return this.topLeft.y;
@@ -32,6 +34,7 @@ class Square {
 
   /**
    * Gets the location of the right edge.
+   * @type {number}
    */
   get right() {
     return this.left + this.sideLength;
@@ -39,15 +42,25 @@ class Square {
 
   /**
    * Gets the location of the bottom edge.
+   * @type {number}
    */
   get bottom() {
     return this.top + this.sideLength;
   }
 
+  /**
+   * Gets the coordinates of the bottom right point.
+   * @type {Coordinates}
+   */
+  get bottomRight() {
+    return new Coordinates(this.right, this.bottom);
+  }
 
   /**
-   * TODO
+   * Determines wheter a specified point is insite this square.
+   * This method includes the edge of the square.
    * @param {Coordinates} coordinates 
+   * @return {bool} true when the specified point is inside the square.
    */
   contains(coordinates) {
     return this.topLeftCoordinates.x <= coordinates.x &&
