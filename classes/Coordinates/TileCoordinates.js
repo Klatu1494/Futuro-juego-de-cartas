@@ -1,7 +1,7 @@
-class TileCoordinates extends Coordinates() {
+class TileCoordinates extends Coordinates {
   constructor(x, y, grid) {
+    super(x, y);
     if (grid instanceof Grid) {
-      super(x, y);
       this.grid = grid;
     }
   }
@@ -9,7 +9,7 @@ class TileCoordinates extends Coordinates() {
   toScreen() {
     var grid = this.grid;
     return new Square(
-      new ScreenCoordinates(grid.marginLeft + this.x * grid.tileSide, grid.marginTop + this.y * grid.tileSide),
+      new ScreenCoordinates(grid.leftMargin + this.x * grid.tileSide, grid.topMargin + this.y * grid.tileSide),
       grid.tileSide
     );
   }

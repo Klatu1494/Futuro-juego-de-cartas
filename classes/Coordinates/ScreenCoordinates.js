@@ -1,4 +1,4 @@
-class TileCoordinates extends Coordinates() {
+class ScreenCoordinates extends Coordinates {
   constructor(x, y) {
     super(x, y);
   }
@@ -12,6 +12,6 @@ class TileCoordinates extends Coordinates() {
     var gridX = Math.floor((this.x - leftMargin) / tileSide);
     var gridY = Math.floor((this.y - topMargin) / tileSide);
 
-    return new Coordinates(gridX, gridY);
+    return new TileCoordinates(gridX, gridY, grid);
   }
 }

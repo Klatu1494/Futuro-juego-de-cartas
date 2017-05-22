@@ -30,11 +30,13 @@ window.addEventListener('load', async function() {
   })).
   add(new UnitType({
     name: 'Farmer',
-    imageSrc: 'images/unit1.png'
+    imageSrc: 'images/unit1.png',
+    initialQuantity: 5 //just testing
   })).
   add(new UnitType({
     name: 'Warrior',
-    imageSrc: 'images/unit2.png'
+    imageSrc: 'images/unit2.png',
+    initialQuantity: 5 //just testing
   }));
   const RADIAL_MENU_FRAMES = 20;
   const RADIAL_MENU_ITEMS_SIZE = 0.75;
@@ -59,6 +61,7 @@ window.addEventListener('load', async function() {
     topMargin, // Top margin of the grid relative to the canvas.
     firstPlayerTurn,
     firstPlayer,
+    grid,
     secondPlayer,
     currentLevel,
     currentDeckTemplate,
@@ -238,7 +241,11 @@ window.addEventListener('load', async function() {
       });
     });
     document.getElementById('formation-editor-tiles-canvas').addEventListener('click', e => {
-      var clickedTileCoordinates = new Coordinates(e.clientX, e.clientY).screenToGrid();
+      var clickedTileBoundingSquare = new ScreenCoordinates(e.clientX, e.clientY).toGrid(grid).toScreen();
+      var center = clickedTileBoundingSquare.center;
+      var centerX = center.x;
+      var centerY = center.y;
+      var tileSide = grid.tileSide;
       var unitTypesBeingShown = [];
       for (var unitType of UNIT_TYPES)
         if (unitType.availableUnits) {
@@ -247,22 +254,24 @@ window.addEventListener('load', async function() {
       var length = unitTypesBeingShown.length;
       var itemRadius = tileSide / 2;
       var polygonRadius = (tileSide - itemRadius) / 2;
-      itemRadius *= RADIAL_MENU_ITEMS_SIZE
+      itemRadius *= RADIAL_MENU_ITEMS_SIZE;
+      //move items to the center of the radial menu
       for (var unitType of unitTypesBeingShown) {
         var style = unitType.formationElement.style;
         style.visibility = 'visible';
         style.transition = 'all 0s linear';
-        style.left = e.clientX + 'px';
-        style.top = e.clientY + 'px';
+        style.left = centerX + 'px';
+        style.top = centerY + 'px';
         style.width = '0';
         style.height = '0';
       }
       document.body.offsetLeft; //force reflow
+      //move items away from the center
       for (var i = 0; i < length; i++) {
         var style = unitTypesBeingShown[i].formationElement.style;
         style.transition = 'all 0.3s linear';
-        style.left = e.clientX - itemRadius / 2 + (length === 1 ? '0' : Math.cos(i * Math.PI * 2 / length) * polygonRadius) + 'px';
-        style.top = e.clientY - itemRadius / 2 + (length === 1 ? '0' : Math.sin(i * Math.PI * 2 / length) * polygonRadius) + 'px';
+        style.left = centerX - itemRadius / 2 + (length === 1 ? '0' : Math.cos(i * Math.PI * 2 / length) * polygonRadius) + 'px';
+        style.top = centerY - itemRadius / 2 + (length === 1 ? '0' : Math.sin(i * Math.PI * 2 / length) * polygonRadius) + 'px';
         style.width = itemRadius + 'px';
         style.height = itemRadius + 'px';
       }

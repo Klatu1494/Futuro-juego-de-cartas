@@ -13,7 +13,8 @@ class Square {
     else if (0 < sideLength && isFinite(sideLength)) {
       this.topLeft = new Coordinates(topLeftCoordinates.x, topLeftCoordinates.y); //in case that we want to modify coordinates1 later;
       this.sideLength = sideLength;
-      this.bottomRight = calculateBottomRight();
+      this.bottomRight = this.calculateBottomRight();
+      this.center = new ScreenCoordinates((this.left + this.right) / 2, (this.top + this.bottom) / 2);
     } else throw new Error("Side length must be a positive number");
   }
 
@@ -54,7 +55,7 @@ class Square {
    * @return {Coordinates}
    */
   calculateBottomRight() {
-    return new Coordinates(this.topLeft.x + sideLength, this.topLeft.y + sideLength);
+    return new Coordinates(this.topLeft.x + this.sideLength, this.topLeft.y + this.sideLength);
   }
 
   /**
