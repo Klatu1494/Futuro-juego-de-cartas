@@ -6,13 +6,4 @@ class Coordinates {
       this.y = y;
     }
   }
-
-  /// Converts screen coordinates to grid coordinates
-  /// Returns Coordinates
-  screenToGrid() {
-    var gridX = Math.floor((this.x - leftMargin) / tileSide);
-    var gridY = Math.floor((this.y - topMargin) / tileSide);
-
-    return new Coordinates(gridX, gridY);
-  }
 }

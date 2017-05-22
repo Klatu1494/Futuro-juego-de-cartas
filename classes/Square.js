@@ -4,17 +4,17 @@
 class Square {
   /**
    * Initializes a new Square given the topleft coordinates and the length of a side.
-   * @param {Coordinates} coordinatesTopLeft Top-left coordinates
+   * @param {Coordinates} topLeftCoordinates Top-left coordinates
    * @param {number} sideLength Length of any side
    */
-  constructor(coordinatesTopLeft, sideLength) {
-    if (!(coordinatesTopLeft instanceof Coordinates)) throw new Error("CoordinatesTopLeft must be Coordinates");
+  constructor(topLeftCoordinates, sideLength) {
+    if (!(topLeftCoordinates instanceof ScreenCoordinates)) throw new Error("topLeftCoordinates must be ScreenCoordinates");
 
     else if (0 < sideLength && isFinite(sideLength)) {
-      this.topLeft = new Coordinates(coordinatesTopLeft.x, coordinatesTopLeft.y); //in case that we want to modify coordinates1 later;
+      this.topLeft = new Coordinates(topLeftCoordinates.x, topLeftCoordinates.y); //in case that we want to modify coordinates1 later;
       this.sideLength = sideLength;
       this.bottomRight = calculateBottomRight();
-    } else throw new Error("Side length must be non negative and finite");
+    } else throw new Error("Side length must be a positive number");
   }
 
   /**
