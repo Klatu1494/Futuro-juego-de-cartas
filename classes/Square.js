@@ -63,9 +63,9 @@ class Square {
    * @return {bool} true when the specified point is inside the square.
    */
   contains(coordinates) {
-    return this.topLeftCoordinates.x <= coordinates.x &&
-      coordinates.x <= this.bottomRightCoordinates.x &&
-      this.topLeftCoordinates.y <= coordinates.y &&
-      coordinates.y <= this.bottomRightCoordinates.y;
+    return this.left <= coordinates.x &&
+      coordinates.x <= this.right &&
+      this.top <= coordinates.y &&
+      coordinates.y <= this.bottom;
   }
 }
