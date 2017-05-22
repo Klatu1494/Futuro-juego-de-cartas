@@ -13,6 +13,7 @@ class Square {
     else if (0 < sideLength && isFinite(sideLength)) {
       this.topLeft = new Coordinates(coordinatesTopLeft.x, coordinatesTopLeft.y); //in case that we want to modify coordinates1 later;
       this.sideLength = sideLength;
+      this.bottomRight = calculateBottomRight();
     } else throw new Error("Side length must be non negative and finite");
   }
 
@@ -37,7 +38,7 @@ class Square {
    * @type {number}
    */
   get right() {
-    return this.left + this.sideLength;
+    return this.bottomRight.x;
   }
 
   /**
@@ -45,15 +46,15 @@ class Square {
    * @type {number}
    */
   get bottom() {
-    return this.top + this.sideLength;
+    return this.bottomRight.y;
   }
 
   /**
-   * Gets the coordinates of the bottom right point.
-   * @type {Coordinates}
+   * Computes the coordinates of the bottom right point from the values of topLeft and sideLength.
+   * @return {Coordinates}
    */
-  get bottomRight() {
-    return new Coordinates(this.right, this.bottom);
+  calculateBottomRight() {
+    return new Coordinates(this.topLeft.x + sideLength, this.topLeft.y + sideLength);
   }
 
   /**
