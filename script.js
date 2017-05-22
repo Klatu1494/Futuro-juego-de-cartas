@@ -49,7 +49,6 @@ window.addEventListener('load', async function() {
     against: AI
   })];
   for (var unitType of UNIT_TYPES) MULTIPLAYER_AVAILABLE_UNITS.set(unitType, Infinity);
-  console.log(UNIT_TYPES)
   var
     availableUnits,
     currentResolver,
@@ -239,7 +238,7 @@ window.addEventListener('load', async function() {
       });
     });
     document.getElementById('formation-editor-tiles-canvas').addEventListener('click', e => {
-
+      var clickedTileCoordinates = new Coordinates(e.clientX, e.clientY).screenToGrid();
       var unitTypesBeingShown = [];
       for (var unitType of UNIT_TYPES)
         if (unitType.availableUnits) {
@@ -258,8 +257,7 @@ window.addEventListener('load', async function() {
         style.width = '0';
         style.height = '0';
       }
-      //force reflow
-      document.body.offsetLeft;
+      document.body.offsetLeft; //force reflow
       for (var i = 0; i < length; i++) {
         var style = unitTypesBeingShown[i].formationElement.style;
         style.transition = 'all 0.3s linear';
