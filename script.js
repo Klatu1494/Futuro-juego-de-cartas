@@ -241,6 +241,7 @@ window.addEventListener('load', async function() {
       });
     });
     document.getElementById('formation-editor-tiles-canvas').addEventListener('click', e => {
+      const TWO_PI = Math.PI * 2;
       var clickedTileBoundingSquare = new ScreenCoordinates(e.clientX, e.clientY).toGrid(grid).toScreen();
       var center = clickedTileBoundingSquare.center;
       var centerX = center.x;
@@ -270,8 +271,8 @@ window.addEventListener('load', async function() {
       for (var i = 0; i < length; i++) {
         var style = unitTypesBeingShown[i].formationElement.style;
         style.transition = 'all 0.3s linear';
-        style.left = centerX - itemRadius / 2 + (length === 1 ? '0' : Math.cos(i * Math.PI * 2 / length) * polygonRadius) + 'px';
-        style.top = centerY - itemRadius / 2 + (length === 1 ? '0' : Math.sin(i * Math.PI * 2 / length) * polygonRadius) + 'px';
+        style.left = centerX - itemRadius / 2 + (length === 1 ? '0' : Math.sin(i * TWO_PI / length) * polygonRadius) + 'px';
+        style.top = centerY - itemRadius / 2 - (length === 1 ? '0' : Math.cos(i * TWO_PI / length) * polygonRadius) + 'px';
         style.width = itemRadius + 'px';
         style.height = itemRadius + 'px';
       }
