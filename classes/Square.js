@@ -1,32 +1,72 @@
+/**
+ * Represents a square
+ */
 class Square {
-  constructor(args) {
-    var {
-      coordinates1,
-      coordinates2,
-      side,
-    } = args;
-    if (!(coordinates1 instanceof Coordinates)) throw new Error();
-    else if (0 < side && isFinite(side)) {
-      this.topLeftCoordinates = new Coordinates(coordinates1.x, coordinates1.y); //in case that we want to modify coordinates1 later;
-      this.bottomRightCoordinates = new Coordinates(coordinates1.x + side, coordinates1.y + side);
-      this.width = side;
-      this.height = side;
-    } else if (coordinates2 instanceof Coordinates) {
-      this.topLeftCoordinates = new Coordinates(Math.min(coordinates1.x, coordinates2.x), Math.min(coordinates1.y, coordinates2.y));
-      this.bottomRightCoordinates = new Coordinates(Math.max(coordinates1.x, coordinates2.x), Math.max(coordinates1.y, coordinates2.y));
-      var width = this.bottomRightCoordinates.x - this.topLeftCoordinates.x;
-      var height = this.bottomRightCoordinates.x - this.topLeftCoordinates.x;
-      if (width === height) {
-        this.width = width;
-        this.height = height;
-      } else throw new Error();
-    } else throw new Error();
+  /**
+   * Initializes a new Square given the topleft coordinates and the length of a side.
+   * @param {Coordinates} coordinatesTopLeft Top-left coordinates
+   * @param {number} sideLength Length of any side
+   */
+  constructor(coordinatesTopLeft, sideLength) {
+    if (!(coordinatesTopLeft instanceof Coordinates)) throw new Error("CoordinatesTopLeft must be Coordinates");
+
+    else if (0 < sideLength && isFinite(sideLength)) {
+      this.topLeft = new Coordinates(coordinatesTopLeft.x, coordinatesTopLeft.y); //in case that we want to modify coordinates1 later;
+      this.sideLength = sideLength;
+      this.bottomRight = calculateBottomRight();
+    } else throw new Error("Side length must be non negative and finite");
   }
 
+  /**
+   * Gets the location of the left edge.
+   * @type {number}
+   */
+  get left() {
+    return this.topLeft.x;
+  }
+
+  /**
+   * Gets the location of the top edge.
+   * @type {number}
+   */
+  get top() {
+    return this.topLeft.y;
+  }
+
+  /**
+   * Gets the location of the right edge.
+   * @type {number}
+   */
+  get right() {
+    return this.bottomRight.x;
+  }
+
+  /**
+   * Gets the location of the bottom edge.
+   * @type {number}
+   */
+  get bottom() {
+    return this.bottomRight.y;
+  }
+
+  /**
+   * Computes the coordinates of the bottom right point from the values of topLeft and sideLength.
+   * @return {Coordinates}
+   */
+  calculateBottomRight() {
+    return new Coordinates(this.topLeft.x + sideLength, this.topLeft.y + sideLength);
+  }
+
+  /**
+   * Determines wheter a specified point is insite this square.
+   * This method includes the edge of the square.
+   * @param {Coordinates} coordinates 
+   * @return {bool} true when the specified point is inside the square.
+   */
   contains(coordinates) {
-    return this.topLeftCoordinates.x <= coordinates.x &&
-      coordinates.x <= this.bottomRightCoordinates.x &&
-      this.topLeftCoordinates.y <= coordinates.y &&
-      coordinates.y <= this.bottomRightCoordinates.y;
+    return this.left <= coordinates.x &&
+      coordinates.x <= this.right &&
+      this.top <= coordinates.y &&
+      coordinates.y <= this.bottom;
   }
 }
