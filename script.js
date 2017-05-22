@@ -295,10 +295,13 @@ window.addEventListener('load', async function() {
       'click',
       e => {
         const TWO_PI = Math.PI * 2;
-        var selectedTileCoordinates = new ScreenCoordinates(
-          e.clientX,
-          e.clientY
-        ).toGrid(grid);
+        var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
+
+        // Do nothing if clicked outside the grid area
+        if (!clickCoordinates.isInsideGridArea(grid))
+          return;
+
+        var selectedTileCoordinates = clickCoordinates.toGrid(grid);
         //TODO: split next line into multiple lines because it is too large
         selectedTile = grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
         var selectedTileBoundingSquare = selectedTileCoordinates.toScreen();
