@@ -19,20 +19,13 @@ class Grid {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  get leftGridArea() {
-    return this.leftMargin;
-  }
-
-  get rightGridArea() {
-    return this.leftMargin + this.tileSide * this.width;
-  }
-
-  get topGridArea() {
-    return this.topMargin;
-  }
-
-  get bottomGridArea() {
-    return this.topMargin + this.tileSide * this.height;
+  /**
+   * Gets a rectangle that represents the grid area
+   * @return Rectangle
+   */
+  getGridArea() {
+    var topleft = new ScreenCoordinates(this.leftMargin, this.topMargin);
+    return new Rectangle(topleft, this.width * this.tileSide, this.height * this.tileSide);
   }
 
   addTile(tile, x, y) {
