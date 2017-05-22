@@ -1,20 +1,34 @@
 /**
- * Represents a square
+ * @fileoverview Contains the Square class declaration and can
+ *     contain definitions of the class' prototype's properties.
+ */
+
+/**
+ * A square whose sides are aligned either to the x axis or to the y axis.
+ * @class
  */
 class Square {
   /**
-   * Initializes a new Square given the topleft coordinates and the length of a side.
+   * Initializes a new Square given the topleft
+   * coordinates and the length of a side.
    * @param {Coordinates} topLeftCoordinates Top-left coordinates
    * @param {number} sideLength Length of any side
    */
   constructor(topLeftCoordinates, sideLength) {
-    if (!(topLeftCoordinates instanceof ScreenCoordinates)) throw new Error("topLeftCoordinates must be ScreenCoordinates");
+    if (!(topLeftCoordinates instanceof ScreenCoordinates))
+      throw new Error("topLeftCoordinates must be ScreenCoordinates");
 
     else if (0 < sideLength && isFinite(sideLength)) {
-      this.topLeft = new Coordinates(topLeftCoordinates.x, topLeftCoordinates.y); //in case that we want to modify coordinates1 later;
+      this.topLeft = new Coordinates(
+        topLeftCoordinates.x,
+        topLeftCoordinates.y
+      ); //in case that we want to modify coordinates1 later;
       this.sideLength = sideLength;
       this.bottomRight = this.calculateBottomRight();
-      this.center = new ScreenCoordinates((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+      this.center = new ScreenCoordinates(
+        (this.left + this.right) / 2,
+        (this.top + this.bottom) / 2
+      );
     } else throw new Error("Side length must be a positive number");
   }
 
@@ -51,15 +65,19 @@ class Square {
   }
 
   /**
-   * Computes the coordinates of the bottom right point from the values of topLeft and sideLength.
+   * Computes the coordinates of the bottom right
+   * point from the values of topLeft and sideLength.
    * @return {Coordinates}
    */
   calculateBottomRight() {
-    return new Coordinates(this.topLeft.x + this.sideLength, this.topLeft.y + this.sideLength);
+    return new Coordinates(
+      this.topLeft.x + this.sideLength,
+      this.topLeft.y + this.sideLength
+    );
   }
 
   /**
-   * Determines wheter a specified point is insite this square.
+   * Determines wheter a specified point is inside this square.
    * This method includes the edge of the square.
    * @param {Coordinates} coordinates 
    * @return {bool} true when the specified point is inside the square.

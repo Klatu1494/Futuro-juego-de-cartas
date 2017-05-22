@@ -5,12 +5,13 @@ class UnitType {
       imageSrc,
       initialQuantity = 0
     } = args;
+    var element = document.createElement('img');
+    this.element = element;
+    element.src = imageSrc;
+    element.className = 'unit-type';
+    document.body.appendChild(element);
     this.name = name;
-    this.formationElement = document.createElement('img');
-    this.formationElement.src = imageSrc;
-    this.formationElement.className = 'unit-type';
-    this.availableUnits = initialQuantity;
-    document.body.appendChild(this.formationElement);
     this.imageSrc = imageSrc;
+    this.availableUnits = initialQuantity;
   }
 }

@@ -43,14 +43,18 @@ window.addEventListener('load', async function() {
   const FRAME_DURATION = 50 / 3;
   //these constants must be declared after the previous ones
   const HAND_POSITION = HEIGHT < WIDTH ? 'right' : 'bottom';
-  const HAND_HEIGHT_OR_WIDTH = HAND_POSITION === 'bottom' ? HEIGHT - WIDTH : WIDTH - HEIGHT;
+  const HAND_HEIGHT_OR_WIDTH =
+    HAND_POSITION === 'bottom' ?
+    HEIGHT - WIDTH :
+    WIDTH - HEIGHT;
   const MULTIPLAYER_AVAILABLE_UNITS = new Map();
   const LEVELS = [new Level({
     width: 3,
     height: 5,
     against: AI
   })];
-  for (var unitType of UNIT_TYPES) MULTIPLAYER_AVAILABLE_UNITS.set(unitType, Infinity);
+  for (var unitType of UNIT_TYPES)
+    MULTIPLAYER_AVAILABLE_UNITS.set(unitType, Infinity);
   var
     availableUnits,
     currentResolver,
@@ -65,11 +69,15 @@ window.addEventListener('load', async function() {
     secondPlayer,
     currentLevel,
     currentDeckTemplate,
+    selectedTile,
     levelWidth, // Level width in tiles.  
     levelHeight; // Level height in tiles.
 
   function createGrid(canvas, levelWidth, levelHeight) {
-    var tileSide = Math.min(canvas.width / levelWidth, canvas.height / levelHeight);
+    var tileSide = Math.min(
+      canvas.width / levelWidth,
+      canvas.height / levelHeight
+    );
     grid = new Grid({
       canvas: canvas,
       width: levelWidth,
@@ -80,11 +88,15 @@ window.addEventListener('load', async function() {
     });
     for (var i = 0; i < levelWidth; i++)
       for (var j = 0; j < levelHeight; j++)
-        grid.addTile(new Tile({ grid: grid, unit: null, x: i, y: j }), i, j);
+        grid.addTile(new Tile({
+          grid: grid,
+          coordinates: new TileCoordinates(i, j, grid)
+        }));
   }
 
   function show(id) {
-    for (var child of document.getElementById('game').children) child.style.display = 'none';
+    for (var child of document.getElementById('game').children)
+      child.style.display = 'none';
     document.getElementById(id).style.display = 'flex';
   }
 
@@ -103,7 +115,11 @@ window.addEventListener('load', async function() {
   async function askForFormation() {
     currentPromise = new Promise(getResolver);
     await executeMenuFunction(async function() {
-      createGrid(document.getElementById('formation-editor-tiles-canvas'), levelWidth, FORMATION_ROWS);
+      createGrid(
+        document.getElementById('formation-editor-tiles-canvas'),
+        levelWidth,
+        FORMATION_ROWS
+      );
       show('formation-editor');
     });
     return currentPromise;
@@ -114,7 +130,11 @@ window.addEventListener('load', async function() {
     var pressedEscOnFirstAsk = false;
     levelWidth = level.width;
     levelHeight = level.height;
-    createGrid(document.getElementById('game-tiles-canvas'), levelWidth, levelHeight);
+    createGrid(
+      document.getElementById('game-tiles-canvas'),
+      levelWidth,
+      levelHeight
+    );
     firstPlayerTurn = Boolean(Math.floor(Math.random() * 2));
     firstPlayer.deckTemplate = null;
     secondPlayer.deckTemplate = null;
@@ -122,25 +142,37 @@ window.addEventListener('load', async function() {
     secondPlayer.formation = null;
     if (level.against === HUMAN) {
       availableUnits = MULTIPLAYER_AVAILABLE_UNITS;
-      while (!(firstPlayer.formation && secondPlayer.formation || pressedEscOnFirstAsk)) {
+      while (!(
+          firstPlayer.formation && secondPlayer.formation ||
+          pressedEscOnFirstAsk)) {
         action = await askForFormation();
-        if (action instanceof DeckTemplate) firstPlayer.deckTemplate = action;
+        if (action instanceof DeckTemplate)
+          firstPlayer.deckTemplate = action;
         else pressedEscOnFirstAsk = true;
-        while (!(firstPlayer.formation && secondPlayer.formation || pressedEscOnFirstAsk)) {
+        while (!(
+            firstPlayer.formation && secondPlayer.formation ||
+            pressedEscOnFirstAsk)) {
           action = await askForFormation();
-          if (action instanceof DeckTemplate) secondPlayer.deckTemplate = action;
+          if (action instanceof DeckTemplate)
+            secondPlayer.deckTemplate = action;
           else pressedEscOnFirstAsk = true;
         }
       }
     } else if (level.against === AI) {
       availableUnits = firstPlayer.availableUnits;
-      while (!(firstPlayer.formation && secondPlayer.formation || pressedEscOnFirstAsk)) {
+      while (!(
+          firstPlayer.formation && secondPlayer.formation ||
+          pressedEscOnFirstAsk)) {
         action = await askForFormation();
-        if (action instanceof DeckTemplate) firstPlayer.deckTemplate = action;
+        if (action instanceof DeckTemplate)
+          firstPlayer.deckTemplate = action;
         else pressedEscOnFirstAsk = true;
-        while (!(firstPlayer.formation && secondPlayer.formation || pressedEscOnFirstAsk)) {
+        while (!(
+            firstPlayer.formation && secondPlayer.formation ||
+            pressedEscOnFirstAsk)) {
           action = await askForDeck(action);
-          if (action instanceof DeckTemplate) secondPlayer.deckTemplate = action;
+          if (action instanceof DeckTemplate)
+            secondPlayer.deckTemplate = action;
           else pressedEscOnFirstAsk = true;
         }
       }
@@ -184,14 +216,21 @@ window.addEventListener('load', async function() {
     var promises = new Set();
     for (var unitType of UNIT_TYPES) promises.add(loadImage(unitType));
     //set the HTML constants-dependent style
-    var boardHeight = HAND_POSITION === 'bottom' ? HEIGHT - HAND_HEIGHT_OR_WIDTH : HEIGHT;
+    var boardHeight =
+      HAND_POSITION === 'bottom' ?
+      HEIGHT - HAND_HEIGHT_OR_WIDTH :
+      HEIGHT;
     var boardStyle = document.getElementById('board').style;
-    var boardWidth = HAND_POSITION === 'bottom' ? WIDTH : WIDTH - HAND_HEIGHT_OR_WIDTH;
+    var boardWidth = HAND_POSITION === 'bottom' ? WIDTH :
+      WIDTH -
+      HAND_HEIGHT_OR_WIDTH;
     var gameStyle = document.getElementById('game').style;
     var handStyle = document.getElementById('hand').style;
     var gameCanvas = document.getElementById('game-tiles-canvas');
     var gameCtx = gameCanvas.getContext('2d');
-    var formationEditorCanvas = document.getElementById('formation-editor-tiles-canvas');
+    var formationEditorCanvas = document.getElementById(
+      'formation-editor-tiles-canvas'
+    );
     var formationEditorCtx = formationEditorCanvas.getContext('2d');
     var cardAdder = document.getElementById('card-adder');
     show('menu');
@@ -199,8 +238,16 @@ window.addEventListener('load', async function() {
     boardStyle.width = boardWidth + 'px';
     gameStyle.height = HEIGHT + 'px';
     gameStyle.width = WIDTH + 'px';
-    handStyle.height = (HAND_POSITION === 'bottom' ? HAND_HEIGHT_OR_WIDTH : HEIGHT) + 'px';
-    handStyle.width = (HAND_POSITION === 'bottom' ? WIDTH : HAND_HEIGHT_OR_WIDTH) + 'px';
+    handStyle.height = (
+      HAND_POSITION === 'bottom' ?
+      HAND_HEIGHT_OR_WIDTH :
+      HEIGHT
+    ) + 'px';
+    handStyle.width = (
+      HAND_POSITION === 'bottom' ?
+      WIDTH :
+      HAND_HEIGHT_OR_WIDTH
+    ) + 'px';
     gameCanvas.height = boardHeight;
     gameCanvas.width = boardWidth;
     gameCtx.fillStyle = TILE_BACKGROUND_COLOR;
@@ -229,55 +276,76 @@ window.addEventListener('load', async function() {
       cardAdder.appendChild(div);
     }
     //add event listeners
-    document.getElementById('play-button').addEventListener('click', async function() {
-      await executeMenuFunction(async function() {
-        await newMatch(LEVELS[currentLevel]);
-        show('play-mode');
+    document.getElementById('play-button').addEventListener(
+      'click',
+      async function() {
+        await executeMenuFunction(async function() {
+          await newMatch(LEVELS[currentLevel]);
+          show('play-mode');
+        });
       });
-    });
-    document.getElementById('deck-editor-button').addEventListener('click', async function() {
-      await executeMenuFunction(async function() {
-        currentResolver(currentDeck);
+    document.getElementById('deck-editor-button').addEventListener(
+      'click',
+      async function() {
+        await executeMenuFunction(async function() {
+          currentResolver(currentDeck);
+        });
       });
-    });
-    document.getElementById('formation-editor-tiles-canvas').addEventListener('click', e => {
-      const TWO_PI = Math.PI * 2;
-      var clickedTileBoundingSquare = new ScreenCoordinates(e.clientX, e.clientY).toGrid(grid).toScreen();
-      var center = clickedTileBoundingSquare.center;
-      var centerX = center.x;
-      var centerY = center.y;
-      var tileSide = grid.tileSide;
-      var unitTypesBeingShown = [];
-      for (var unitType of UNIT_TYPES)
-        if (unitType.availableUnits) {
-          unitTypesBeingShown.push(unitType);
+    document.getElementById('formation-editor-tiles-canvas').addEventListener(
+      'click',
+      e => {
+        const TWO_PI = Math.PI * 2;
+        var selectedTileCoordinates = new ScreenCoordinates(
+          e.clientX,
+          e.clientY
+        ).toGrid(grid);
+        //TODO: split next line into multiple lines because it is too large
+        selectedTile = grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
+        var selectedTileBoundingSquare = selectedTileCoordinates.toScreen();
+        var center = selectedTileBoundingSquare.center;
+        var centerX = center.x;
+        var centerY = center.y;
+        var tileSide = grid.tileSide;
+        var unitTypesBeingShown = [];
+        for (var unitType of UNIT_TYPES)
+          if (unitType.availableUnits) {
+            unitTypesBeingShown.push(unitType);
+          }
+        var length = unitTypesBeingShown.length;
+        var itemRadius = tileSide / 2;
+        var polygonRadius = (tileSide - itemRadius) / 2;
+        itemRadius *= RADIAL_MENU_ITEMS_SIZE;
+        //move items to the center of the radial menu
+        for (var unitType of unitTypesBeingShown) {
+          var style = unitType.element.style;
+          style.visibility = 'visible';
+          style.transition = 'all 0s linear';
+          style.left = centerX + 'px';
+          style.top = centerY + 'px';
+          style.width = '0';
+          style.height = '0';
         }
-      var length = unitTypesBeingShown.length;
-      var itemRadius = tileSide / 2;
-      var polygonRadius = (tileSide - itemRadius) / 2;
-      itemRadius *= RADIAL_MENU_ITEMS_SIZE;
-      //move items to the center of the radial menu
-      for (var unitType of unitTypesBeingShown) {
-        var style = unitType.formationElement.style;
-        style.visibility = 'visible';
-        style.transition = 'all 0s linear';
-        style.left = centerX + 'px';
-        style.top = centerY + 'px';
-        style.width = '0';
-        style.height = '0';
-      }
-      document.body.offsetLeft; //force reflow
-      //move items away from the center
-      for (var i = 0; i < length; i++) {
-        var style = unitTypesBeingShown[i].formationElement.style;
-        style.transition = 'all 0.3s linear';
-        style.left = centerX - itemRadius / 2 + (length === 1 ? '0' : Math.sin(i * TWO_PI / length) * polygonRadius) + 'px';
-        style.top = centerY - itemRadius / 2 - (length === 1 ? '0' : Math.cos(i * TWO_PI / length) * polygonRadius) + 'px';
-        style.width = itemRadius + 'px';
-        style.height = itemRadius + 'px';
-      }
-    });
-    //if it is the first time the user opens the game or the user deleted the save file, create a save file 
+        document.body.offsetLeft; //force reflow
+        //move items away from the center
+        for (var i = 0; i < length; i++) {
+          var style = unitTypesBeingShown[i].element.style;
+          style.transition = 'all 0.3s linear';
+          style.left = centerX - itemRadius / 2 + (
+            length === 1 ?
+            '0' :
+            Math.sin(i * TWO_PI / length) * polygonRadius
+          ) + 'px';
+          style.top = centerY - itemRadius / 2 - (
+            length === 1 ?
+            '0' :
+            Math.cos(i * TWO_PI / length) * polygonRadius
+          ) + 'px';
+          style.width = itemRadius + 'px';
+          style.height = itemRadius + 'px';
+        }
+      });
+    //if it is the first time the user opens the game or
+    //the user deleted the save file, create a save file
     var savedGame = window.localStorage.getItem('savedGame');
     if (!savedGame) {
       window.localStorage.setItem('currentLevel', JSON.stringify(0));
@@ -286,7 +354,9 @@ window.addEventListener('load', async function() {
     }
     //load the save file
     var currentLevel = JSON.parse(window.localStorage.getItem('currentLevel'));
-    var availableUnits = JSON.parse(window.localStorage.getItem('availableUnits'));
+    var availableUnits = JSON.parse(
+      window.localStorage.getItem('availableUnits')
+    );
     //create the first player
     firstPlayer = new Player({
       controller: HUMAN,
