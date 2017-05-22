@@ -55,16 +55,16 @@ window.addEventListener('load', async function() {
     currentResolver,
     currentDeck,
     currentPromise,
-    tileSide,
-    leftMargin,
-    topMargin,
+    tileSide, // The length of any tile.
+    leftMargin, // Left margin of the grid relative to the canvas.
+    topMargin, // Top margin of the grid relative to the canvas.
     firstPlayerTurn,
     firstPlayer,
     secondPlayer,
     currentLevel,
     currentDeckTemplate,
-    levelWidth,
-    levelHeight;
+    levelWidth, // Level width in tiles.  
+    levelHeight; // Level height in tiles.
 
   function drawGrid(canvas, levelWidth, levelHeight) {
     var ctx = canvas.getContext('2d');
@@ -78,6 +78,17 @@ window.addEventListener('load', async function() {
         ctx.strokeRect(leftMargin + tileSide * i, topMargin + tileSide * j, tileSide, tileSide);
       }
   }
+
+  /// Converts screen coordinates to grid coordinates
+  /// Where c is Coordinates
+  /// Returns Coordinates
+  function screenToGrid(screenCoordinates) {
+    var gridX = Math.floor((screenCoordinates.x - leftMargin) / tileSide);
+    var gridY = Math.floor((screenCoordinates.y - topMargin) / tileSide);
+
+    return new Coordinates(gridX, gridY);
+  }
+
 
   function show(id) {
     for (var child of document.getElementById('game').children) child.style.display = 'none';
@@ -237,6 +248,7 @@ window.addEventListener('load', async function() {
       });
     });
     document.getElementById('formation-editor-tiles-canvas').addEventListener('click', e => {
+
       var unitTypesBeingShown = [];
       for (var unitType of UNIT_TYPES)
         if (unitType.availableUnits) {
