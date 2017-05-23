@@ -1,0 +1,34 @@
+/**
+ * @fileoverview Contains the MatchGrid class declaration and
+ *     can contain definitions of the class' prototype's properties.
+ */
+
+/**
+ * A grid used by the match screen.
+ * @class
+ */
+class MatchGrid extends Grid {
+  /**
+   * Creates a grid
+   * @typedef {Object} MatchGridArgs
+   * @property {number} height The grid's height in tiles. It must be positive.
+   * @property {number} width The grid's width in tiles. It must be positive.
+   * @property {number} leftMargin The grid's left margin in pixels.
+   * @property {number} topMargin The grid's top margin in pixels.
+   * @property {number} tileSide The length of each of the
+   *     grid's tiles' side in pixels. It must be positive.
+   *
+   * @param {MatchGridArgs} args An object that has
+   *     information about the grid being created.
+   */
+  constructor(args) {
+    //TODO: replace arrays but the not yet implemented fixed length arrays
+    args.canvas = document.getElementById('formation-editor-tiles-canvas');
+    super(args);
+  }
+}
+
+window.addEventListener(
+  'load',
+  () => MatchGrid.prototype.relatedTileClass = MatchTile
+);

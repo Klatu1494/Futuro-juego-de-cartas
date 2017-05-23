@@ -14,8 +14,6 @@ class Tile {
    * @property {TileCoordinates} coordinates This tile
    *     coordinates, relative to the grid it belongs to.
    * @property {Grid} grid The grid that the tile belongs to.
-   * @property {Unit} unit The unit that the 
-   *     tile is containing. Defaults to null.
    * 
    * @param {TileArgs} args An object that has
    *     information about the tile being created.
@@ -23,11 +21,9 @@ class Tile {
   constructor(args) {
     var {
       grid,
-      unit = null,
       coordinates
     } = args;
-    if (grid instanceof Grid && (unit === null || unit instanceof Unit)) {
-      this.unit = unit;
+    if (grid instanceof Grid) {
       this.coordinates = coordinates;
       this.grid = grid;
       this.draw();
