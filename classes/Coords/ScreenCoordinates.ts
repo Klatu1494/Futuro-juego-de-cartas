@@ -1,11 +1,10 @@
 /**
  * Represents coordinates based on the screen
  */
-class ScreenCoordinates extends Coordinates {
-  constructor(x, y) {
+class ScreenCoordinates extends Coords {
+  constructor(x: number, y: number) {
     super(x, y);
   }
-
 
   /**
    * Converts screen coordinates to grid coordinates.

@@ -8,6 +8,8 @@
  * @class
  */
 class Tile {
+  coordinates: TileCoordinates;
+  grid: Grid;
   /**
    * Creates a tile
    * @typedef {Object} TileArgs
@@ -18,11 +20,9 @@ class Tile {
    * @param {TileArgs} args An object that has
    *     information about the tile being created.
    */
-  constructor(args) {
-    var {
-      grid,
-      coordinates
-    } = args;
+  constructor(
+    { grid, coordinates }: { grid: Grid, coordinates: TileCoordinates }
+  ) {
     if (grid instanceof Grid) {
       this.coordinates = coordinates;
       this.grid = grid;

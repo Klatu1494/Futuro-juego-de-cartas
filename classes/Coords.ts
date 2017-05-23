@@ -7,25 +7,30 @@
  * A 2D pair of coordinates.
  * @class
  */
-class Coordinates {
+class Coords { //can't be named Coordinates because of the TS Coordinates class
+  private _x: number;
+  private _y: number;
   /**
    * Creates a pair of coordinates.
    * @param {number} x The value of the first coordinate. It must be positive.
    * @param {number} y The value of the second coordinate. It must be positive.
    */
-  constructor(x, y) {
-    if (0 <= x && isFinite(x) && 0 <= y && isFinite(y)) {
-      this.x = x;
-      this.y = y;
-      this.args = arguments;
+  constructor(x: number, y: number) {
+    if (0 <= x && 0 <= y) {
+      this._x = x;
+      this._y = y;
     } else throw new Error();
   }
 
-  /**
-   * Clones and returns this coordinates
-   * @return {Coordinates} a copy of this coordinates
-   */
+  get x() {
+    return this._x;
+  };
+
+  get y() {
+    return this._y;
+  };
+
   clone() {
-    return new this.constructor(...this.args);
+    return Object.assign({}, this);
   }
 }

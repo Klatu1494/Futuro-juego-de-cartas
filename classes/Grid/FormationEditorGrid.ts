@@ -21,9 +21,10 @@ class FormationEditorGrid extends Grid {
    * @param {FormationEditorGridArgs} args An object that has
    *     information about the grid being created.
    */
-  constructor(args) {
-    //TODO: replace arrays but the not yet implemented fixed length arrays
-    args.canvas = document.getElementById('formation-editor-tiles-canvas');
+  constructor(
+    args: { width: number, height: number, tileSide: number, leftMargin: number, topMargin: number, canvas: HTMLCanvasElement }
+  ) {
+    args.canvas = <HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas');
     super(args);
   }
 
@@ -31,12 +32,7 @@ class FormationEditorGrid extends Grid {
    * Adds a tile to the grid in the specified position.
    * @param {FormationEditorTile} tile An object that has
    */
-  addTile(tile) {
+  addTile(tile: FormationEditorTile) {
     this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
   }
 }
-
-window.addEventListener(
-  'load',
-  () => FormationEditorGrid.prototype.relatedTileClass = FormationEditorTile
-);

@@ -8,6 +8,14 @@
  * @class
  */
 class Grid {
+  width: number;
+  height: number;
+  ctx: CanvasRenderingContext2D;
+  tileSide: number;
+  topMargin: number;
+  leftMargin: number;
+  tiles: Array<Array<Tile>>;
+  relatedTileClass: Function;
   /**
    * Creates a grid
    * @typedef {Object} GridArgs
@@ -23,16 +31,10 @@ class Grid {
    * @param {GridArgs} args An object that has
    *     information about the grid being created.
    */
-  constructor(args) {
+  constructor(
+    { width, height, canvas, tileSide, leftMargin, topMargin }: { width: number, height: number, canvas: HTMLCanvasElement, tileSide: number, leftMargin: number, topMargin: number }
+  ) {
     //TODO: replace arrays but the not yet implemented fixed length arrays
-    var {
-      width,
-      height,
-      canvas,
-      tileSide,
-      topMargin,
-      leftMargin
-    } = args;
     this.tiles = [];
     for (var i = 0; i < width; i++) this.tiles.push([]);
     this.width = width;
@@ -57,9 +59,7 @@ class Grid {
    * Adds a tile to the grid in the specified position.
    * @param {Tile} tile An object that has
    */
-  addTile(tile) {
-    if (tile instanceof this.relatedTileClass)
-      this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
-    else throw new Error();
+  addTile(tile: Tile) {
+    this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
   }
 }

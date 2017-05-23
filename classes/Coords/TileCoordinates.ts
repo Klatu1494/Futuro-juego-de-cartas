@@ -1,5 +1,7 @@
-class TileCoordinates extends Coordinates {
-  constructor(x, y, grid) {
+class TileCoordinates extends Coords {
+  grid: Grid;
+
+  constructor(x: number, y: number, grid: Grid) {
     super(x, y);
     if (grid instanceof Grid) {
       this.grid = grid;
