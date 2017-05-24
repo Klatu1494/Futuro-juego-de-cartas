@@ -31,10 +31,9 @@ class Coords { //can't be named Coordinates because of the TS Coordinates class
   }
 
   clone() {
-    var coordsBeingCloned = this;
-    var clone = Object.create(Object.getPrototypeOf(coordsBeingCloned));
-    var props = Object.getOwnPropertyNames(coordsBeingCloned);
-    props.forEach(function (key) {
+    var coordsBeingCloned: Coords = this;
+    var clone: Coords = Object.create(Object.getPrototypeOf(coordsBeingCloned));
+    Object.getOwnPropertyNames(coordsBeingCloned).forEach(function (key) {
       var desc = Object.getOwnPropertyDescriptor(coordsBeingCloned, key);
       Object.defineProperty(clone, key, desc);
     });

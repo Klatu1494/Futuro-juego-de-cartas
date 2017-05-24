@@ -9,9 +9,12 @@ class TileCoordinates extends Coords {
   }
 
   toScreen() {
-    var grid = this.grid;
+    var grid: Grid = this.grid;
     return new Square(
-      new ScreenCoordinates(grid.leftMargin + this.x * grid.tileSide, grid.topMargin + this.y * grid.tileSide),
+      new ScreenCoordinates(
+        grid.leftMargin + this.x * grid.tileSide,
+        grid.topMargin + this.y * grid.tileSide
+      ),
       grid.tileSide
     );
   }
