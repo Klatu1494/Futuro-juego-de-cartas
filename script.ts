@@ -1,77 +1,68 @@
-window.addEventListener('load', async function() {
-  const ACTIONS = new Set().
-  add({
-    name: 'First action',
-    onUse: () => {
+window.addEventListener('load', async function () {
+  var CARD_TYPES: Set<Card> = new Set().
+    add(new Card({
+      name: 'First action',
+      onUse: () => {
 
-    }
-  }).
-  add({
-    name: 'Second action',
-    onUse: () => {
+      }
+    })).
+    add(new Card({
+      name: 'Second action',
+      onUse: () => {
 
-    }
-  });
-  const AI = 'AI';
-  const FIRST_COLOR = 'blue';
-  const FORMATION_ROWS = 2;
-  const HEIGHT = 600;
-  const HUMAN = 'human';
-  const SECOND_COLOR = 'red';
-  const TILE_BACKGROUND_COLOR = 'white';
-  const TILE_BORDER_COLOR = 'black';
-  const TILE_BORDER_WIDTH = 2;
-  const WIDTH = 800;
-  const UNIT_TYPES = new Set().
-  add(new UnitType({
-    name: 'Zombie',
-    imageSrc: 'images/shambling-zombie.png',
-    initialQuantity: 5
-  })).
-  add(new UnitType({
-    name: 'Farmer',
-    imageSrc: 'images/unit1.png',
-    initialQuantity: 5 //just testing
-  })).
-  add(new UnitType({
-    name: 'Warrior',
-    imageSrc: 'images/unit2.png',
-    initialQuantity: 5 //just testing
-  }));
-  const RADIAL_MENU_FRAMES = 20;
-  const RADIAL_MENU_ITEMS_SIZE = 0.75;
-  const FRAME_DURATION = 50 / 3;
-  //these constants must be declared after the previous ones
-  const HAND_POSITION = HEIGHT < WIDTH ? 'right' : 'bottom';
-  const HAND_HEIGHT_OR_WIDTH =
+      }
+    }));
+  var FIRST_COLOR: string = 'blue'; //:Color?
+  var FORMATION_ROWS: number = 2;
+  var HEIGHT: number = 600;
+  var SECOND_COLOR: string = 'red'; //:Color?
+  var TILE_BACKGROUND_COLOR: string = 'white'; //:Color?
+  var TILE_BORDER_COLOR: string = 'black'; //:Color?
+  var TILE_BORDER_WIDTH: number = 2;
+  var WIDTH: number = 800;
+  var UNIT_TYPES: Set<UnitType> = new Set().
+    add(new UnitType({
+      name: 'Zombie',
+      imageSrc: 'images/shambling-zombie.png',
+      initialQuantity: 5
+    })).
+    add(new UnitType({
+      name: 'Farmer',
+      imageSrc: 'images/unit1.png',
+      initialQuantity: 5 //just testing
+    })).
+    add(new UnitType({
+      name: 'Warrior',
+      imageSrc: 'images/unit2.png',
+      initialQuantity: 5 //just testing
+    }));
+  var RADIAL_MENU_FRAMES: number = 20;
+  var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
+  var FRAME_DURATION: number = 50 / 3;
+  //these variables must be declared after the previous ones
+  var HAND_POSITION: string = HEIGHT < WIDTH ? 'right' : 'bottom';
+  var HAND_HEIGHT_OR_WIDTH: number =
     HAND_POSITION === 'bottom' ?
-    HEIGHT - WIDTH :
-    WIDTH - HEIGHT;
-  const MULTIPLAYER_AVAILABLE_UNITS = new Map();
-  const LEVELS = [new Level({
+      HEIGHT - WIDTH :
+      WIDTH - HEIGHT;
+  var LEVELS: Array<Level> = [new Level({
     width: 3,
-    height: 5,
-    against: AI
+    height: 5
   })];
-  for (var unitType of UNIT_TYPES)
-    MULTIPLAYER_AVAILABLE_UNITS.set(unitType, Infinity);
   var
-    availableUnits,
-    currentResolver,
-    currentDeck,
-    currentPromise,
-    tileSide, // The length of any tile.
-    leftMargin, // Left margin of the grid relative to the canvas.
-    topMargin, // Top margin of the grid relative to the canvas.
-    firstPlayerTurn,
-    firstPlayer,
-    grid,
-    secondPlayer,
-    currentLevel,
-    currentDeckTemplate,
-    selectedTile,
-    levelWidth, // Level width in tiles.  
-    levelHeight; // Level height in tiles.
+    currentResolver: Function,
+    currentDeck: DeckTemplate,
+    currentDeckPromise: Promise<DeckTemplate>,
+    currentFormationPromise: Promise<Formation>,
+    firstPlayerTurn: boolean,
+    firstPlayer: Player,
+    grid: Grid,
+    secondPlayer: Player,
+    currentLevel: Level,
+    currentDeckTemplate: DeckTemplate,
+    selectedTile: Tile,
+    levelWidth: number, // Level width in tiles.  
+    levelHeight: number; // Level height in tiles.
 
   function createGrid(canvas, levelWidth, levelHeight) {
     var tileSide = Math.min(
@@ -95,26 +86,26 @@ window.addEventListener('load', async function() {
   }
 
   function show(id) {
-    for (var child of document.getElementById('game').children)
-      child.style.display = 'none';
+    var gameElements: HTMLCollection = document.querySelector('#game>*').children;
+    for (var i: number = gameElements.length - 1; 0 <= i; i--)
+      (<HTMLElement>gameElements[i]).style.display = 'none';
     document.getElementById(id).style.display = 'flex';
   }
-
   function getResolver(resolve) {
     currentResolver = resolve;
   }
 
   async function askForDeck() {
-    currentPromise = new Promise(getResolver);
-    await executeMenuFunction(async function() {
+    currentDeckPromise = new Promise(getResolver);
+    await executeMenuFunction(async function () {
       show('deck-editor');
     });
-    return currentPromise;
+    return currentDeckPromise;
   }
 
   async function askForFormation() {
-    currentPromise = new Promise(getResolver);
-    await executeMenuFunction(async function() {
+    currentFormationPromise = new Promise(getResolver);
+    await executeMenuFunction(async function () {
       createGrid(
         document.getElementById('formation-editor-tiles-canvas'),
         levelWidth,
@@ -122,12 +113,18 @@ window.addEventListener('load', async function() {
       );
       show('formation-editor');
     });
-    return currentPromise;
+    return currentFormationPromise;
   }
 
   async function newMatch(level) {
-    var action;
-    var pressedEscOnFirstAsk = false;
+    function keepLooping(): boolean {
+      return !(firstPlayer.formation !== null &&
+        firstPlayer.deckTemplate !== null &&
+        secondPlayer.formation !== null &&
+        secondPlayer.deckTemplate !== null)
+    }
+
+    var pressedEscOnFirstAsk: boolean = false;
     levelWidth = level.width;
     levelHeight = level.height;
     createGrid(
@@ -140,45 +137,67 @@ window.addEventListener('load', async function() {
     secondPlayer.deckTemplate = null;
     firstPlayer.formation = null;
     secondPlayer.formation = null;
-    if (level.against === HUMAN) {
-      availableUnits = MULTIPLAYER_AVAILABLE_UNITS;
-      while (!(
-          firstPlayer.formation && secondPlayer.formation ||
-          pressedEscOnFirstAsk)) {
-        action = await askForFormation();
-        if (action instanceof DeckTemplate)
-          firstPlayer.deckTemplate = action;
-        else pressedEscOnFirstAsk = true;
-        while (!(
-            firstPlayer.formation && secondPlayer.formation ||
-            pressedEscOnFirstAsk)) {
-          action = await askForFormation();
-          if (action instanceof DeckTemplate)
-            secondPlayer.deckTemplate = action;
-          else pressedEscOnFirstAsk = true;
+    if (secondPlayer instanceof HumanPlayer) {
+      while (keepLooping()) {
+        await askForFormation()
+          .then(formation => firstPlayer.formation = formation)
+          .catch(() => {
+            //volver al menu principal
+          });
+        while (keepLooping()) {
+          await askForFormation()
+            .then(formation => firstPlayer.formation = formation)
+            .catch(() => {
+              //volver a pedir la primera formación
+            });
+          while (keepLooping()) {
+            await askForFormation()
+              .then(formation => firstPlayer.formation = formation)
+              .catch(() => {
+                //volver a pedir el primer deck template
+              });
+            while (keepLooping()) {
+              await askForFormation()
+                .then(formation => firstPlayer.formation = formation)
+                .catch(() => {
+                  //volver a pedir la segunda formación
+                });
+            }
+          }
         }
       }
-    } else if (level.against === AI) {
-      availableUnits = firstPlayer.availableUnits;
-      while (!(
-          firstPlayer.formation && secondPlayer.formation ||
-          pressedEscOnFirstAsk)) {
-        action = await askForFormation();
-        if (action instanceof DeckTemplate)
-          firstPlayer.deckTemplate = action;
-        else pressedEscOnFirstAsk = true;
-        while (!(
-            firstPlayer.formation && secondPlayer.formation ||
-            pressedEscOnFirstAsk)) {
-          action = await askForDeck(action);
-          if (action instanceof DeckTemplate)
-            secondPlayer.deckTemplate = action;
-          else pressedEscOnFirstAsk = true;
+    } else if (secondPlayer instanceof AIPlayer) {
+      while (keepLooping()) {
+        await askForFormation()
+          .then(formation => firstPlayer.formation = formation)
+          .catch(() => {
+            //volver al menu principal
+          });
+        while (keepLooping()) {
+          await askForFormation()
+            .then(formation => firstPlayer.formation = formation)
+            .catch(() => {
+              //volver a pedir la primera formación
+            });
+          while (keepLooping()) {
+            await askForFormation()
+              .then(formation => firstPlayer.formation = formation)
+              .catch(() => {
+                //volver a pedir el primer deck template
+              });
+            while (keepLooping()) {
+              await askForFormation()
+                .then(formation => firstPlayer.formation = formation)
+                .catch(() => {
+                  //volver a pedir la segunda formación
+                });
+            }
+          }
         }
       }
     } else throw new Error();
-    firstPlayer.startGame(level.height - 1, 1);
-    firstPlayer.startGame(0, -1);
+    firstPlayer.startGame();
+    firstPlayer.startGame();
   }
 
   async function executeMenuFunction(asyncFunc) {
@@ -211,24 +230,26 @@ window.addEventListener('load', async function() {
   document.getElementById('loading-screen').style.height = HEIGHT + 'px';
   document.getElementById('loading-screen').style.lineHeight = HEIGHT + 'px';
   document.getElementById('loading-screen').style.width = WIDTH + 'px';
-  await executeMenuFunction(async function() {
+  await executeMenuFunction(async function () {
     //load unit images
     var promises = new Set();
     for (var unitType of UNIT_TYPES) promises.add(loadImage(unitType));
     //set the HTML constants-dependent style
     var boardHeight =
       HAND_POSITION === 'bottom' ?
-      HEIGHT - HAND_HEIGHT_OR_WIDTH :
-      HEIGHT;
+        HEIGHT - HAND_HEIGHT_OR_WIDTH :
+        HEIGHT;
     var boardStyle = document.getElementById('board').style;
     var boardWidth = HAND_POSITION === 'bottom' ? WIDTH :
       WIDTH -
       HAND_HEIGHT_OR_WIDTH;
     var gameStyle = document.getElementById('game').style;
     var handStyle = document.getElementById('hand').style;
-    var gameCanvas = document.getElementById('game-tiles-canvas');
+    var gameCanvas = <HTMLCanvasElement>document.getElementById(
+      'game-tiles-canvas'
+    );
     var gameCtx = gameCanvas.getContext('2d');
-    var formationEditorCanvas = document.getElementById(
+    var formationEditorCanvas = <HTMLCanvasElement>document.getElementById(
       'formation-editor-tiles-canvas'
     );
     var formationEditorCtx = formationEditorCanvas.getContext('2d');
@@ -240,13 +261,13 @@ window.addEventListener('load', async function() {
     gameStyle.width = WIDTH + 'px';
     handStyle.height = (
       HAND_POSITION === 'bottom' ?
-      HAND_HEIGHT_OR_WIDTH :
-      HEIGHT
+        HAND_HEIGHT_OR_WIDTH :
+        HEIGHT
     ) + 'px';
     handStyle.width = (
       HAND_POSITION === 'bottom' ?
-      WIDTH :
-      HAND_HEIGHT_OR_WIDTH
+        WIDTH :
+        HAND_HEIGHT_OR_WIDTH
     ) + 'px';
     gameCanvas.height = boardHeight;
     gameCanvas.width = boardWidth;
@@ -258,37 +279,20 @@ window.addEventListener('load', async function() {
     formationEditorCtx.fillStyle = TILE_BACKGROUND_COLOR;
     formationEditorCtx.strokeStyle = TILE_BORDER_COLOR;
     formationEditorCtx.lineWidth = TILE_BORDER_WIDTH;
-    //create remaining HTML elements
-    for (var action of ACTIONS) {
-      var div = document.createElement('div');
-      var addButton = document.createElement('div');
-      var takeOutButton = document.createElement('div');
-      var func = action.onplay;
-      addButton.className = 'add';
-      takeOutButton.className = 'take-out';
-      div.appendChild(document.createTextNode(action.name));
-      div.appendChild(addButton);
-      div.appendChild(takeOutButton);
-      div.className = 'action';
-      addButton.addEventListener('click', function() {
-        currentDeckTemplate.set(func, currentDeckTemplate.get(func))
-      });
-      cardAdder.appendChild(div);
-    }
     //add event listeners
     document.getElementById('play-button').addEventListener(
       'click',
-      async function() {
-        await executeMenuFunction(async function() {
+      async function () {
+        await executeMenuFunction(async function () {
           await newMatch(LEVELS[currentLevel]);
           show('play-mode');
         });
       });
     document.getElementById('deck-editor-button').addEventListener(
       'click',
-      async function() {
-        await executeMenuFunction(async function() {
-          currentResolver(currentDeck);
+      async function () {
+        await executeMenuFunction(async function () {
+          currentResolver(currentDeckTemplate);
         });
       });
     document.getElementById('formation-editor-tiles-canvas').addEventListener(
@@ -309,7 +313,7 @@ window.addEventListener('load', async function() {
         var centerX = center.x;
         var centerY = center.y;
         var tileSide = grid.tileSide;
-        var unitTypesBeingShown = [];
+        var unitTypesBeingShown: Array<UnitType> = [];
         for (var unitType of UNIT_TYPES)
           if (unitType.availableUnits) {
             unitTypesBeingShown.push(unitType);
@@ -333,40 +337,40 @@ window.addEventListener('load', async function() {
         for (var i = 0; i < length; i++) {
           var style = unitTypesBeingShown[i].element.style;
           style.transition = 'all 0.3s linear';
-          style.left = centerX - itemRadius / 2 + (
+          style.left = (centerX - itemRadius / 2 + (
             length === 1 ?
-            '0' :
-            Math.sin(i * TWO_PI / length) * polygonRadius
-          ) + 'px';
-          style.top = centerY - itemRadius / 2 - (
+              0 :
+              Math.sin(i * TWO_PI / length) * polygonRadius
+          )) + 'px';
+          style.top = (centerY - itemRadius / 2 - (
             length === 1 ?
-            '0' :
-            Math.cos(i * TWO_PI / length) * polygonRadius
-          ) + 'px';
+              0 :
+              Math.cos(i * TWO_PI / length) * polygonRadius
+          )) + 'px';
           style.width = itemRadius + 'px';
           style.height = itemRadius + 'px';
         }
       });
     //if it is the first time the user opens the game or
     //the user deleted the save file, create a save file
-    var savedGame = window.localStorage.getItem('savedGame');
+    var savedGame = localStorage.getItem('savedGame');
     if (!savedGame) {
-      window.localStorage.setItem('currentLevel', JSON.stringify(0));
-      window.localStorage.setItem('availableUnits', JSON.stringify([]));
-      window.localStorage.setItem('savedGame', JSON.stringify(true));
+      localStorage.setItem('currentLevel', JSON.stringify(0));
+      localStorage.setItem('availableUnits', JSON.stringify([]));
+      localStorage.setItem('savedGame', JSON.stringify(true));
     }
     //load the save file
-    var currentLevel = JSON.parse(window.localStorage.getItem('currentLevel'));
+    var currentLevel = JSON.parse(localStorage.getItem('currentLevel'));
     var availableUnits = JSON.parse(
-      window.localStorage.getItem('availableUnits')
+      localStorage.getItem('availableUnits')
     );
     //create the first player
-    firstPlayer = new Player({
-      controller: HUMAN,
+    firstPlayer = new HumanPlayer({
+      name: 'Karv',
       color: FIRST_COLOR
     });
-    secondPlayer = new Player({
-      controller: null,
+    secondPlayer = new HumanPlayer({
+      name: 'Klatu',
       color: SECOND_COLOR
     });
     //assign images to unit types

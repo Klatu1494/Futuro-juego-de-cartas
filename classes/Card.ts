@@ -11,4 +11,7 @@
  */
 class Card {
   // TODO
+  constructor({ name, onUse = () => { } }: { name: string, onUse: Function }) {
+
+  }
 }

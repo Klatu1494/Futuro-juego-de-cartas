@@ -14,8 +14,8 @@ class DeckTemplate {
    * Creates a new deck template.
    * @param {Array<Card>} Cards cards for the template.
    */
-  constructor(cards: Card[] = []) {
-    this._cards = new Array<Card>(cards);
+  constructor(cards: Array<Card> = []) {
+    this._cards = [...cards];
   }
 
   /**

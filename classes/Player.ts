@@ -9,9 +9,10 @@
  */
 abstract class Player {
   readonly color: string;
+  readonly name: string;
   private _deckTemplate: DeckTemplate;
-  private _controller: any;
-  private _deck: Array<Card>
+  private _deck: Array<Card>;
+  formation: Formation;
   /**
    * Creates a player
    * @typedef {Object} PlayerArgs
@@ -22,13 +23,13 @@ abstract class Player {
    * @param {PlayerArgs} args An object that has
    *     information about the player being created.
    */
-  constructor(args) {
+  constructor(args: { color: string, name: string }) {
     var {
       color,
-      controller
+      name
     } = args;
     this.color = color;
-    this._controller = controller;
+    this.name = name;
     this._deckTemplate = JSON.parse(localStorage.getItem('deck'));
   }
 
