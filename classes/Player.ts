@@ -5,9 +5,13 @@
 
 /**
  * A player.
- * @class
+ * @interface
  */
-class Player {
+abstract class Player {
+  readonly color: string;
+  private _deckTemplate: DeckTemplate;
+  private _controller: any;
+  private _deck: Array<Card>
   /**
    * Creates a player
    * @typedef {Object} PlayerArgs
@@ -34,10 +38,10 @@ class Player {
    */
   startGame() {
     //TODO: replace the array for a deck (when it is implemented)
-    this.deck = [];
+    this._deck = new Array<Card>();
     for (var cardType in this.deckTemplate)
       for (var i = 0; i < this.deckTemplate[cardType]; i++)
-        this.deck.push(cardType);
+        this._deck.push(cardType);
   }
 
   /**
