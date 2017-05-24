@@ -9,7 +9,7 @@
  */
 
 class DeckTemplate {
-  private readonly _cards: Array<Card>
+  private readonly _cards: ReadonlyArray<Card>
   /**
    * Creates a new deck template.
    * @param {Array<Card>} Cards cards for the template.

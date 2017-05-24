@@ -22,11 +22,11 @@ class Coords { //can't be named Coordinates because of the TS Coordinates class
     } else throw new Error();
   }
 
-  get x() {
+  get x(): number {
     return this._x;
   }
 
-  get y() {
+  get y(): number {
     return this._y;
   }
 

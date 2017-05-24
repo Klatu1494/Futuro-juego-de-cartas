@@ -49,11 +49,11 @@ abstract class Player {
    * Gets or sets and saves this player's deck template.
    * @type {DeckTemplate}
    */
-  get deckTemplate() {
+  get deckTemplate(): DeckTemplate {
     return this._deckTemplate;
   }
   set deckTemplate(value) {
-    window.localStorage.setItem(this.color + 'Deck', JSON.stringify(value));
+    localStorage.setItem(this.color + 'Deck', JSON.stringify(value));
     this._deckTemplate = value;
   }
 }
