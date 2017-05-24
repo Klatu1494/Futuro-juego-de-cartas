@@ -23,7 +23,7 @@ class Level {
    *     information about the level being created.
    */
   constructor(
-    { width, height, content = { unitType: null } }: { width: number, height: number, content?: { unitType: UnitType } }
+    { width, height }: { width: number, height: number }
   ) {
     this.width = width;
     this.height = height;
