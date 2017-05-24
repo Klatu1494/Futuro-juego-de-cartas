@@ -21,8 +21,9 @@ class FormationEditorTile extends Tile {
    * @param {FormationEditorTileArgs} args An object that has
    *     information about the tile being created.
    */
-  constructor(tileArgs: TileArguments, content: { unitType: UnitType }) {
+  constructor(tileArgs: TileArguments, content?: { unitType: UnitType }) {
     super(tileArgs);
+    content = content || { unitType: null };
     //I should destruct args when it more parameters (if it ever happens)
     this.unitType = content.unitType;
   }

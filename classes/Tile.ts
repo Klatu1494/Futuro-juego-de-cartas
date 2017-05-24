@@ -20,14 +20,11 @@ class Tile {
    * @param {TileArgs} args An object that has
    *     information about the tile being created.
    */
-  constructor(
-    { grid, coordinates }: { grid: Grid, coordinates: TileCoordinates }
-  ) {
-    if (grid instanceof Grid) {
-      this.coordinates = coordinates;
-      this.grid = grid;
-      this.draw();
-    } else throw new Error();
+  constructor(args: TileArguments) {
+    var { grid, coordinates } = args;
+    this.coordinates = coordinates;
+    this.grid = grid;
+    this.draw();
   }
 
   draw() {
