@@ -1,6 +1,7 @@
 body,
 html {
   margin: 0;
+  background-color: black;
 }
 
 #loading-screen {
@@ -93,5 +94,7 @@ canvas {
 .unit-type {
   border-radius: 50%;
   position: absolute;
+  top: 0;
+  left: 0;
   visibility: hidden;
 }

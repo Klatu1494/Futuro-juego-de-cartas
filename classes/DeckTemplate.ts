@@ -7,19 +7,27 @@
  * @class
  * @summary A template used to create the decks for each match.
  */
+
 class DeckTemplate {
+  private readonly _cards: ReadonlyArray<Card>
   /**
-   * Creates a deck template
+   * Creates a new deck template.
+   * @param {Array<Card>} Cards cards for the template.
    */
-  constructor() {
-    this.cards = [];
+  constructor(cards: Array<Card> = []) {
+    this._cards = [...cards];
   }
+
+  /**
+   * Gets the cards of the deck
+   */
+  get cards(): ReadonlyArray<Card> { return this._cards; }
 
   /**
    * Determines whether the deck template is empty.
    * @return {boolean} Whether the deck template is empty.
    */
-  empty() {
-    return !this.cards.length;
+  isEmpty() {
+    return !this._cards.length;
   }
 }

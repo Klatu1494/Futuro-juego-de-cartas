@@ -1,23 +1,22 @@
 /**
  * Represents coordinates based on the screen
  */
-class ScreenCoordinates extends Coordinates {
-  constructor(x, y) {
+class ScreenCoordinates extends Coords {
+  constructor(x: number, y: number) {
     super(x, y);
   }
-
 
   /**
    * Converts screen coordinates to grid coordinates.
    * @param {Grid} grid Grid used to transform the coordinates.
    * @return {TileCoordinates}
    */
-  toGrid(grid) {
-    var leftMargin = grid.leftMargin;
-    var topMargin = grid.topMargin;
-    var tileSide = grid.tileSide;
-    var gridX = Math.floor((this.x - leftMargin) / tileSide);
-    var gridY = Math.floor((this.y - topMargin) / tileSide);
+  toGrid(grid: Grid) {
+    var leftMargin: number = grid.leftMargin;
+    var topMargin: number = grid.topMargin;
+    var tileSide: number = grid.tileSide;
+    var gridX: number = Math.floor((this.x - leftMargin) / tileSide);
+    var gridY: number = Math.floor((this.y - topMargin) / tileSide);
 
     return new TileCoordinates(gridX, gridY, grid);
   }
@@ -27,15 +26,7 @@ class ScreenCoordinates extends Coordinates {
    * @param {Grid} grid Grid used to transform the coordinates.
    * @return {bool} true whenever this point can be assiged to a tile of the specified grid.
    */
-  isInsideGridArea(grid) {
+  isInsideGridArea(grid: Grid) {
     return grid.getGridArea().contains(this);
-  }
-
-  /**
-   * Clones and returns this coordinates
-   * @return {ScreenCoordinates} a copy of this coordinates
-   */
-  clone() {
-    return new ScreenCoordinates(this.x, this.y);
   }
 }

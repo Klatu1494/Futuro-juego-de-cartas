@@ -5,9 +5,14 @@
 
 /**
  * A player.
- * @class
+ * @interface
  */
-class Player {
+abstract class Player {
+  readonly color: string;
+  readonly name: string;
+  private _deckTemplate: DeckTemplate;
+  private _deck: Array<Card>;
+  formation: Formation;
   /**
    * Creates a player
    * @typedef {Object} PlayerArgs
@@ -18,13 +23,13 @@ class Player {
    * @param {PlayerArgs} args An object that has
    *     information about the player being created.
    */
-  constructor(args) {
+  constructor(args: { color: string, name: string }) {
     var {
       color,
-      controller
+      name
     } = args;
     this.color = color;
-    this._controller = controller;
+    this.name = name;
     this._deckTemplate = JSON.parse(localStorage.getItem('deck'));
   }
 
@@ -34,21 +39,20 @@ class Player {
    */
   startGame() {
     //TODO: replace the array for a deck (when it is implemented)
-    this.deck = [];
-    for (var cardType in this.deckTemplate)
-      for (var i = 0; i < this.deckTemplate[cardType]; i++)
-        this.deck.push(cardType);
+    this._deck = new Array<Card>();
+    for (var card of this.deckTemplate.cards)
+      this._deck.push(card);
   }
 
   /**
    * Gets or sets and saves this player's deck template.
    * @type {DeckTemplate}
    */
-  get deckTemplate() {
+  get deckTemplate(): DeckTemplate {
     return this._deckTemplate;
   }
   set deckTemplate(value) {
-    window.localStorage.setItem(this.color + 'Deck', JSON.stringify(value));
+    localStorage.setItem(this.color + 'Deck', JSON.stringify(value));
     this._deckTemplate = value;
   }
 }

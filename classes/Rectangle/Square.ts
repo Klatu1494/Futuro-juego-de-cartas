@@ -14,7 +14,7 @@ class Square extends Rectangle {
    * @param {Coordinates} topLeftCoordinates Top-left coordinates
    * @param {number} sideLength Length of any side
    */
-  constructor(topLeftCoordinates, sideLength) {
+  constructor(topLeftCoordinates: Coords, sideLength: number) {
     super(topLeftCoordinates, sideLength, sideLength)
   }
 }

@@ -14,3 +14,4 @@ This section contains a list about technical required game's features, unimpleme
 	* Rename the game.
 * Basic structures
 	* **Square** class: Although the class is mutable, it should not the threaded as if it were; currently changing values may lead to an inconsistent state.
+	* **Formation** class.
