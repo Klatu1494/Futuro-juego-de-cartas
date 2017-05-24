@@ -25,6 +25,5 @@ class FormationEditorTile extends Tile {
     super(tileArgs);
     //I should destruct args when it more parameters (if it ever happens)
     this.unitType = content.unitType;
-    this.draw();
   }
 }
