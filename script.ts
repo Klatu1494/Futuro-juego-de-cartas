@@ -40,16 +40,17 @@ window.addEventListener('load', async function () {
   var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
   var FRAME_DURATION: number = 50 / 3;
   //these variables must be declared after the previous ones
-  var CANVAS_SIDE = Math.min(WIDTH, HEIGHT);
+  var CANVAS_SIDE: number = Math.min(WIDTH, HEIGHT);
   var HAND_POSITION: string = HEIGHT < WIDTH ? 'right' : 'bottom';
   var HAND_HEIGHT_OR_WIDTH: number =
     HAND_POSITION === 'bottom' ?
       HEIGHT - WIDTH :
       WIDTH - HEIGHT;
-  var LEVELS: Array<Level> = [new Level({
+  var LEVELS: ReadonlyArray<Level> = [new Level({
     width: 3,
     height: 5
   })];
+
   var
     currentResolver: Function,
     currentDeck: DeckTemplate,
@@ -65,26 +66,46 @@ window.addEventListener('load', async function () {
     levelWidth: number, // Level width in tiles.  
     levelHeight: number; // Level height in tiles.
 
-  function createGrid(
-    canvas: HTMLCanvasElement,
+  function createFormationEditorGrid(
+    levelWidth: number,
+  ) {
+    var tileSide: number = Math.min(
+      CANVAS_SIDE / levelWidth,
+      CANVAS_SIDE / FORMATION_ROWS
+    );
+    grid = new FormationEditorGrid(new NoCanvasGridArguments({
+      width: levelWidth,
+      height: FORMATION_ROWS,
+      tileSide: tileSide,
+      leftMargin: (CANVAS_SIDE - tileSide * levelWidth) / 2,
+      topMargin: (CANVAS_SIDE - tileSide * FORMATION_ROWS) / 2
+    }));
+    for (var i: number = 0; i < levelWidth; i++)
+      for (var j: number = 0; j < FORMATION_ROWS; j++)
+        grid.addTile(new FormationEditorTile({
+          grid: grid,
+          coordinates: new TileCoordinates(i, j, grid)
+        }));
+  }
+
+  function createMatchGrid(
     levelWidth: number,
     levelHeight: number
   ) {
-    var tileSide = Math.min(
+    var tileSide: number = Math.min(
       CANVAS_SIDE / levelWidth,
       CANVAS_SIDE / levelHeight
     );
-    grid = new Grid({
-      canvas: canvas,
+    grid = new MatchGrid(new NoCanvasGridArguments({
       width: levelWidth,
       height: levelHeight,
       tileSide: tileSide,
       leftMargin: (CANVAS_SIDE - tileSide * levelWidth) / 2,
       topMargin: (CANVAS_SIDE - tileSide * levelHeight) / 2
-    });
-    for (var i = 0; i < levelWidth; i++)
-      for (var j = 0; j < levelHeight; j++)
-        grid.addTile(new Tile({
+    }));
+    for (var i: number = 0; i < levelWidth; i++)
+      for (var j: number = 0; j < levelHeight; j++)
+        grid.addTile(new MatchTile({
           grid: grid,
           coordinates: new TileCoordinates(i, j, grid)
         }));
@@ -111,11 +132,7 @@ window.addEventListener('load', async function () {
   async function askForFormation() {
     currentFormationPromise = new Promise(getResolver);
     await executeMenuFunction(async function () {
-      createGrid(
-        <HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas'),
-        levelWidth,
-        FORMATION_ROWS
-      );
+      createFormationEditorGrid(levelWidth);
       show('formation-editor');
     });
     return currentFormationPromise;
@@ -132,8 +149,7 @@ window.addEventListener('load', async function () {
     var pressedEscOnFirstAsk: boolean = false;
     levelWidth = level.width;
     levelHeight = level.height;
-    createGrid(
-      <HTMLCanvasElement>document.getElementById('game-tiles-canvas'),
+    createMatchGrid(
       levelWidth,
       levelHeight
     );
