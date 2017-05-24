@@ -21,11 +21,9 @@ class FormationEditorGrid extends Grid {
    * @param {FormationEditorGridArgs} args An object that has
    *     information about the grid being created.
    */
-  constructor(
-    args: { width: number, height: number, tileSide: number, leftMargin: number, topMargin: number, canvas: HTMLCanvasElement }
-  ) {
-    args.canvas = <HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas');
-    super(args);
+  constructor(args: NoCanvasGridArguments) {
+    var completeArgs: GridArguments = args.setCanvas(<HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas'));
+    super(completeArgs);
   }
 
   /**

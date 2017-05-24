@@ -8,6 +8,10 @@
  * @class
  */
 class Level {
+  width: number;
+  height: number;
+  units: Set<Unit>;
+
   /**
    * Creates a level
    * @typedef {Object} LevelArgs
@@ -28,6 +32,5 @@ class Level {
     this.width = width;
     this.height = height;
     this.units = new Set();
-    this.against = against;
   }
 }

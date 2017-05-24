@@ -18,23 +18,12 @@ class Grid {
   relatedTileClass: Function;
   /**
    * Creates a grid
-   * @typedef {Object} GridArgs
-   * @property {HTMLCanvasElement} canvas The canvas
-   *     element where the grid will be drawn.
-   * @property {number} height The grid's height in tiles. It must be positive.
-   * @property {number} width The grid's width in tiles. It must be positive.
-   * @property {number} leftMargin The grid's left margin in pixels.
-   * @property {number} topMargin The grid's top margin in pixels.
-   * @property {number} tileSide The length of each of the
-   *     grid's tiles' side in pixels. It must be positive.
-   *
-   * @param {GridArgs} args An object that has
+   * @param {GridArguments} args An object that has
    *     information about the grid being created.
    */
-  constructor(
-    { width, height, canvas, tileSide, leftMargin, topMargin }: { width: number, height: number, canvas: HTMLCanvasElement, tileSide: number, leftMargin: number, topMargin: number }
-  ) {
+  constructor(args: GridArguments) {
     //TODO: replace arrays but the not yet implemented fixed length arrays
+    var { width, height, canvas, tileSide, leftMargin, topMargin } = args;
     this.tiles = [];
     for (var i = 0; i < width; i++) this.tiles.push([]);
     this.width = width;

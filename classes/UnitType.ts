@@ -3,7 +3,9 @@ class UnitType {
   name: string;
   imageSrc: string;
   availableUnits: number;
-  constructor({ name, imageSrc, initialQuantity = 0 }: { name: string, imageSrc: string, initialQuantity: number }) {
+  constructor(
+    { name, imageSrc, initialQuantity = 0 }: { name: string, imageSrc: string, initialQuantity: number }
+  ) {
     var element = document.createElement('img');
     this.element = element;
     element.src = imageSrc;
