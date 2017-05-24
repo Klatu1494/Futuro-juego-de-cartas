@@ -15,7 +15,7 @@ class Rectangle {
    */
   constructor(topLeftCoordinates: Coords, horizontalSize: number, verticalSize: number) {
     if (0 < horizontalSize && 0 < verticalSize && isFinite(horizontalSize + verticalSize)) {
-      this.topLeft = topLeftCoordinates.clone() //in case that we want to modify coordinates1 later;
+      this.topLeft = topLeftCoordinates.clone() //in case that we want to modify topLeftCoordinates later;
       this.horizontalSize = horizontalSize;
       this.verticalSize = verticalSize;
       this.bottomRight = new Coords(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);

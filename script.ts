@@ -40,6 +40,7 @@ window.addEventListener('load', async function () {
   var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
   var FRAME_DURATION: number = 50 / 3;
   //these variables must be declared after the previous ones
+  var CANVAS_SIDE = Math.min(WIDTH, HEIGHT);
   var HAND_POSITION: string = HEIGHT < WIDTH ? 'right' : 'bottom';
   var HAND_HEIGHT_OR_WIDTH: number =
     HAND_POSITION === 'bottom' ?
@@ -66,16 +67,16 @@ window.addEventListener('load', async function () {
 
   function createGrid(canvas, levelWidth, levelHeight) {
     var tileSide = Math.min(
-      canvas.width / levelWidth,
-      canvas.height / levelHeight
+      CANVAS_SIDE / levelWidth,
+      CANVAS_SIDE / levelHeight
     );
     grid = new Grid({
       canvas: canvas,
       width: levelWidth,
       height: levelHeight,
       tileSide: tileSide,
-      leftMargin: (canvas.width - tileSide * levelWidth) / 2,
-      topMargin: (canvas.height - tileSide * levelHeight) / 2
+      leftMargin: (CANVAS_SIDE - tileSide * levelWidth) / 2,
+      topMargin: (CANVAS_SIDE - tileSide * levelHeight) / 2
     });
     for (var i = 0; i < levelWidth; i++)
       for (var j = 0; j < levelHeight; j++)
@@ -86,7 +87,7 @@ window.addEventListener('load', async function () {
   }
 
   function show(id) {
-    var gameElements: HTMLCollection = document.querySelector('#game>*').children;
+    var gameElements: HTMLCollection = document.getElementById('game').children;
     for (var i: number = gameElements.length - 1; 0 <= i; i--)
       (<HTMLElement>gameElements[i]).style.display = 'none';
     document.getElementById(id).style.display = 'flex';

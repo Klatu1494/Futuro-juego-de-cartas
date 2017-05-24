@@ -24,13 +24,20 @@ class Coords { //can't be named Coordinates because of the TS Coordinates class
 
   get x() {
     return this._x;
-  };
+  }
 
   get y() {
     return this._y;
-  };
+  }
 
   clone() {
-    return Object.assign({}, this);
+    var coordsBeingCloned = this;
+    var clone = Object.create(Object.getPrototypeOf(coordsBeingCloned));
+    var props = Object.getOwnPropertyNames(coordsBeingCloned);
+    props.forEach(function (key) {
+      var desc = Object.getOwnPropertyDescriptor(coordsBeingCloned, key);
+      Object.defineProperty(clone, key, desc);
+    });
+    return clone;
   }
 }
