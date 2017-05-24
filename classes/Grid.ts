@@ -40,7 +40,7 @@ class Grid {
    * @return Rectangle
    */
   getGridArea() {
-    var topleft = new ScreenCoordinates(this.leftMargin, this.topMargin);
+    var topleft: ScreenCoordinates = new ScreenCoordinates(this.leftMargin, this.topMargin);
     return new Rectangle(topleft, this.width * this.tileSide, this.height * this.tileSide);
   }
 
