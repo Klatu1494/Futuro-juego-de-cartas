@@ -48,9 +48,6 @@ class Grid {
      * @param {Tile} tile An object that has
      */
     addTile(tile) {
-        if (tile instanceof this.relatedTileClass)
-            this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
-        else
-            throw new Error();
+        this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
     }
 }

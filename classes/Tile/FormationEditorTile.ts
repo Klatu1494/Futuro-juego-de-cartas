@@ -4,10 +4,11 @@
  */
 
 /**
- * A class.
+ * A tile that belongs to the formation editor grid.
  * @class
  */
 class FormationEditorTile extends Tile {
+  unitType: UnitType;
   /**
    * Creates a tile that will belong to the formation editor grid
    * @typedef {Object} FormationEditorTileArgs
@@ -20,12 +21,10 @@ class FormationEditorTile extends Tile {
    * @param {FormationEditorTileArgs} args An object that has
    *     information about the tile being created.
    */
-  constructor(args) {
-    if (grid instanceof Grid && (unit === null || unit instanceof UnitType)) {
-      super(args);
-      //I should destruct args when it more parameters (if it ever happens)
-      this.unitType = args.unitType;
-      this.draw();
-    } else throw new Error();
+  constructor(tileArgs: TileArguments, content: { unitType: UnitType }) {
+    super(tileArgs);
+    //I should destruct args when it more parameters (if it ever happens)
+    this.unitType = content.unitType;
+    this.draw();
   }
 }

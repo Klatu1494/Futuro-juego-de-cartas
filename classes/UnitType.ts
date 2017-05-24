@@ -1,10 +1,9 @@
 class UnitType {
-  constructor(args) {
-    var {
-      name,
-      imageSrc,
-      initialQuantity = 0
-    } = args;
+  element: HTMLImageElement;
+  name: string;
+  imageSrc: string;
+  availableUnits: number;
+  constructor({ name, imageSrc, initialQuantity = 0 }: { name: string, imageSrc: string, initialQuantity: number }) {
     var element = document.createElement('img');
     this.element = element;
     element.src = imageSrc;
