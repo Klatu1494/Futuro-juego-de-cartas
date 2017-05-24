@@ -3,7 +3,8 @@
     "target": "es2015",
     "outDir": "compiled/",
     "rootDir": "./",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "noImplicitAny": true
   },
   "include": [
     "**/*"

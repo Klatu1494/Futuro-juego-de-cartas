@@ -40,9 +40,8 @@ abstract class Player {
   startGame() {
     //TODO: replace the array for a deck (when it is implemented)
     this._deck = new Array<Card>();
-    for (var cardType in this.deckTemplate)
-      for (var i = 0; i < this.deckTemplate[cardType]; i++)
-        this._deck.push(cardType);
+    for (var card of this.deckTemplate.cards)
+      this._deck.push(card);
   }
 
   /**

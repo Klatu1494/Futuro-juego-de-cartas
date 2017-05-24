@@ -65,7 +65,11 @@ window.addEventListener('load', async function () {
     levelWidth: number, // Level width in tiles.  
     levelHeight: number; // Level height in tiles.
 
-  function createGrid(canvas, levelWidth, levelHeight) {
+  function createGrid(
+    canvas: HTMLCanvasElement,
+    levelWidth: number,
+    levelHeight: number
+  ) {
     var tileSide = Math.min(
       CANVAS_SIDE / levelWidth,
       CANVAS_SIDE / levelHeight
@@ -86,13 +90,13 @@ window.addEventListener('load', async function () {
         }));
   }
 
-  function show(id) {
+  function show(id: string) {
     var gameElements: HTMLCollection = document.getElementById('game').children;
     for (var i: number = gameElements.length - 1; 0 <= i; i--)
       (<HTMLElement>gameElements[i]).style.display = 'none';
     document.getElementById(id).style.display = 'flex';
   }
-  function getResolver(resolve) {
+  function getResolver(resolve: Function) {
     currentResolver = resolve;
   }
 
@@ -108,7 +112,7 @@ window.addEventListener('load', async function () {
     currentFormationPromise = new Promise(getResolver);
     await executeMenuFunction(async function () {
       createGrid(
-        document.getElementById('formation-editor-tiles-canvas'),
+        <HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas'),
         levelWidth,
         FORMATION_ROWS
       );
@@ -117,7 +121,7 @@ window.addEventListener('load', async function () {
     return currentFormationPromise;
   }
 
-  async function newMatch(level) {
+  async function newMatch(level: Level) {
     function keepLooping(): boolean {
       return !(firstPlayer.formation !== null &&
         firstPlayer.deckTemplate !== null &&
@@ -129,7 +133,7 @@ window.addEventListener('load', async function () {
     levelWidth = level.width;
     levelHeight = level.height;
     createGrid(
-      document.getElementById('game-tiles-canvas'),
+      <HTMLCanvasElement>document.getElementById('game-tiles-canvas'),
       levelWidth,
       levelHeight
     );
@@ -201,7 +205,7 @@ window.addEventListener('load', async function () {
     firstPlayer.startGame();
   }
 
-  async function executeMenuFunction(asyncFunc) {
+  async function executeMenuFunction(asyncFunc: Function) {
     document.getElementById('game').style.display = 'none';
     document.getElementById('loading-screen').style.display = 'block';
     await asyncFunc();
@@ -209,32 +213,10 @@ window.addEventListener('load', async function () {
     document.getElementById('game').style.display = 'block';
   }
 
-  function loadImage(unitType) {
-    return new Promise(resolve => {
-      var image = document.createElement('img');
-      image.src = unitType.imageSrc;
-      image.addEventListener('load', () => resolve({
-        unitType: unitType,
-        image: image
-      }));
-    });
-  }
-
-  async function assignImages(promises) {
-    var object;
-    for (var promise of promises) {
-      object = await promise;
-      object.unitType.image = object.image;
-    }
-  }
-
   document.getElementById('loading-screen').style.height = HEIGHT + 'px';
   document.getElementById('loading-screen').style.lineHeight = HEIGHT + 'px';
   document.getElementById('loading-screen').style.width = WIDTH + 'px';
   await executeMenuFunction(async function () {
-    //load unit images
-    var promises = new Set();
-    for (var unitType of UNIT_TYPES) promises.add(loadImage(unitType));
     //set the HTML constants-dependent style
     var boardHeight =
       HAND_POSITION === 'bottom' ?
@@ -309,11 +291,11 @@ window.addEventListener('load', async function () {
         var selectedTileCoordinates = clickCoordinates.toGrid(grid);
         //TODO: split next line into multiple lines because it is too large
         selectedTile = grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
-        var selectedTileBoundingSquare = selectedTileCoordinates.toScreen();
-        var center = selectedTileBoundingSquare.center;
-        var centerX = center.x;
-        var centerY = center.y;
-        var tileSide = grid.tileSide;
+        var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
+        var center: Coords = selectedTileBoundingSquare.center;
+        var centerX: number = center.x;
+        var centerY: number = center.y;
+        var tileSide: number = grid.tileSide;
         var unitTypesBeingShown: Array<UnitType> = [];
         for (var unitType of UNIT_TYPES)
           if (unitType.availableUnits) {
@@ -325,7 +307,7 @@ window.addEventListener('load', async function () {
         itemRadius *= RADIAL_MENU_ITEMS_SIZE;
         //move items to the center of the radial menu
         for (var unitType of unitTypesBeingShown) {
-          var style = unitType.element.style;
+          var style = unitType.radialMenuItem.style;
           style.visibility = 'visible';
           style.transition = 'all 0s linear';
           style.left = centerX + 'px';
@@ -336,7 +318,7 @@ window.addEventListener('load', async function () {
         document.body.offsetLeft; //force reflow
         //move items away from the center
         for (var i = 0; i < length; i++) {
-          var style = unitTypesBeingShown[i].element.style;
+          var style = unitTypesBeingShown[i].radialMenuItem.style;
           style.transition = 'all 0.3s linear';
           style.left = (centerX - itemRadius / 2 + (
             length === 1 ?
@@ -374,7 +356,10 @@ window.addEventListener('load', async function () {
       name: 'Klatu',
       color: SECOND_COLOR
     });
-    //assign images to unit types
-    await assignImages(promises);
+    //wait until all the images have been loaded
+    var promises: Array<Promise<HTMLImageElement>> = [];
+    var unitType: UnitType;
+    for (unitType of UNIT_TYPES) promises.push(unitType.imageLoader);
+    await Promise.all(promises);
   });
 });

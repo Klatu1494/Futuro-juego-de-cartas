@@ -21,7 +21,7 @@ class MatchGrid extends Grid {
    * @param {MatchGridArgs} args An object that has
    *     information about the grid being created.
    */
-  constructor(args) {
+  constructor(args: NoCanvasGridArguments) {
     var completeArgs: GridArguments = args.setCanvas(<HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas'));
     super(completeArgs);
   }
