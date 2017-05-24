@@ -8,13 +8,6 @@
  * @summary A template used to create the decks for each match.
  */
 
-/**
- * Represents a card instance
- */
-class Card {
-  // Not implemented
-}
-
 class DeckTemplate {
   private readonly _cards: Array<Card>
   /**
