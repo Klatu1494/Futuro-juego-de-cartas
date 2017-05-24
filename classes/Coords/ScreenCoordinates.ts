@@ -27,6 +27,6 @@ class ScreenCoordinates extends Coords {
    * @return {bool} true whenever this point can be assiged to a tile of the specified grid.
    */
   isInsideGridArea(grid: Grid) {
-    return grid.getGridArea().contains(this);
+    return grid.getGridArea().containsProper(this);
   }
 }

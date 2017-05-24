@@ -56,7 +56,7 @@ class Rectangle {
   }
 
   /**
-   * Determines wheter a specified point is insite this square.
+   * Determines wheter a specified point is inside this rectangle.
    * This method includes the edge of the square.
    * @param {Coordinates} coordinates 
    * @return {bool} true when the specified point is inside the square.
@@ -66,5 +66,18 @@ class Rectangle {
       coordinates.x <= this.right &&
       this.top <= coordinates.y &&
       coordinates.y <= this.bottom;
+  }
+
+  /**
+   * Determines wheter a specified point is inside this rectangle.
+   * This method excludes the edge of the rectangle.
+   * @param {Coordinates} coordinates 
+   * @return {bool} true when the specified point is inside the rectangle.
+   */
+  containsProper(coordinates: Coords) {
+    return this.left < coordinates.x &&
+      coordinates.x < this.right &&
+      this.top < coordinates.y &&
+      coordinates.y < this.bottom;
   }
 }
