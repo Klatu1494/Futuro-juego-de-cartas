@@ -25,6 +25,5 @@ class MatchTile extends Tile {
     super(tileArgs);
     //I should destruct args when it more parameters (if it ever happens)
     this.unit = content.unit;
-    this.draw();
   }
 }

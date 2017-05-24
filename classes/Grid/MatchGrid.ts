@@ -22,13 +22,15 @@ class MatchGrid extends Grid {
    *     information about the grid being created.
    */
   constructor(args) {
-    //TODO: replace arrays but the not yet implemented fixed length arrays
-    args.canvas = document.getElementById('formation-editor-tiles-canvas');
-    super(args);
+    var completeArgs: GridArguments = args.setCanvas(<HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas'));
+    super(completeArgs);
+  }
+
+  /**
+   * Adds a tile to the grid in the specified position.
+   * @param {MatchTile} tile An object that has
+   */
+  addTile(tile: MatchTile) {
+    this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
   }
 }
-
-window.addEventListener(
-  'load',
-  () => MatchGrid.prototype.relatedTileClass = MatchTile
-);
