@@ -339,13 +339,12 @@ window.addEventListener('load', async function () {
       e => {
         var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
         var selectedTileCoordinates = clickCoordinates.toGrid(formationEditorGrid);
-        var isClickingSelectedTile: Boolean;
-        //TODO: split next line into multiple lines because it is too large
         if (selectedFormationEditorTile !== null) {
           if (selectedFormationEditorTile.coordinates.toScreen().contains(clickCoordinates)) return;
           hideRadialMenu();
         }
         if (clickCoordinates.isInsideGridArea(formationEditorGrid)) {
+          //TODO: split next line into multiple lines because it is too large
           selectedFormationEditorTile = formationEditorGrid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
           var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
           var center: Coords = selectedTileBoundingSquare.center;
@@ -388,6 +387,26 @@ window.addEventListener('load', async function () {
             style.width = itemRadius + 'px';
             style.height = itemRadius + 'px';
           }
+        }
+        else {
+          hideRadialMenu();
+          selectedFormationEditorTile = null;
+        }
+      }
+    );
+    document.getElementById('formation-editor').addEventListener(
+      'contextmenu',
+      e => {
+        e.preventDefault();
+        hideRadialMenu();
+        var clickedCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
+        if (clickedCoordinates.isInsideGridArea(formationEditorGrid)) {
+          var selectedTileCoordinates: TileCoordinates = clickedCoordinates.toGrid(formationEditorGrid);
+          //TODO: split next line into multiple lines because it is too large
+          var clickedTile: FormationEditorTile = formationEditorGrid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
+          selectedFormationEditorTile = null;
+          clickedTile.draw();
+          currentFormation.setUnitType(selectedFormationEditorTile.coordinates, null);
         }
         else {
           hideRadialMenu();
