@@ -70,10 +70,13 @@ window.addEventListener('load', async function () {
     levelHeight: number; // Level height in tiles.
 
   function setTileUnitType(event: MouseEvent) {
+    var selectedTileCoordinates = selectedFormationEditorTile.coordinates;
+    var currentUnitTypeInThisTile = currentFormation.unitTypes[selectedTileCoordinates.x][selectedTileCoordinates.y];
     hideRadialMenu();
+    if (currentUnitTypeInThisTile) currentUnitTypeInThisTile.availableUnits++;
     selectedFormationEditorTile.drawUnitType(this);
     this.availableUnits--;
-    currentFormation.setUnitType(selectedFormationEditorTile.coordinates, this);
+    currentFormation.setUnitType(selectedTileCoordinates, this);
   }
 
   function hideRadialMenu() {
