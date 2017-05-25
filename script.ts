@@ -1,12 +1,12 @@
 window.addEventListener('load', async function () {
-  var CARD_TYPES: Set<Card> = new Set().
-    add(new Card({
+  var CARD_TYPES: Set<CardType> = new Set().
+    add(new CardType({
       name: 'First action',
       onUse: () => {
 
       }
     })).
-    add(new Card({
+    add(new CardType({
       name: 'Second action',
       onUse: () => {
 
@@ -65,9 +65,7 @@ window.addEventListener('load', async function () {
     secondPlayer: Player,
     currentLevel: Level,
     currentDeckTemplate: DeckTemplate,
-    selectedFormationEditorTile: FormationEditorTile = null,
-    levelWidth: number, // Level width in tiles.  
-    levelHeight: number; // Level height in tiles.
+    selectedFormationEditorTile: FormationEditorTile = null;
 
   function setTileUnitType(event: MouseEvent) {
     hideRadialMenu();
@@ -141,7 +139,7 @@ window.addEventListener('load', async function () {
     currentResolver = resolve;
   }
 
-  async function askForDeck() {
+  async function askForDeck(formation: Formation) {
     currentDeckPromise = new Promise(getResolver);
     await executeMenuFunction(async function () {
       show('deck-editor');
@@ -149,7 +147,7 @@ window.addEventListener('load', async function () {
     return currentDeckPromise;
   }
 
-  async function askForFormation() {
+  async function askForFormation(levelWidth: number) {
     currentFormationPromise = new Promise(getResolver);
     await executeMenuFunction(async function () {
       createFormationEditorGrid(levelWidth);
@@ -167,12 +165,9 @@ window.addEventListener('load', async function () {
     }
 
     var pressedEscOnFirstAsk: boolean = false;
-    levelWidth = level.width;
-    levelHeight = level.height;
-    createMatchGrid(
-      levelWidth,
-      levelHeight
-    );
+    var levelWidth = level.width;
+    var levelHeight = level.height;
+    createMatchGrid(levelWidth, levelHeight);
     firstPlayerTurn = Boolean(Math.floor(Math.random() * 2));
     firstPlayer.deckTemplate = null;
     secondPlayer.deckTemplate = null;
@@ -181,26 +176,26 @@ window.addEventListener('load', async function () {
     if (secondPlayer instanceof HumanPlayer) {
       while (keepLooping()) {
         currentFormation = firstPlayer.formation;
-        await askForFormation()
+        await askForFormation(levelWidth)
           .then(formation => firstPlayer.formation = formation)
           .catch(() => {
             //volver al menu principal
           });
         while (keepLooping()) {
-          await askForDeck()
+          await askForDeck(firstPlayer.formation)
             .then(deckTemplate => firstPlayer.deckTemplate = deckTemplate)
             .catch(() => {
               //volver a pedir la primera formación
             });
           while (keepLooping()) {
             currentFormation = secondPlayer.formation;
-            await askForFormation()
+            await askForFormation(levelWidth)
               .then(formation => secondPlayer.formation = formation)
               .catch(() => {
                 //volver a pedir el primer deck template
               });
             while (keepLooping()) {
-              await askForDeck()
+              await askForDeck(secondPlayer.formation)
                 .then(deckTemplate => secondPlayer.deckTemplate = deckTemplate)
                 .catch(() => {
                   //volver a pedir la segunda formación
@@ -212,13 +207,13 @@ window.addEventListener('load', async function () {
     } else if (secondPlayer instanceof AIPlayer) {
       while (keepLooping()) {
         currentFormation = firstPlayer.formation;
-        await askForFormation()
+        await askForFormation(levelWidth)
           .then(formation => firstPlayer.formation = formation)
           .catch(() => {
             //volver al menu principal
           });
         while (keepLooping()) {
-          await askForDeck()
+          await askForDeck(firstPlayer.formation)
             .then(deckTemplate => firstPlayer.deckTemplate = deckTemplate)
             .catch(() => {
               //volver a pedir la primera formación
