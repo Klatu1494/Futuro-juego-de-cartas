@@ -35,11 +35,11 @@ class Formation {
      */
     getUsedUnits(unitType: UnitType): number {
         var counter: number = 0;
-        this.unitTypes.forEach(uTypeRow => {
-            uTypeRow.forEach(uType => {
-                if (uType == unitType) counter++;
-            });
-        });
+        for (var i = 0; i < this.unitTypes.length; i++) {
+            var row = this.unitTypes[i];
+            for (var j = 0; j < row.length; j++)
+                if (row[j] == unitType) counter++;
+        }
 
         return counter;
     }
