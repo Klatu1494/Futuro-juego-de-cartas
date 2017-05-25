@@ -4,8 +4,8 @@
  */
 
 /**
+ * A template used to create the decks for each match.
  * @class
- * @summary A template used to create the decks for each match.
  */
 
 class DeckTemplate {

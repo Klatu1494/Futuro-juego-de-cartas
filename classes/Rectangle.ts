@@ -1,5 +1,11 @@
 /**
- * Represents a rectangle
+ * @fileoverview Contains the Player class declaration and can
+ *     contain definitions of the class' prototype's properties.
+ */
+
+/**
+ * Represents a rectangle.
+ * @class
  */
 class Rectangle {
   private _topLeft: Coords;

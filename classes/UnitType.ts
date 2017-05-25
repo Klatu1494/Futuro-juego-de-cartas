@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Contains the Player class declaration and can
+ *     contain definitions of the class' prototype's properties.
+ */
+
+/**
+ * A unit type.
+ * @todo Comment constructor.
+ * @class
+ */
 class UnitType {
   private _radialMenuItem: HTMLImageElement;
   private _imageLoader: Promise<HTMLElement>;
