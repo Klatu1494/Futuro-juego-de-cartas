@@ -401,6 +401,7 @@ window.addEventListener('load', async function () {
       e => {
         e.preventDefault();
         hideRadialMenu();
+        selectedFormationEditorTile = null;
         var clickedCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
         if (clickedCoordinates.isInsideGridArea(formationEditorGrid)) {
           var selectedTileCoordinates: TileCoordinates = clickedCoordinates.toGrid(formationEditorGrid);
@@ -409,10 +410,6 @@ window.addEventListener('load', async function () {
           selectedFormationEditorTile = null;
           clickedTile.draw();
           currentFormation.setUnitType(selectedFormationEditorTile.coordinates, null);
-        }
-        else {
-          hideRadialMenu();
-          selectedFormationEditorTile = null;
         }
       }
     );
