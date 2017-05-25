@@ -17,7 +17,6 @@ class UnitType {
       image.src = imageSrc;
       document.body.appendChild(image);
       image.addEventListener('load', () => resolve(image));
-      image.addEventListener('click', () => self.availableUnits--);
     }).then((image: HTMLImageElement) => self.radialMenuItem = image);
     this.availableUnits = initialQuantity;
   }

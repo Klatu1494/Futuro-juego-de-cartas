@@ -8,6 +8,7 @@
  * @class
  */
 class FormationEditorGrid extends Grid {
+  tiles: Array<Array<FormationEditorTile>>;
   /**
    * Creates a grid
    * @typedef {Object} FormationEditorGridArgs

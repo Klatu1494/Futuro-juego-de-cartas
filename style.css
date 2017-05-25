@@ -97,4 +97,6 @@ canvas {
   top: 0;
   left: 0;
   visibility: hidden;
+  border: 2px solid white;
+  cursor: pointer;
 }

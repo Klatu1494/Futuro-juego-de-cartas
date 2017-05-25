@@ -19,6 +19,7 @@ window.addEventListener('load', async function () {
   var TILE_BACKGROUND_COLOR: string = 'white'; //:Color?
   var TILE_BORDER_COLOR: string = 'black'; //:Color?
   var TILE_BORDER_WIDTH: number = 2;
+  var TWO_PI = Math.PI * 2;
   var WIDTH: number = 800;
   var UNIT_TYPES: Set<UnitType> = new Set().
     add(new UnitType({
@@ -58,13 +59,28 @@ window.addEventListener('load', async function () {
     currentFormationPromise: Promise<Formation>,
     firstPlayerTurn: boolean,
     firstPlayer: Player,
-    grid: Grid,
+    formationEditorGrid: FormationEditorGrid,
+    matchGrid: MatchGrid,
     secondPlayer: Player,
     currentLevel: Level,
     currentDeckTemplate: DeckTemplate,
-    selectedTile: Tile,
+    selectedFormationEditorTile: FormationEditorTile,
     levelWidth: number, // Level width in tiles.  
     levelHeight: number; // Level height in tiles.
+
+  function setTileUnitType(event: MouseEvent) {
+    selectedFormationEditorTile.drawUnitType(this);
+    this.availableUnits--;
+  }
+
+  function hideRadialMenu() {
+    for (var unitType of UNIT_TYPES) {
+      var radialMenuItem: HTMLImageElement = unitType.radialMenuItem;
+      var style: CSSStyleDeclaration = radialMenuItem.style;
+      radialMenuItem.style.transition = 'all 0s linear';
+      radialMenuItem.style.visibility = 'hidden';
+    }
+  }
 
   function createFormationEditorGrid(
     levelWidth: number,
@@ -73,7 +89,7 @@ window.addEventListener('load', async function () {
       CANVAS_SIDE / levelWidth,
       CANVAS_SIDE / FORMATION_ROWS
     );
-    grid = new FormationEditorGrid(new NoCanvasGridArguments({
+    formationEditorGrid = new FormationEditorGrid(new NoCanvasGridArguments({
       width: levelWidth,
       height: FORMATION_ROWS,
       tileSide: tileSide,
@@ -82,9 +98,9 @@ window.addEventListener('load', async function () {
     }));
     for (var i: number = 0; i < levelWidth; i++)
       for (var j: number = 0; j < FORMATION_ROWS; j++)
-        grid.addTile(new FormationEditorTile({
-          grid: grid,
-          coordinates: new TileCoordinates(i, j, grid)
+        formationEditorGrid.addTile(new FormationEditorTile({
+          grid: formationEditorGrid,
+          coordinates: new TileCoordinates(i, j, formationEditorGrid)
         }));
   }
 
@@ -96,7 +112,7 @@ window.addEventListener('load', async function () {
       CANVAS_SIDE / levelWidth,
       CANVAS_SIDE / levelHeight
     );
-    grid = new MatchGrid(new NoCanvasGridArguments({
+    matchGrid = new MatchGrid(new NoCanvasGridArguments({
       width: levelWidth,
       height: levelHeight,
       tileSide: tileSide,
@@ -105,9 +121,9 @@ window.addEventListener('load', async function () {
     }));
     for (var i: number = 0; i < levelWidth; i++)
       for (var j: number = 0; j < levelHeight; j++)
-        grid.addTile(new MatchTile({
-          grid: grid,
-          coordinates: new TileCoordinates(i, j, grid)
+        matchGrid.addTile(new MatchTile({
+          grid: matchGrid,
+          coordinates: new TileCoordinates(i, j, matchGrid)
         }));
   }
 
@@ -166,20 +182,20 @@ window.addEventListener('load', async function () {
             //volver al menu principal
           });
         while (keepLooping()) {
-          await askForFormation()
-            .then(formation => firstPlayer.formation = formation)
+          await askForDeck()
+            .then(deckTemplate => firstPlayer.deckTemplate = deckTemplate)
             .catch(() => {
               //volver a pedir la primera formación
             });
           while (keepLooping()) {
             await askForFormation()
-              .then(formation => firstPlayer.formation = formation)
+              .then(formation => secondPlayer.formation = formation)
               .catch(() => {
                 //volver a pedir el primer deck template
               });
             while (keepLooping()) {
-              await askForFormation()
-                .then(formation => firstPlayer.formation = formation)
+              await askForDeck()
+                .then(deckTemplate => secondPlayer.deckTemplate = deckTemplate)
                 .catch(() => {
                   //volver a pedir la segunda formación
                 });
@@ -195,25 +211,11 @@ window.addEventListener('load', async function () {
             //volver al menu principal
           });
         while (keepLooping()) {
-          await askForFormation()
-            .then(formation => firstPlayer.formation = formation)
+          await askForDeck()
+            .then(deckTemplate => firstPlayer.deckTemplate = deckTemplate)
             .catch(() => {
               //volver a pedir la primera formación
             });
-          while (keepLooping()) {
-            await askForFormation()
-              .then(formation => firstPlayer.formation = formation)
-              .catch(() => {
-                //volver a pedir el primer deck template
-              });
-            while (keepLooping()) {
-              await askForFormation()
-                .then(formation => firstPlayer.formation = formation)
-                .catch(() => {
-                  //volver a pedir la segunda formación
-                });
-            }
-          }
         }
       }
     } else throw new Error();
@@ -278,78 +280,6 @@ window.addEventListener('load', async function () {
     formationEditorCtx.fillStyle = TILE_BACKGROUND_COLOR;
     formationEditorCtx.strokeStyle = TILE_BORDER_COLOR;
     formationEditorCtx.lineWidth = TILE_BORDER_WIDTH;
-    //add event listeners
-    document.getElementById('play-button').addEventListener(
-      'click',
-      async function () {
-        await executeMenuFunction(async function () {
-          await newMatch(LEVELS[currentLevel]);
-          show('play-mode');
-        });
-      });
-    document.getElementById('deck-editor-button').addEventListener(
-      'click',
-      async function () {
-        await executeMenuFunction(async function () {
-          currentResolver(currentDeckTemplate);
-        });
-      });
-    document.getElementById('formation-editor-tiles-canvas').addEventListener(
-      'click',
-      e => {
-        const TWO_PI = Math.PI * 2;
-        var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
-
-        // Do nothing if clicked outside the grid area
-        if (!clickCoordinates.isInsideGridArea(grid))
-          return;
-
-        var selectedTileCoordinates = clickCoordinates.toGrid(grid);
-        //TODO: split next line into multiple lines because it is too large
-        selectedTile = grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
-        var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
-        var center: Coords = selectedTileBoundingSquare.center;
-        var centerX: number = center.x;
-        var centerY: number = center.y;
-        var tileSide: number = grid.tileSide;
-        var unitTypesBeingShown: Array<UnitType> = [];
-        for (var unitType of UNIT_TYPES)
-          if (unitType.availableUnits) {
-            unitTypesBeingShown.push(unitType);
-          }
-        var length = unitTypesBeingShown.length;
-        var itemRadius = tileSide / 2;
-        var polygonRadius = (tileSide - itemRadius) / 2;
-        itemRadius *= RADIAL_MENU_ITEMS_SIZE;
-        //move items to the center of the radial menu
-        for (var unitType of unitTypesBeingShown) {
-          var style = unitType.radialMenuItem.style;
-          style.visibility = 'visible';
-          style.transition = 'all 0s linear';
-          style.left = centerX + 'px';
-          style.top = centerY + 'px';
-          style.width = '0';
-          style.height = '0';
-        }
-        document.body.offsetLeft; //force reflow
-        //move items away from the center
-        for (var i = 0; i < length; i++) {
-          var style = unitTypesBeingShown[i].radialMenuItem.style;
-          style.transition = 'all 0.3s linear';
-          style.left = (centerX - itemRadius / 2 + (
-            length === 1 ?
-              0 :
-              Math.sin(i * TWO_PI / length) * polygonRadius
-          )) + 'px';
-          style.top = (centerY - itemRadius / 2 - (
-            length === 1 ?
-              0 :
-              Math.cos(i * TWO_PI / length) * polygonRadius
-          )) + 'px';
-          style.width = itemRadius + 'px';
-          style.height = itemRadius + 'px';
-        }
-      });
     //if it is the first time the user opens the game or
     //the user deleted the save file, create a save file
     var savedGame = localStorage.getItem('savedGame');
@@ -377,5 +307,80 @@ window.addEventListener('load', async function () {
     var unitType: UnitType;
     for (unitType of UNIT_TYPES) promises.push(unitType.imageLoader);
     await Promise.all(promises);
+    //add event listeners
+    for (unitType of UNIT_TYPES) unitType.radialMenuItem.addEventListener(
+      'click',
+      setTileUnitType.bind(unitType)
+    );
+    document.getElementById('play-button').addEventListener(
+      'click',
+      async function () {
+        await executeMenuFunction(async function () {
+          await newMatch(LEVELS[currentLevel]);
+          show('play-mode');
+        });
+      });
+    document.getElementById('deck-editor-button').addEventListener(
+      'click',
+      async function () {
+        await executeMenuFunction(async function () {
+          currentResolver(currentDeckTemplate);
+        });
+      });
+    document.getElementById('formation-editor-tiles-canvas').addEventListener(
+      'click',
+      e => {
+        hideRadialMenu();
+        var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
+
+        // Do nothing if clicked outside the grid area
+        if (!clickCoordinates.isInsideGridArea(formationEditorGrid))
+          return;
+
+        var selectedTileCoordinates = clickCoordinates.toGrid(formationEditorGrid);
+        //TODO: split next line into multiple lines because it is too large
+        selectedFormationEditorTile = formationEditorGrid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
+        var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
+        var center: Coords = selectedTileBoundingSquare.center;
+        var centerX: number = center.x;
+        var centerY: number = center.y;
+        var tileSide: number = formationEditorGrid.tileSide;
+        var unitTypesBeingShown: Array<UnitType> = [];
+        for (var unitType of UNIT_TYPES)
+          if (unitType.availableUnits) {
+            unitTypesBeingShown.push(unitType);
+          }
+        var length = unitTypesBeingShown.length;
+        var itemRadius = tileSide / 2;
+        var polygonRadius = (tileSide - itemRadius) / 2;
+        itemRadius *= RADIAL_MENU_ITEMS_SIZE;
+        //move items to the center of the radial menu
+        for (var unitType of unitTypesBeingShown) {
+          var style = unitType.radialMenuItem.style;
+          style.visibility = 'visible';
+          style.left = centerX + 'px';
+          style.top = centerY + 'px';
+          style.width = '0';
+          style.height = '0';
+        }
+        document.body.offsetLeft; //force reflow
+        //move items away from the center
+        for (var i = 0; i < length; i++) {
+          var style = unitTypesBeingShown[i].radialMenuItem.style;
+          style.transition = 'all 0.3s linear';
+          style.left = (centerX - itemRadius / 2 + (
+            length === 1 ?
+              0 :
+              Math.sin(i * TWO_PI / length) * polygonRadius
+          )) + 'px';
+          style.top = (centerY - itemRadius / 2 - (
+            length === 1 ?
+              0 :
+              Math.cos(i * TWO_PI / length) * polygonRadius
+          )) + 'px';
+          style.width = itemRadius + 'px';
+          style.height = itemRadius + 'px';
+        }
+      });
   });
 });

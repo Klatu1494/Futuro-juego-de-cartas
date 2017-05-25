@@ -8,6 +8,7 @@
  * @class
  */
 class MatchGrid extends Grid {
+  tiles: Array<Array<MatchTile>>;
   /**
    * Creates a grid
    * @typedef {Object} MatchGridArgs
