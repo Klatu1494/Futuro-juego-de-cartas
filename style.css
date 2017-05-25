@@ -1,70 +1,102 @@
-body, html{
-    margin: 0;
+body,
+html {
+  margin: 0;
+  background-color: black;
 }
-#loading-screen{
-    background-color: black;
-    color: white;
-    height: 100%;
-    text-align: center;
-    width: 100%;
+
+#loading-screen {
+  background-color: #292b2c;
+  color: white;
+  height: 100%;
+  text-align: center;
+  width: 100%;
 }
-#game{
-    background-color: #111;
-    text-align: center;
+
+#game {
+  background-color: #F5F5F6;
+  text-align: center;
 }
-#menu, #play-mode, td{
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+
+#menu,
+#play-mode,
+td {
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
-#board{
-    background-color: gray;
-    position: relative;
+
+#board {
+  background-color: #7b1fa2;
+  position: relative;
 }
-canvas{
-    position: absolute;
-    top: 0;
-    left: 0;
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-.button{
-    background-color: red;
-    display: inline-block;
-    height: 124px;
-    line-height: 124px;
-    width: 220px;
-    margin: 8px;
-    cursor: pointer;
+
+.button {
+  background-color: #0075d8;
+  color: white;
+  display: inline-block;
+  height: 124px;
+  line-height: 124px;
+  width: 184px;
+  /* 184px = 200px - (margin-left + margin-right) * 2 */
+  margin: 8px;
+  cursor: pointer;
 }
-.action{
-    background-color: white;
-    height: 40px;
-    line-height: 40px;
-    text-align: left;
-    vertical-align: middle;
+
+.action {
+  background-color: white;
+  height: 40px;
+  line-height: 40px;
+  text-align: left;
+  vertical-align: middle;
 }
-.action:nth-child(even){
-    background-color: #ddd;
+
+.action:nth-child(even) {
+  background-color: #ddd;
 }
-.add, .take-out{
-    background-color: darkblue;
-    border-radius: 13px;
-    color: #eee;
-    cursor: pointer;
-    display: inline-block;
-    float: right;
-    font-weight: bold;
-    height: 26px;
-    line-height: 26px;
-    margin:7px;
-    width: 26px;
-    text-align: center;
+
+.add,
+.take-out {
+  background-color: darkblue;
+  border-radius: 13px;
+  color: #eee;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  height: 26px;
+  line-height: 26px;
+  margin: 7px;
+  width: 26px;
+  text-align: center;
 }
-.add:before{
-    content: '+';
+
+.add:before {
+  content: '+';
 }
-.take-out:before{
-    content: '-';
+
+.take-out:before {
+  content: '-';
 }
-.confirm:before{
-    content:'Confirm';
+
+.confirm:before {
+  content: 'Confirm';
+}
+
+#formation-editor {
+  align-content: center;
+}
+
+.unit-type {
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  border: 2px solid white;
+  cursor: pointer;
 }

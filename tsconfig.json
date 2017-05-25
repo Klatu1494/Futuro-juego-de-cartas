@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "outDir": "compiled/",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "noImplicitAny": true
+  },
+  "include": [
+    "**/*"
+  ]
+}
