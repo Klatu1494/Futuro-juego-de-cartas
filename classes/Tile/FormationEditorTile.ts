@@ -29,6 +29,12 @@ class FormationEditorTile extends Tile {
   }
 
   drawUnitType(unitType: UnitType) {
-
+    this.grid.ctx.drawImage(
+      unitType.radialMenuItem,
+      this.coordinates.toScreen().left,
+      this.coordinates.toScreen().top,
+      this.grid.tileSide,
+      this.grid.tileSide
+    );
   }
 }

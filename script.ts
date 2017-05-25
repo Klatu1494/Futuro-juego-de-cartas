@@ -55,6 +55,7 @@ window.addEventListener('load', async function () {
   var
     currentResolver: Function,
     currentDeck: DeckTemplate,
+    currentFormation: Formation,
     currentDeckPromise: Promise<DeckTemplate>,
     currentFormationPromise: Promise<Formation>,
     firstPlayerTurn: boolean,
@@ -69,8 +70,10 @@ window.addEventListener('load', async function () {
     levelHeight: number; // Level height in tiles.
 
   function setTileUnitType(event: MouseEvent) {
+    hideRadialMenu();
     selectedFormationEditorTile.drawUnitType(this);
     this.availableUnits--;
+    currentFormation.setUnitType(selectedFormationEditorTile.coordinates, this);
   }
 
   function hideRadialMenu() {
@@ -172,10 +175,11 @@ window.addEventListener('load', async function () {
     firstPlayerTurn = Boolean(Math.floor(Math.random() * 2));
     firstPlayer.deckTemplate = null;
     secondPlayer.deckTemplate = null;
-    firstPlayer.formation = null;
-    secondPlayer.formation = null;
+    firstPlayer.formation = new Formation(levelWidth, FORMATION_ROWS);
+    secondPlayer.formation = new Formation(levelWidth, FORMATION_ROWS);
     if (secondPlayer instanceof HumanPlayer) {
       while (keepLooping()) {
+        currentFormation = firstPlayer.formation;
         await askForFormation()
           .then(formation => firstPlayer.formation = formation)
           .catch(() => {
@@ -188,6 +192,7 @@ window.addEventListener('load', async function () {
               //volver a pedir la primera formación
             });
           while (keepLooping()) {
+            currentFormation = secondPlayer.formation;
             await askForFormation()
               .then(formation => secondPlayer.formation = formation)
               .catch(() => {
@@ -205,6 +210,7 @@ window.addEventListener('load', async function () {
       }
     } else if (secondPlayer instanceof AIPlayer) {
       while (keepLooping()) {
+        currentFormation = firstPlayer.formation;
         await askForFormation()
           .then(formation => firstPlayer.formation = formation)
           .catch(() => {

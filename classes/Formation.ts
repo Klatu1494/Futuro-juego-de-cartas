@@ -8,10 +8,20 @@
  * @class
  */
 class Formation {
+    unitTypes: Array<Array<UnitType>>;
     /**
      * Creates a formation.
      */
-    constructor() {
+    constructor(width: number, height: number) {
+        this.unitTypes = [];
+        for (var i: number = 0; i < width; i++) {
+            this.unitTypes.push([]);
+            for (var j: number = 0; j < height; j++)
+                this.unitTypes[i].push(null);
+        }
+    }
 
+    setUnitType(coordinates: TileCoordinates, unitType: UnitType) {
+        this.unitTypes[coordinates.x][coordinates.y] = unitType;
     }
 }
