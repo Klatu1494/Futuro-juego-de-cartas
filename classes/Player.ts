@@ -5,7 +5,7 @@
 
 /**
  * A player.
- * @interface
+ * @class
  */
 abstract class Player {
   readonly color: string;
@@ -17,8 +17,7 @@ abstract class Player {
    * Creates a player
    * @typedef {Object} PlayerArgs
    * @property {number} color The player's color.
-   * @property {string} controller The player's controller, used to determine
-   *     whether the AI should play instead of a second human player.
+   * @property {string} name The player's name.
    * 
    * @param {PlayerArgs} args An object that has
    *     information about the player being created.
@@ -30,7 +29,6 @@ abstract class Player {
     } = args;
     this.color = color;
     this.name = name;
-    this._deckTemplate = JSON.parse(localStorage.getItem('deck'));
   }
 
   /**

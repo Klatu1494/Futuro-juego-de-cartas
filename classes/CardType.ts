@@ -16,6 +16,8 @@ class CardType {
 
   constructor({ name, onUse, imgSrc }: { name: string, onUse?: Function, imgSrc?: string }) {
     imgSrc = imgSrc || 'help.png';
+
+    //these images will never be used, they just preload the image file
     this._imageLoader = new Promise(resolve => {
       var image: HTMLImageElement = new Image()
       image.src = 'images/' + imgSrc;
@@ -24,6 +26,7 @@ class CardType {
     onUse = onUse || (() => {
 
     });
+
     var element = document.createElement('div');
     element.className = 'card-type-adder';
     element.innerText = name;
@@ -33,6 +36,7 @@ class CardType {
     button = document.createElement('div');
     button.className = 'take-out';
     element.appendChild(button);
+    document.getElementById('card-adder').appendChild(element);
     this._name = name;
     this._onUse = onUse;
     this._element = element;
