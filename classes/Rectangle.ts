@@ -2,11 +2,11 @@
  * Represents a rectangle
  */
 class Rectangle {
-  topLeft: Coords;
-  bottomRight: Coords;
-  horizontalSize: number;
-  verticalSize: number;
-  center: Coords;
+  _topLeft: Coords;
+  _bottomRight: Coords;
+  _horizontalSize: number;
+  _verticalSize: number;
+  _center: Coords;
   /**
    * Initializes a new Square given the topleft coordinates and the length of a side.
    * @param {Coordinates} topLeftCoordinates Top-left coordinates.
@@ -15,11 +15,11 @@ class Rectangle {
    */
   constructor(topLeftCoordinates: Coords, horizontalSize: number, verticalSize: number) {
     if (0 < horizontalSize && 0 < verticalSize && isFinite(horizontalSize + verticalSize)) {
-      this.topLeft = topLeftCoordinates.clone() //in case that we want to modify topLeftCoordinates later;
-      this.horizontalSize = horizontalSize;
-      this.verticalSize = verticalSize;
-      this.bottomRight = new Coords(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);
-      this.center = new Coords((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+      this._topLeft = topLeftCoordinates.clone() //in case that we want to modify topLeftCoordinates later;
+      this._horizontalSize = horizontalSize;
+      this._verticalSize = verticalSize;
+      this._bottomRight = new Coords(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);
+      this._center = new Coords((this.left + this.right) / 2, (this.top + this.bottom) / 2);
     } else throw new Error("Invalid size");
   }
 
@@ -53,6 +53,26 @@ class Rectangle {
    */
   get bottom() {
     return this.bottomRight.y;
+  }
+
+  get topLeft() {
+    return this._topLeft;
+  }
+
+  get horizontalSize() {
+    return this._horizontalSize;
+  }
+
+  get verticalSize() {
+    return this._verticalSize;
+  }
+
+  get bottomRight() {
+    return this._bottomRight;
+  }
+
+  get center() {
+    return this._center;
   }
 
   /**
