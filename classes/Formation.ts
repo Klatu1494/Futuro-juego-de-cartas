@@ -22,6 +22,12 @@ class Formation {
     }
 
     setUnitType(coordinates: TileCoordinates, unitType: UnitType) {
-        this.unitTypes[coordinates.x][coordinates.y] = unitType;
+        var x: number = coordinates.x;
+        var y: number = coordinates.y;
+        var currentUnitTypeInThisTile = currentFormation.unitTypes[x][y];
+        if (currentUnitTypeInThisTile) currentUnitTypeInThisTile.availableUnits++;
+        selectedFormationEditorTile.drawUnitType(this);
+        this.availableUnits--;
+        this.unitTypes[x][y] = unitType;
     }
 }
