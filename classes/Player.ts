@@ -40,8 +40,8 @@ abstract class Player {
   startGame() {
     //TODO: replace the array for a deck (when it is implemented)
     this._deck = new Array<Card>();
-    for (var card of this.deckTemplate.cards)
-      this._deck.push(card);
+    for (var cardType of this.deckTemplate.cards)
+      this._deck.push(new Card(cardType));
   }
 
   /**
@@ -51,7 +51,7 @@ abstract class Player {
   get deckTemplate(): DeckTemplate {
     return this._deckTemplate;
   }
-  set deckTemplate(value) {
+  set deckTemplate(value: DeckTemplate) {
     localStorage.setItem(this.color + 'Deck', JSON.stringify(value));
     this._deckTemplate = value;
   }

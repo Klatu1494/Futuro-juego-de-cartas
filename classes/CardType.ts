@@ -8,10 +8,22 @@
  * @class
  */
 class CardType {
+  private _imgSrc: string;
   private _name: string;
   private _onUse: Function;
   private _element: HTMLDivElement;
-  constructor({ name, onUse = () => { } }: { name: string, onUse: Function }) {
+  private _imageLoader: Promise<HTMLImageElement>;
+
+  constructor({ name, onUse, imgSrc }: { name: string, onUse?: Function, imgSrc?: string }) {
+    imgSrc = imgSrc || 'help.png';
+    this._imageLoader = new Promise(resolve => {
+      var image: HTMLImageElement = new Image()
+      image.src = 'images/' + imgSrc;
+      image.addEventListener('load', () => resolve(image));
+    });
+    onUse = onUse || (() => {
+
+    });
     var element = document.createElement('div');
     element.className = 'card-type-adder';
     element.innerText = name;
@@ -24,6 +36,7 @@ class CardType {
     this._name = name;
     this._onUse = onUse;
     this._element = element;
+    this._imgSrc = imgSrc;
   }
 
   get name(): string {
@@ -32,5 +45,13 @@ class CardType {
 
   get onUse(): Function {
     return this._onUse;
+  }
+
+  get imageLoader(): Promise<HTMLElement> {
+    return this._imageLoader;
+  }
+
+  get imgSrc(): string {
+    return this._imgSrc;
   }
 }

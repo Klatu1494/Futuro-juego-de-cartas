@@ -9,19 +9,19 @@
  */
 
 class DeckTemplate {
-  private readonly _cards: ReadonlyArray<Card>
+  private readonly _cards: ReadonlyArray<CardType>
   /**
    * Creates a new deck template.
    * @param {Array<Card>} Cards cards for the template.
    */
-  constructor(cards: Array<Card> = []) {
+  constructor(cards: Array<CardType> = []) {
     this._cards = [...cards];
   }
 
   /**
    * Gets the cards of the deck
    */
-  get cards(): ReadonlyArray<Card> { return this._cards; }
+  get cards(): ReadonlyArray<CardType> { return this._cards; }
 
   /**
    * Determines whether the deck template is empty.

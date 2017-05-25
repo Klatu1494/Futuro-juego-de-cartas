@@ -24,17 +24,17 @@ window.addEventListener('load', async function () {
   var UNIT_TYPES: Set<UnitType> = new Set().
     add(new UnitType({
       name: 'Zombie',
-      imageSrc: 'images/shambling-zombie.png',
+      imgSrc: 'images/shambling-zombie.png',
       initialQuantity: 2
     })).
     add(new UnitType({
       name: 'Farmer',
-      imageSrc: 'images/unit1.png',
+      imgSrc: 'images/unit1.png',
       initialQuantity: 2 //just testing
     })).
     add(new UnitType({
       name: 'Warrior',
-      imageSrc: 'images/unit2.png',
+      imgSrc: 'images/unit2.png',
       initialQuantity: 2 //just testing
     }));
   var RADIAL_MENU_FRAMES: number = 20;
@@ -70,9 +70,10 @@ window.addEventListener('load', async function () {
   function setTileUnitType(event: MouseEvent) {
     hideRadialMenu();
     if (currentFormation.getAvailableUnits(this)) {
-      selectedFormationEditorTile.drawUnitType(this);
       currentFormation.setUnitType(selectedFormationEditorTile.coordinates, this);
+      if (this) selectedFormationEditorTile.drawUnitType(this);
     }
+    selectedFormationEditorTile = null;
   }
 
   function hideRadialMenu() {
@@ -307,7 +308,8 @@ window.addEventListener('load', async function () {
     //wait until all the images have been loaded
     var promises: Array<Promise<HTMLImageElement>> = [];
     var unitType: UnitType;
-    for (unitType of UNIT_TYPES) promises.push(unitType.imageLoader);
+    for (var unitType of UNIT_TYPES) promises.push(unitType.imageLoader);
+    for (var cardType of CARD_TYPES) promises.push(cardType.imageLoader);
     await Promise.all(promises);
     //add event listeners
     for (unitType of UNIT_TYPES) unitType.radialMenuItem.addEventListener(
