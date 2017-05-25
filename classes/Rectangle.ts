@@ -2,11 +2,11 @@
  * Represents a rectangle
  */
 class Rectangle {
-  _topLeft: Coords;
-  _bottomRight: Coords;
-  _horizontalSize: number;
-  _verticalSize: number;
-  _center: Coords;
+  private _topLeft: Coords;
+  private _bottomRight: Coords;
+  private _horizontalSize: number;
+  private _verticalSize: number;
+  private _center: Coords;
   /**
    * Initializes a new Square given the topleft coordinates and the length of a side.
    * @param {Coordinates} topLeftCoordinates Top-left coordinates.
