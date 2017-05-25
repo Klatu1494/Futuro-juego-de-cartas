@@ -65,7 +65,7 @@ window.addEventListener('load', async function () {
     secondPlayer: Player,
     currentLevel: Level,
     currentDeckTemplate: DeckTemplate,
-    selectedFormationEditorTile: FormationEditorTile,
+    selectedFormationEditorTile: FormationEditorTile = null,
     levelWidth: number, // Level width in tiles.  
     levelHeight: number; // Level height in tiles.
 
@@ -324,68 +324,82 @@ window.addEventListener('load', async function () {
           await newMatch(LEVELS[currentLevel]);
           show('play-mode');
         });
-      });
+      }
+    );
     document.getElementById('deck-editor-button').addEventListener(
       'click',
       async function () {
         await executeMenuFunction(async function () {
           currentResolver(currentDeckTemplate);
         });
-      });
-    document.getElementById('formation-editor-tiles-canvas').addEventListener(
+      }
+    );
+    document.getElementById('formation-editor').addEventListener(
       'click',
       e => {
-        hideRadialMenu();
         var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
-
-        // Do nothing if clicked outside the grid area
-        if (!clickCoordinates.isInsideGridArea(formationEditorGrid))
-          return;
-
         var selectedTileCoordinates = clickCoordinates.toGrid(formationEditorGrid);
+        var isClickingSelectedTile: Boolean;
         //TODO: split next line into multiple lines because it is too large
-        selectedFormationEditorTile = formationEditorGrid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
-        var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
-        var center: Coords = selectedTileBoundingSquare.center;
-        var centerX: number = center.x;
-        var centerY: number = center.y;
-        var tileSide: number = formationEditorGrid.tileSide;
-        var unitTypesBeingShown: Array<UnitType> = [];
-        for (var unitType of UNIT_TYPES)
-          if (unitType.availableUnits) {
-            unitTypesBeingShown.push(unitType);
+        if (selectedFormationEditorTile !== null) {
+          if (selectedFormationEditorTile.coordinates.toScreen().contains(clickCoordinates)) return;
+          hideRadialMenu();
+        }
+        if (clickCoordinates.isInsideGridArea(formationEditorGrid)) {
+          selectedFormationEditorTile = formationEditorGrid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
+          var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
+          var center: Coords = selectedTileBoundingSquare.center;
+          var centerX: number = center.x;
+          var centerY: number = center.y;
+          var tileSide: number = formationEditorGrid.tileSide;
+          var unitTypesBeingShown: Array<UnitType> = [];
+          for (var unitType of UNIT_TYPES)
+            if (unitType.availableUnits) {
+              unitTypesBeingShown.push(unitType);
+            }
+          var length = unitTypesBeingShown.length;
+          var itemRadius = tileSide / 2;
+          var polygonRadius = (tileSide - itemRadius) / 2;
+          itemRadius *= RADIAL_MENU_ITEMS_SIZE;
+          //move items to the center of the radial menu
+          for (var unitType of unitTypesBeingShown) {
+            var style = unitType.radialMenuItem.style;
+            style.visibility = 'visible';
+            style.left = centerX + 'px';
+            style.top = centerY + 'px';
+            style.width = '0';
+            style.height = '0';
           }
-        var length = unitTypesBeingShown.length;
-        var itemRadius = tileSide / 2;
-        var polygonRadius = (tileSide - itemRadius) / 2;
-        itemRadius *= RADIAL_MENU_ITEMS_SIZE;
-        //move items to the center of the radial menu
-        for (var unitType of unitTypesBeingShown) {
-          var style = unitType.radialMenuItem.style;
-          style.visibility = 'visible';
-          style.left = centerX + 'px';
-          style.top = centerY + 'px';
-          style.width = '0';
-          style.height = '0';
+          document.body.offsetLeft; //force reflow
+          //move items away from the center
+          for (var i = 0; i < length; i++) {
+            var style = unitTypesBeingShown[i].radialMenuItem.style;
+            style.transition = 'all 0.3s linear';
+            style.left = (centerX - itemRadius / 2 + (
+              length === 1 ?
+                0 :
+                Math.sin(i * TWO_PI / length) * polygonRadius
+            )) + 'px';
+            style.top = (centerY - itemRadius / 2 - (
+              length === 1 ?
+                0 :
+                Math.cos(i * TWO_PI / length) * polygonRadius
+            )) + 'px';
+            style.width = itemRadius + 'px';
+            style.height = itemRadius + 'px';
+          }
         }
-        document.body.offsetLeft; //force reflow
-        //move items away from the center
-        for (var i = 0; i < length; i++) {
-          var style = unitTypesBeingShown[i].radialMenuItem.style;
-          style.transition = 'all 0.3s linear';
-          style.left = (centerX - itemRadius / 2 + (
-            length === 1 ?
-              0 :
-              Math.sin(i * TWO_PI / length) * polygonRadius
-          )) + 'px';
-          style.top = (centerY - itemRadius / 2 - (
-            length === 1 ?
-              0 :
-              Math.cos(i * TWO_PI / length) * polygonRadius
-          )) + 'px';
-          style.width = itemRadius + 'px';
-          style.height = itemRadius + 'px';
+        else {
+          hideRadialMenu();
+          selectedFormationEditorTile = null;
         }
-      });
+      }
+    );
+    document.getElementById('formation-editor-button').addEventListener(
+      'click',
+      () => {
+        hideRadialMenu();
+      }
+    );
   });
 });
