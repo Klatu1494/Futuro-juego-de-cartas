@@ -25,17 +25,17 @@ window.addEventListener('load', async function () {
     add(new UnitType({
       name: 'Zombie',
       imageSrc: 'images/shambling-zombie.png',
-      initialQuantity: 5
+      initialQuantity: 2
     })).
     add(new UnitType({
       name: 'Farmer',
       imageSrc: 'images/unit1.png',
-      initialQuantity: 5 //just testing
+      initialQuantity: 2 //just testing
     })).
     add(new UnitType({
       name: 'Warrior',
       imageSrc: 'images/unit2.png',
-      initialQuantity: 5 //just testing
+      initialQuantity: 2 //just testing
     }));
   var RADIAL_MENU_FRAMES: number = 20;
   var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
@@ -71,8 +71,10 @@ window.addEventListener('load', async function () {
 
   function setTileUnitType(event: MouseEvent) {
     hideRadialMenu();
-    selectedFormationEditorTile.drawUnitType(this);
-    currentFormation.setUnitType(selectedFormationEditorTile.coordinates, this);
+    if (currentFormation.getAvailableUnits(this)) {
+      selectedFormationEditorTile.drawUnitType(this);
+      currentFormation.setUnitType(selectedFormationEditorTile.coordinates, this);
+    }
   }
 
   function hideRadialMenu() {

@@ -21,12 +21,39 @@ class Formation {
         }
     }
 
+    /**
+     * Gets the available units of a specified type for the formation
+     * @param {UnitType} unitType The type of unit to check for availability
+     */
+    getAvailableUnits(unitType: UnitType): number {
+        return unitType.availableUnits - this.getUsedUnits(unitType);
+    }
+
+    /**
+     * Counts the number of a specified UnitType in this formation.
+     * @param {UnitType} unitType The UnitType to count.
+     */
+    getUsedUnits(unitType: UnitType): number {
+        var counter: number = 0;
+        for (var i = 0; i < this.unitTypes.length; i++) {
+            var row = this.unitTypes[i];
+            for (var j = 0; j < row.length; j++)
+                if (row[j] == unitType) counter++;
+        }
+
+        return counter;
+    }
+
+    /**
+     * Sets, in the specified tile, a specified unit type.
+     * Does not check for availability
+     * @param coordinates The coordinates of the tile to set the unit type.
+     * @param unitType The unit type to set in the tile.
+     */
     setUnitType(coordinates: TileCoordinates, unitType: UnitType) {
         var x: number = coordinates.x;
         var y: number = coordinates.y;
-        var currentUnitTypeInThisTile = this.unitTypes[x][y];
-        if (currentUnitTypeInThisTile) currentUnitTypeInThisTile.availableUnits++;
-        unitType.availableUnits--;
-        this.unitTypes[x][y] = unitType;
+        if (this.getAvailableUnits(unitType))
+            this.unitTypes[x][y] = unitType;
     }
 }
