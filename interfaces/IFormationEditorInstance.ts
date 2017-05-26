@@ -8,9 +8,10 @@
  * @interface
  */
 interface IFormationEditorInstance extends IEditorInstance {
+  canvas: HTMLCanvasElement;
   setFormation: Function;
   rows: number;
   grid: FormationEditorGrid;
-  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
   createGrid: Function;
 }

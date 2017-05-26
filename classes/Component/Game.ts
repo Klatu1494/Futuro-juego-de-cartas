@@ -17,15 +17,10 @@ class Game extends Component {
         var instance: IGameInstance;
         super();
         Game.prototype._instance = this.newInstance();
-        div = this.div;
-        div.id = 'game';
-        instance = this.instance;
-        instance.show(instance.menu);
-        document.body.appendChild(div);
     }
 
     protected newInstance(): IGameInstance {
-        //loading screen
+        var div: HTMLDivElement;
         var loadingScreen: IComponentInstance = new LoadingScreen().instance;
         var instance: IGameInstance = {
             width: this.width,
@@ -74,6 +69,10 @@ class Game extends Component {
         instance.addComponent(instance.formationEditor);
         instance.addComponent(instance.deckEditor);
         instance.addComponent(instance.matchScreen);
+        div = this.div;
+        div.id = 'game';
+        instance.show(instance.menu);
+        document.body.appendChild(div);
         return instance;
     }
 

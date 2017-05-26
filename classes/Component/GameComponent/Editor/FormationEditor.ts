@@ -19,10 +19,10 @@ class FormationEditor extends Editor {
     }
 
     protected newInstance(game: Game): IFormationEditorInstance {
-        //loading screen
-        var loadingScreen: IComponentInstance = new LoadingScreen().instance;
+        var canvas: HTMLCanvasElement = document.createElement('canvas');
         var instance: IFormationEditorInstance = {
-            canvas: document.createElement('canvas'),
+            canvas: canvas,
+            ctx: canvas.getContext('2d'),
             grid: null,
             rows: 2,
             onConfirm: function () {
@@ -69,6 +69,8 @@ class FormationEditor extends Editor {
             },
             div: this.newDiv()
         }
+        instance.ctx.fillStyle = 'white';
+        instance.ctx.strokeStyle = 'black';
         return instance;
     }
 

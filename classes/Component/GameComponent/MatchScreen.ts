@@ -19,9 +19,11 @@ class MatchScreen extends GameComponent {
     }
 
     protected newInstance(game: Game): IMatchScreenInstance {
+        var canvas: HTMLCanvasElement = document.createElement('canvas')
         var instance: IMatchScreenInstance = {
             grid: null,
-            canvas: document.createElement('canvas'),
+            canvas: canvas,
+            ctx: canvas.getContext('2d'),
             onEscapePress: function () {
                 var game: IGameInstance = this.game.instance;
                 game.show(game.menu);
@@ -47,6 +49,8 @@ class MatchScreen extends GameComponent {
                 });
             },
         }
+        instance.ctx.fillStyle = 'white';
+        instance.ctx.strokeStyle = 'black';
         return instance;
     }
 

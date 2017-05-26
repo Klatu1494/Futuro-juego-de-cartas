@@ -11,4 +11,5 @@ interface IMatchScreenInstance extends IGameComponentInstance {
   grid: MatchGrid;
   canvas: HTMLCanvasElement;
   createGrid: Function;
+  ctx: CanvasRenderingContext2D;
 }
