@@ -16,7 +16,6 @@ class DeckEditor extends GameComponent {
         var div: HTMLDivElement;
         super(game);
         DeckEditor.prototype._instance = this.newInstance(game);
-        document.body.appendChild(div);
     }
 
     protected newInstance(game: Game): IDeckEditorInstance {

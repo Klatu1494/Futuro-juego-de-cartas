@@ -16,7 +16,6 @@ class FormationEditor extends Component {
         var div: HTMLDivElement;
         super();
         FormationEditor.prototype._instance = this.newInstance(game);
-        document.body.appendChild(div);
     }
 
     protected newInstance(game: Game): IFormationEditorInstance {

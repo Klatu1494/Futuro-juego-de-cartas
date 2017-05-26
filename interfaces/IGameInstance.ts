@@ -8,6 +8,8 @@
  * @interface
  */
 interface IGameInstance extends IComponentInstance {
+  width: number;
+  height: number;
   cardTypes: Set<CardType>;
   firstPlayer: HumanPlayer;
   secondPlayer: Player;

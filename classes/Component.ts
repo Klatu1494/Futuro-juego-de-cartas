@@ -9,8 +9,8 @@
  */
 abstract class Component {
   protected instance: IComponentInstance;
-  private _width: number = 800;
-  private _height: number = 600;
+  protected _width: number = innerWidth;
+  protected _height: number = innerHeight;
   /**
    * Creates a component.
    */

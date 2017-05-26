@@ -1,13 +1,13 @@
 window.addEventListener('load', async function () {
+  var game: IGameInstance = new Game().instance;
+
   var FIRST_COLOR: string = 'blue'; //:Color?
   var FORMATION_ROWS: number = 2;
-  var HEIGHT: number = 600;
   var SECOND_COLOR: string = 'red'; //:Color?
   var TILE_BACKGROUND_COLOR: string = 'white'; //:Color?
   var TILE_BORDER_COLOR: string = 'black'; //:Color?
   var TILE_BORDER_WIDTH: number = 2;
   var TWO_PI = Math.PI * 2;
-  var WIDTH: number = 800;
   var UNIT_TYPES: Set<UnitType> = new Set().
     add(new UnitType({
       name: 'Zombie',
@@ -28,19 +28,18 @@ window.addEventListener('load', async function () {
   var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
   var FRAME_DURATION: number = 50 / 3;
   //these variables must be declared after the previous ones
-  var CANVAS_SIDE: number = Math.min(WIDTH, HEIGHT);
-  var HAND_POSITION: string = HEIGHT < WIDTH ? 'right' : 'bottom';
+  var CANVAS_SIDE: number = Math.min(game.width, game.height);
+  var HAND_POSITION: string = game.height < game.width ? 'right' : 'bottom';
   var HAND_HEIGHT_OR_WIDTH: number =
     HAND_POSITION === 'bottom' ?
-      HEIGHT - WIDTH :
-      WIDTH - HEIGHT;
+      game.height - game.width :
+      game.width - game.height;
   var LEVELS: ReadonlyArray<Level> = [new Level({
     width: 3,
     height: 5
   })];
 
   var
-    game: IGameInstance = new Game().instance,
     currentResolver: Function,
     currentDeck: DeckTemplate,
     currentFormation: Formation,
@@ -218,11 +217,11 @@ window.addEventListener('load', async function () {
     //set the HTML constants-dependent style
     var boardHeight =
       HAND_POSITION === 'bottom' ?
-        HEIGHT - HAND_HEIGHT_OR_WIDTH :
-        HEIGHT;
+        game.height - HAND_HEIGHT_OR_WIDTH :
+        game.height;
     var boardStyle = document.getElementById('board').style;
-    var boardWidth = HAND_POSITION === 'bottom' ? WIDTH :
-      WIDTH -
+    var boardWidth = HAND_POSITION === 'bottom' ? game.width :
+      game.width -
       HAND_HEIGHT_OR_WIDTH;
     var gameStyle = document.getElementById('game').style;
     var handStyle = document.getElementById('hand').style;
@@ -238,16 +237,16 @@ window.addEventListener('load', async function () {
     show('menu');
     boardStyle.height = boardHeight + 'px';
     boardStyle.width = boardWidth + 'px';
-    gameStyle.height = HEIGHT + 'px';
-    gameStyle.width = WIDTH + 'px';
+    gameStyle.height = game.height + 'px';
+    gameStyle.width = game.width + 'px';
     handStyle.height = (
       HAND_POSITION === 'bottom' ?
         HAND_HEIGHT_OR_WIDTH :
-        HEIGHT
+        game.height
     ) + 'px';
     handStyle.width = (
       HAND_POSITION === 'bottom' ?
-        WIDTH :
+        game.width :
         HAND_HEIGHT_OR_WIDTH
     ) + 'px';
     gameCanvas.height = boardHeight;

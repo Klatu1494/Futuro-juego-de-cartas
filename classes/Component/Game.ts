@@ -14,10 +14,13 @@ class Game extends Component {
      */
     constructor() {
         var div: HTMLDivElement;
+        var instance: IGameInstance;
         super();
         Game.prototype._instance = this.newInstance();
         div = this.div;
         div.id = 'game';
+        instance = this.instance;
+        instance.show(instance.menu);
         document.body.appendChild(div);
     }
 
@@ -25,6 +28,8 @@ class Game extends Component {
         //loading screen
         var loadingScreen: IComponentInstance = new LoadingScreen().instance;
         var instance: IGameInstance = {
+            width: this.width,
+            height: this.height,
             cardTypes: new Set().
                 add(new CardType({
                     name: 'First action',
@@ -40,7 +45,8 @@ class Game extends Component {
                 })),
             firstPlayer: new HumanPlayer({ name: null, color: null }),
             secondPlayer: null,
-            addComponent: function (div: HTMLDivElement) {
+            addComponent: function (component: IGameComponentInstance) {
+                var div = component.div;
                 this.componentsDivs.push(div);
                 this.div.appendChild(div);
             },

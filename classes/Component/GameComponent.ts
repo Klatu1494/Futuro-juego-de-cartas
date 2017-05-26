@@ -8,6 +8,7 @@
  * @class
  */
 abstract class GameComponent extends Component {
+    protected instance: IGameComponentInstance;
     /**
      * Creates a game component.
      */
