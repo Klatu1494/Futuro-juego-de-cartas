@@ -7,7 +7,7 @@
  * A grid tile
  * @class
  */
-class Tile {
+abstract class Tile {
   coordinates: TileCoordinates;
   grid: Grid;
   /**

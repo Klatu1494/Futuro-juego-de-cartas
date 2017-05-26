@@ -7,10 +7,11 @@
  * The objects that implement this interface have a related div.
  * @interface
  */
-interface IFormationEditorInstance extends IEditorInstance {
-  setFormation: Function;
-  rows: number;
-  grid: FormationEditorGrid;
-  canvas: HTMLCanvasElement;
-  createGrid: Function;
+interface IGridArguments {
+    width: number;
+    height: number;
+    tileSide: number;
+    leftMargin: number;
+    topMargin: number;
+    canvas: HTMLCanvasElement;
 }

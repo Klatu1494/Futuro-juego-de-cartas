@@ -7,14 +7,14 @@
  * The game.
  * @class
  */
-class Menu extends Component {
+class Menu extends GameComponent {
     protected _instance: IMenuInstance;
     /**
      * Creates the game.
      */
     constructor(game: Game) {
         var div: HTMLDivElement;
-        super();
+        super(game);
         Menu.prototype._instance = this.newInstance(game);
     }
 

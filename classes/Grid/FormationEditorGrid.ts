@@ -8,30 +8,30 @@
  * @class
  */
 class FormationEditorGrid extends Grid {
-  tiles: Array<Array<FormationEditorTile>>;
+  protected _tiles: ReadonlyArray<ReadonlyArray<FormationEditorTile>>;
   /**
    * Creates a grid
-   * @typedef {Object} FormationEditorGridArgs
-   * @property {number} height The grid's height in tiles. It must be positive.
-   * @property {number} width The grid's width in tiles. It must be positive.
-   * @property {number} leftMargin The grid's left margin in pixels.
-   * @property {number} topMargin The grid's top margin in pixels.
-   * @property {number} tileSide The length of each of the
-   *     grid's tiles' side in pixels. It must be positive.
    *
-   * @param {FormationEditorGridArgs} args An object that has
+   * @param {IGridArguments} args An object that has
    *     information about the grid being created.
    */
-  constructor(args: NoCanvasGridArguments) {
-    var completeArgs: GridArguments = args.setCanvas(<HTMLCanvasElement>document.getElementById('formation-editor-tiles-canvas'));
-    super(completeArgs);
+  constructor(args: IGridArguments) {
+    var tiles: Array<Array<FormationEditorTile>> = [];
+    super(args);
+    for (var i: number = 0; i < this.width; i++) {
+      var array: Array<FormationEditorTile> = []
+      for (var j: number = 0; j < this.height; j++)
+        array.push(new FormationEditorTile({
+          grid: this,
+          coordinates: new TileCoordinates(i, j, this)
+        }));
+      tiles.push(array);
+    }
+    this._tiles = tiles;
+    this.draw();
   }
 
-  /**
-   * Adds a tile to the grid in the specified position.
-   * @param {FormationEditorTile} tile An object that has
-   */
-  addTile(tile: FormationEditorTile) {
-    this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
+  get tiles(): ReadonlyArray<ReadonlyArray<FormationEditorTile>> {
+    return this._tiles;
   }
 }

@@ -1,9 +1,6 @@
 window.addEventListener('load', async function () {
   var game: IGameInstance = new Game().instance;
 
-  var FIRST_COLOR: string = 'blue'; //:Color?
-  var FORMATION_ROWS: number = 2;
-  var SECOND_COLOR: string = 'red'; //:Color?
   var TILE_BACKGROUND_COLOR: string = 'white'; //:Color?
   var TILE_BORDER_COLOR: string = 'black'; //:Color?
   var TILE_BORDER_WIDTH: number = 2;
@@ -72,51 +69,6 @@ window.addEventListener('load', async function () {
     }
   }
 
-  function createFormationEditorGrid(
-    levelWidth: number,
-  ) {
-    var tileSide: number = Math.min(
-      CANVAS_SIDE / levelWidth,
-      CANVAS_SIDE / FORMATION_ROWS
-    );
-    formationEditorGrid = new FormationEditorGrid(new NoCanvasGridArguments({
-      width: levelWidth,
-      height: FORMATION_ROWS,
-      tileSide: tileSide,
-      leftMargin: (CANVAS_SIDE - tileSide * levelWidth) / 2,
-      topMargin: (CANVAS_SIDE - tileSide * FORMATION_ROWS) / 2
-    }));
-    for (var i: number = 0; i < levelWidth; i++)
-      for (var j: number = 0; j < FORMATION_ROWS; j++)
-        formationEditorGrid.addTile(new FormationEditorTile({
-          grid: formationEditorGrid,
-          coordinates: new TileCoordinates(i, j, formationEditorGrid)
-        }));
-  }
-
-  function createMatchGrid(
-    levelWidth: number,
-    levelHeight: number
-  ) {
-    var tileSide: number = Math.min(
-      CANVAS_SIDE / levelWidth,
-      CANVAS_SIDE / levelHeight
-    );
-    matchGrid = new MatchGrid(new NoCanvasGridArguments({
-      width: levelWidth,
-      height: levelHeight,
-      tileSide: tileSide,
-      leftMargin: (CANVAS_SIDE - tileSide * levelWidth) / 2,
-      topMargin: (CANVAS_SIDE - tileSide * levelHeight) / 2
-    }));
-    for (var i: number = 0; i < levelWidth; i++)
-      for (var j: number = 0; j < levelHeight; j++)
-        matchGrid.addTile(new MatchTile({
-          grid: matchGrid,
-          coordinates: new TileCoordinates(i, j, matchGrid)
-        }));
-  }
-
   function show(id: string) {
     var gameElements: HTMLCollection = document.getElementById('game').children;
     for (var i: number = gameElements.length - 1; 0 <= i; i--)
@@ -138,7 +90,7 @@ window.addEventListener('load', async function () {
   async function askForFormation(levelWidth: number) {
     currentFormationPromise = new Promise(getResolver);
     await game.executeLengthyFunction(async function () {
-      createFormationEditorGrid(levelWidth);
+      game.formationEditor.createGrid(currentLevel);
       show('formation-editor');
     });
     return currentFormationPromise;
@@ -155,12 +107,12 @@ window.addEventListener('load', async function () {
     var pressedEscOnFirstAsk: boolean = false;
     var levelWidth = level.width;
     var levelHeight = level.height;
-    createMatchGrid(levelWidth, levelHeight);
+    game.matchScreen.createGrid(currentLevel);
     firstPlayerTurn = Boolean(Math.floor(Math.random() * 2));
     firstPlayer.deckTemplate = null;
     secondPlayer.deckTemplate = null;
-    firstPlayer.formation = new Formation(levelWidth, FORMATION_ROWS);
-    secondPlayer.formation = new Formation(levelWidth, FORMATION_ROWS);
+    firstPlayer.formation = new Formation(levelWidth, game.formationEditor.rows);
+    secondPlayer.formation = new Formation(levelWidth, game.formationEditor.rows);
     if (secondPlayer instanceof HumanPlayer) {
       while (keepLooping()) {
         currentFormation = firstPlayer.formation;
@@ -272,15 +224,6 @@ window.addEventListener('load', async function () {
     var availableUnits = JSON.parse(
       localStorage.getItem('availableUnits')
     );
-    //create the first player
-    firstPlayer = new HumanPlayer({
-      name: 'Karv',
-      color: FIRST_COLOR
-    });
-    secondPlayer = new HumanPlayer({
-      name: 'Klatu',
-      color: SECOND_COLOR
-    });
     //wait until all the images have been loaded
     var promises: Array<Promise<HTMLImageElement>> = [];
     var unitType: UnitType;

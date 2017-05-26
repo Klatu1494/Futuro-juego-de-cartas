@@ -8,5 +8,7 @@
  * @interface
  */
 interface IMatchScreenInstance extends IGameComponentInstance {
-  //TODO
+  grid: MatchGrid;
+  canvas: HTMLCanvasElement;
+  createGrid: Function;
 }

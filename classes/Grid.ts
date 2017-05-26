@@ -7,25 +7,23 @@
  * A set of tiles aligned in rows and columns.
  * @class
  */
-class Grid {
+abstract class Grid {
   width: number;
   height: number;
   ctx: CanvasRenderingContext2D;
   tileSide: number;
   topMargin: number;
   leftMargin: number;
-  tiles: Array<Array<Tile>>;
+  protected _tiles: ReadonlyArray<ReadonlyArray<Tile>>;
   relatedTileClass: Function;
   /**
    * Creates a grid
    * @param {GridArguments} args An object that has
    *     information about the grid being created.
    */
-  constructor(args: GridArguments) {
+  constructor(args: IGridArguments) {
     //TODO: replace arrays but the not yet implemented fixed length arrays
-    var { width, height, canvas, tileSide, leftMargin, topMargin } = args;
-    this.tiles = [];
-    for (var i = 0; i < width; i++) this.tiles.push([]);
+    var { width, height, canvas, tileSide, leftMargin, topMargin, canvas } = args;
     this.width = width;
     this.height = height;
     this.ctx = canvas.getContext('2d');
@@ -44,11 +42,11 @@ class Grid {
     return new Rectangle(topleft, this.width * this.tileSide, this.height * this.tileSide);
   }
 
-  /**
-   * Adds a tile to the grid in the specified position.
-   * @param {Tile} tile An object that has
-   */
-  addTile(tile: Tile) {
-    this.tiles[tile.coordinates.x][tile.coordinates.y] = tile;
+  get tiles(): ReadonlyArray<ReadonlyArray<Tile>> {
+    return this._tiles;
+  }
+
+  draw() {
+    for (var array of this.tiles) for (var tile of array) tile.draw()
   }
 }

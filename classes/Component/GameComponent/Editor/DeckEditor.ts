@@ -7,7 +7,7 @@
  * The deck editor.
  * @class
  */
-class DeckEditor extends GameComponent {
+class DeckEditor extends Editor {
     protected _instance: IDeckEditorInstance;
     /**
      * Creates the deck editor.
