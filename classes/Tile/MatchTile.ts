@@ -21,7 +21,7 @@ class MatchTile extends Tile {
    * @param {FormationEditorTileArgs} args An object that has
    *     information about the tile being created.
    */
-  constructor(tileArgs: TileArguments, content?: { unit: Unit }) {
+  constructor(tileArgs: ITileArguments, content?: { unit: Unit }) {
     super(tileArgs);
     content = content || { unit: null };
     //I should destruct args when it more parameters (if it ever happens)

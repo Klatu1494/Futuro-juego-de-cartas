@@ -53,7 +53,7 @@ window.addEventListener('load', async function () {
   })];
 
   var
-    game: Game = new Game(),
+    game: IGameInstance = new Game().instance,
     currentResolver: Function,
     currentDeck: DeckTemplate,
     currentFormation: Formation,
@@ -143,7 +143,7 @@ window.addEventListener('load', async function () {
 
   async function askForDeck(formation: Formation) {
     currentDeckPromise = new Promise(getResolver);
-    await game.getInstance().executeMenuFunction(async function () {
+    await game.executeLengthyFunction(async function () {
       show('deck-editor');
     });
     return currentDeckPromise;
@@ -151,7 +151,7 @@ window.addEventListener('load', async function () {
 
   async function askForFormation(levelWidth: number) {
     currentFormationPromise = new Promise(getResolver);
-    await game.getInstance().executeMenuFunction(async function () {
+    await game.executeLengthyFunction(async function () {
       createFormationEditorGrid(levelWidth);
       show('formation-editor');
     });
@@ -227,7 +227,7 @@ window.addEventListener('load', async function () {
     firstPlayer.startGame();
   }
 
-  await game.getInstance().executeMenuFunction(async function () {
+  await game.executeLengthyFunction(async function () {
     //set the HTML constants-dependent style
     var boardHeight =
       HAND_POSITION === 'bottom' ?
@@ -309,7 +309,7 @@ window.addEventListener('load', async function () {
     document.getElementById('play-button').addEventListener(
       'click',
       async function () {
-        await game.getInstance().executeMenuFunction(async function () {
+        await game.executeLengthyFunction(async function () {
           await newMatch(LEVELS[currentLevel]);
           show('play-mode');
         });
@@ -318,7 +318,7 @@ window.addEventListener('load', async function () {
     document.getElementById('deck-editor-button').addEventListener(
       'click',
       async function () {
-        await game.getInstance().executeMenuFunction(async function () {
+        await game.executeLengthyFunction(async function () {
           currentResolver(currentDeckTemplate);
         });
       }

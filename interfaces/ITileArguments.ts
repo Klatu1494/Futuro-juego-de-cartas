@@ -1,5 +1,5 @@
 /**
- * @fileoverview Contains the TileArguments interface declaration and
+ * @fileoverview Contains the ITileArguments interface declaration and
  *     can contain definitions of the class' prototype's properties.
  */
 
@@ -8,7 +8,7 @@
  * the necessary information to create a tile.
  * @interface
  */
-interface TileArguments {
+interface ITileArguments {
   grid: Grid;
   coordinates: TileCoordinates;
 }

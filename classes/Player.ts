@@ -12,7 +12,7 @@ abstract class Player {
   readonly name: string;
   private _deckTemplate: DeckTemplate;
   private _deck: Array<Card>;
-  formation: Formation;
+  private _formation: Formation;
   /**
    * Creates a player
    * @typedef {Object} PlayerArgs
@@ -43,14 +43,26 @@ abstract class Player {
   }
 
   /**
-   * Gets or sets and saves this player's deck template.
+   * Gets or sets this player's deck template.
    * @type {DeckTemplate}
    */
   get deckTemplate(): DeckTemplate {
     return this._deckTemplate;
   }
+
   set deckTemplate(value: DeckTemplate) {
-    localStorage.setItem(this.color + 'Deck', JSON.stringify(value));
     this._deckTemplate = value;
+  }
+
+  /**
+   * Gets or sets this player's deck template.
+   * @type {DeckTemplate}
+   */
+  get formation(): Formation {
+    return this._formation;
+  }
+
+  set formation(value: Formation) {
+    this._formation = value;
   }
 }
