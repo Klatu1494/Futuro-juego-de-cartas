@@ -4,7 +4,6 @@ window.addEventListener('load', async function () {
   var TWO_PI = Math.PI * 2;
   var RADIAL_MENU_FRAMES: number = 20;
   var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
-  var FRAME_DURATION: number = 50 / 3;
   //these variables must be declared after the previous ones
   var CANVAS_SIDE: number = Math.min(game.width, game.height);
   var HAND_POSITION: string = game.height < game.width ? 'right' : 'bottom';
