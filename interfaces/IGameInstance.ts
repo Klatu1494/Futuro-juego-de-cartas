@@ -11,6 +11,7 @@ interface IGameInstance extends IComponentInstance {
   width: number;
   height: number;
   cardTypes: Set<CardType>;
+  unitTypes: Set<UnitType>;
   firstPlayer: HumanPlayer;
   secondPlayer: Player;
   executeLengthyFunction: Function;

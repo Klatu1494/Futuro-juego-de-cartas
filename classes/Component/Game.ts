@@ -38,6 +38,22 @@ class Game extends Component {
 
                     }
                 })),
+            unitTypes: new Set().
+                add(new UnitType({
+                    name: 'Zombie',
+                    imgSrc: 'images/shambling-zombie.png',
+                    initialQuantity: 2
+                })).
+                add(new UnitType({
+                    name: 'Farmer',
+                    imgSrc: 'images/unit1.png',
+                    initialQuantity: 2 //just testing
+                })).
+                add(new UnitType({
+                    name: 'Warrior',
+                    imgSrc: 'images/unit2.png',
+                    initialQuantity: 2 //just testing
+                })),
             firstPlayer: new HumanPlayer({ name: null, color: null }),
             secondPlayer: null,
             addComponent: function (component: IGameComponentInstance) {

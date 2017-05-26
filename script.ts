@@ -2,22 +2,6 @@ window.addEventListener('load', async function () {
   var game: IGameInstance = new Game().instance;
 
   var TWO_PI = Math.PI * 2;
-  var UNIT_TYPES: Set<UnitType> = new Set().
-    add(new UnitType({
-      name: 'Zombie',
-      imgSrc: 'images/shambling-zombie.png',
-      initialQuantity: 2
-    })).
-    add(new UnitType({
-      name: 'Farmer',
-      imgSrc: 'images/unit1.png',
-      initialQuantity: 2 //just testing
-    })).
-    add(new UnitType({
-      name: 'Warrior',
-      imgSrc: 'images/unit2.png',
-      initialQuantity: 2 //just testing
-    }));
   var RADIAL_MENU_FRAMES: number = 20;
   var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
   var FRAME_DURATION: number = 50 / 3;
@@ -58,7 +42,7 @@ window.addEventListener('load', async function () {
   }
 
   function hideRadialMenu() {
-    for (var unitType of UNIT_TYPES) {
+    for (var unitType of game.unitTypes) {
       var radialMenuItem: HTMLImageElement = unitType.radialMenuItem;
       var style: CSSStyleDeclaration = radialMenuItem.style;
       radialMenuItem.style.transition = 'all 0s linear';
@@ -218,11 +202,11 @@ window.addEventListener('load', async function () {
     //wait until all the images have been loaded
     var promises: Array<Promise<HTMLImageElement>> = [];
     var unitType: UnitType;
-    for (var unitType of UNIT_TYPES) promises.push(unitType.imageLoader);
+    for (var unitType of game.unitTypes) promises.push(unitType.imageLoader);
     for (var cardType of game.cardTypes) promises.push(cardType.imageLoader);
     await Promise.all(promises);
     //add event listeners
-    for (unitType of UNIT_TYPES) unitType.radialMenuItem.addEventListener(
+    for (unitType of game.unitTypes) unitType.radialMenuItem.addEventListener(
       'click',
       setTileUnitType.bind(unitType)
     );
@@ -261,7 +245,7 @@ window.addEventListener('load', async function () {
           var centerY: number = center.y;
           var tileSide: number = formationEditorGrid.tileSide;
           var unitTypesBeingShown: Array<UnitType> = [];
-          for (var unitType of UNIT_TYPES)
+          for (var unitType of game.unitTypes)
             if (unitType.availableUnits) {
               unitTypesBeingShown.push(unitType);
             }
