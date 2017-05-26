@@ -25,6 +25,19 @@ class Game extends Component {
         //loading screen
         var loadingScreen: IComponentInstance = new LoadingScreen().instance;
         var instance: IGameInstance = {
+            cardTypes: new Set().
+                add(new CardType({
+                    name: 'First action',
+                    onUse: () => {
+
+                    }
+                })).
+                add(new CardType({
+                    name: 'Second action',
+                    onUse: () => {
+
+                    }
+                })),
             firstPlayer: new HumanPlayer({ name: null, color: null }),
             secondPlayer: null,
             addComponent: function (div: HTMLDivElement) {

@@ -8,14 +8,15 @@
  * @interface
  */
 interface IGameInstance extends IComponentInstance {
-  firstPlayer: HumanPlayer,
-  secondPlayer: Player,
-  executeLengthyFunction: Function,
-  componentsDivs: Array<HTMLDivElement>,
-  menu: IMenuInstance,
-  formationEditor: IFormationEditorInstance,
-  deckEditor: IDeckEditorInstance,
-  matchScreen: IMatchScreenInstance,
-  show: Function,
-  addComponent: Function,
+  cardTypes: Set<CardType>;
+  firstPlayer: HumanPlayer;
+  secondPlayer: Player;
+  executeLengthyFunction: Function;
+  componentsDivs: Array<HTMLDivElement>;
+  menu: IMenuInstance;
+  formationEditor: IFormationEditorInstance;
+  deckEditor: IDeckEditorInstance;
+  matchScreen: IMatchScreenInstance;
+  show: Function;
+  addComponent: Function;
 }

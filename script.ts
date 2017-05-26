@@ -1,17 +1,4 @@
 window.addEventListener('load', async function () {
-  var CARD_TYPES: Set<CardType> = new Set().
-    add(new CardType({
-      name: 'First action',
-      onUse: () => {
-
-      }
-    })).
-    add(new CardType({
-      name: 'Second action',
-      onUse: () => {
-
-      }
-    }));
   var FIRST_COLOR: string = 'blue'; //:Color?
   var FORMATION_ROWS: number = 2;
   var HEIGHT: number = 600;
@@ -299,7 +286,7 @@ window.addEventListener('load', async function () {
     var promises: Array<Promise<HTMLImageElement>> = [];
     var unitType: UnitType;
     for (var unitType of UNIT_TYPES) promises.push(unitType.imageLoader);
-    for (var cardType of CARD_TYPES) promises.push(cardType.imageLoader);
+    for (var cardType of game.cardTypes) promises.push(cardType.imageLoader);
     await Promise.all(promises);
     //add event listeners
     for (unitType of UNIT_TYPES) unitType.radialMenuItem.addEventListener(
