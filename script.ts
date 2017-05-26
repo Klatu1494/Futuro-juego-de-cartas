@@ -1,7 +1,6 @@
 window.addEventListener('load', async function () {
   var game: IGameInstance = new Game().instance;
 
-  var TILE_BORDER_WIDTH: number = 2;
   var TWO_PI = Math.PI * 2;
   var UNIT_TYPES: Set<UnitType> = new Set().
     add(new UnitType({
@@ -203,7 +202,6 @@ window.addEventListener('load', async function () {
     gameCanvas.width = boardWidth;
     formationEditorCanvas.height = boardHeight;
     formationEditorCanvas.width = boardWidth;
-    formationEditorCtx.lineWidth = TILE_BORDER_WIDTH;
     //if it is the first time the user opens the game or
     //the user deleted the save file, create a save file
     var savedGame = localStorage.getItem('savedGame');
