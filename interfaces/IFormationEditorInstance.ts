@@ -14,4 +14,6 @@ interface IFormationEditorInstance extends IEditorInstance {
   grid: FormationEditorGrid;
   ctx: CanvasRenderingContext2D;
   createGrid: Function;
+  radialMenuItemSize: number;
+  selectedTile: FormationEditorTile;
 }

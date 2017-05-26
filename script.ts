@@ -1,11 +1,6 @@
 window.addEventListener('load', async function () {
   var game: IGameInstance = new Game().instance;
 
-  var TWO_PI = Math.PI * 2;
-  var RADIAL_MENU_FRAMES: number = 20;
-  var RADIAL_MENU_ITEMS_SIZE: number = 0.75;
-  //these variables must be declared after the previous ones
-  var CANVAS_SIDE: number = Math.min(game.width, game.height);
   var HAND_POSITION: string = game.height < game.width ? 'right' : 'bottom';
   var HAND_HEIGHT_OR_WIDTH: number =
     HAND_POSITION === 'bottom' ?
@@ -224,66 +219,6 @@ window.addEventListener('load', async function () {
         await game.executeLengthyFunction(async function () {
           currentResolver(currentDeckTemplate);
         });
-      }
-    );
-    document.getElementById('formation-editor').addEventListener(
-      'click',
-      e => {
-        var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
-        var selectedTileCoordinates = clickCoordinates.toGrid(formationEditorGrid);
-        if (selectedFormationEditorTile !== null) {
-          if (selectedFormationEditorTile.coordinates.toScreen().contains(clickCoordinates)) return;
-          hideRadialMenu();
-        }
-        if (clickCoordinates.isInsideGridArea(formationEditorGrid)) {
-          //TODO: split next line into multiple lines because it is too large
-          selectedFormationEditorTile = formationEditorGrid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
-          var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
-          var center: Coords = selectedTileBoundingSquare.center;
-          var centerX: number = center.x;
-          var centerY: number = center.y;
-          var tileSide: number = formationEditorGrid.tileSide;
-          var unitTypesBeingShown: Array<UnitType> = [];
-          for (var unitType of game.unitTypes)
-            if (unitType.availableUnits) {
-              unitTypesBeingShown.push(unitType);
-            }
-          var length = unitTypesBeingShown.length;
-          var itemRadius = tileSide / 2;
-          var polygonRadius = (tileSide - itemRadius) / 2;
-          itemRadius *= RADIAL_MENU_ITEMS_SIZE;
-          //move items to the center of the radial menu
-          for (var unitType of unitTypesBeingShown) {
-            var style = unitType.radialMenuItem.style;
-            style.visibility = 'visible';
-            style.left = centerX + 'px';
-            style.top = centerY + 'px';
-            style.width = '0';
-            style.height = '0';
-          }
-          document.body.offsetLeft; //force reflow
-          //move items away from the center
-          for (var i = 0; i < length; i++) {
-            var style = unitTypesBeingShown[i].radialMenuItem.style;
-            style.transition = 'all 0.3s linear';
-            style.left = (centerX - itemRadius / 2 + (
-              length === 1 ?
-                0 :
-                Math.sin(i * TWO_PI / length) * polygonRadius
-            )) + 'px';
-            style.top = (centerY - itemRadius / 2 - (
-              length === 1 ?
-                0 :
-                Math.cos(i * TWO_PI / length) * polygonRadius
-            )) + 'px';
-            style.width = itemRadius + 'px';
-            style.height = itemRadius + 'px';
-          }
-        }
-        else {
-          hideRadialMenu();
-          selectedFormationEditorTile = null;
-        }
       }
     );
     document.getElementById('formation-editor').addEventListener(
