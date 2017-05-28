@@ -14,10 +14,11 @@ abstract class GameComponent extends Component {
      */
     constructor(
         game: Game,
-        { onResize = doNothing, onEscapePress = doNothing, id, isHiddenOnCreation = true }: IGameComponentOptionalArguments
+        args?: IGameComponentOptionalArguments
     ) {
+        var { onResize = doNothing, onEscapePress = doNothing, isHiddenOnCreation = true } = args;
         var div: HTMLDivElement = game.div;
-        super(div, id, isHiddenOnCreation);
+        super(div, isHiddenOnCreation);
         this.div.addEventListener('keydown', onEscapePress || doNothing)
         window.addEventListener('resize', onResize || doNothing);
     }

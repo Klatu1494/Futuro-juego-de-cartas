@@ -16,7 +16,7 @@ class MatchScreen extends GameComponent {
      * Creates the match screen.
      */
     constructor(game: Game) {
-        super(game, { id: 'match-screen', isHiddenOnCreation: false });
+        super(game, {});
 
         function onEscapePress() {
             game.show(game.menu);

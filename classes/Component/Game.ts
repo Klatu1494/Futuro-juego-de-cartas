@@ -23,7 +23,7 @@ class Game extends Component {
      * Creates the game.
      */
     constructor() {
-        super(document.body, 'game', false);
+        super(document.body, false, 'game');
         this._loadingScreen = new LoadingScreen(this);
         this.setComponents(this._loadingScreen);
     }

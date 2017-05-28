@@ -16,7 +16,7 @@ class Component {
    * @param {HTMLElement} parent The parent of this component's div.
    * @param {string?} parent The id of this component's div.
    */
-  constructor(parent: HTMLElement, id?: string, isHiddenOnCreation: boolean = true) {
+  constructor(parent: HTMLElement, isHiddenOnCreation: boolean = true, id?: string) {
     if (this.wasInstantiated) throw new Error('This component already exists.');
     var div = document.createElement('div');
     var style = div.style;

@@ -13,7 +13,7 @@ class LoadingScreen extends GameComponent {
      * Creates a screen that will be shown while a lengthy function is executed.
      */
     constructor(game: Game) {
-        super(game, { id: 'loading-screen', isHiddenOnCreation: false });
+        super(game, { isHiddenOnCreation: false });
         this.div.style.lineHeight = Component.height + 'px';
         this._game = game;
     }

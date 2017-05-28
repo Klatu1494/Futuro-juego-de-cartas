@@ -13,10 +13,18 @@ class Menu extends GameComponent {
      * Creates the game.
      */
     constructor(game: Game) {
-        super(game, { id: 'menu' });
+        super(game, {});
 
-        function newMatch() {
+        this.addButton('Single player', () => {
             game.show(game.formationEditor);
-        }
+        });
+    }
+
+    private addButton(label: string, eventListener: EventListener) {
+        var button = document.createElement('div');
+        button.innerText = label;
+        button.className = 'button';
+        button.addEventListener('click', eventListener);
+        this.div.appendChild(button);
     }
 }

@@ -10,6 +10,5 @@
 interface IGameComponentOptionalArguments {
     onResize?: EventListener;
     onEscapePress?: EventListener;
-    id?: string;
     isHiddenOnCreation?: boolean;
 }
