@@ -8,6 +8,7 @@
  * @class
  */
 class Game extends Component {
+    completeLevel: () => void;
     cardTypes: ReadonlyArray<CardType>;
     unitTypes: ReadonlyArray<UnitType>;
     secondPlayer: Player;
@@ -32,6 +33,9 @@ class Game extends Component {
 
     async initialize() {
         var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
+        this.completeLevel = function () {
+            this._currentLevelIndex++;
+        }
         this.cardTypes = [
             new CardType({
                 name: 'First action',
@@ -86,10 +90,6 @@ class Game extends Component {
         for (var div of this._divsOfComponents) div.style.display = 'none';
         component.div.style.display = '';
         component.onShow();
-    }
-
-    completeLevel() {
-        this._currentLevelIndex++;
     }
 
     async executeLengthyFunction(asyncFunc: Function, showThisAfter?: GameComponent) {
