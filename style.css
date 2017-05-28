@@ -24,14 +24,8 @@ html {
 
 #game>div {
   display: flex;
-}
-
-#menu,
-#play-mode,
-td {
   align-items: center;
   justify-content: center;
-  height: 100%;
 }
 
 #board {
