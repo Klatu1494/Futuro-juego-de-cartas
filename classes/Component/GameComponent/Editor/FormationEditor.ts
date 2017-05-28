@@ -37,7 +37,7 @@ class FormationEditor extends Editor {
         var canvas: HTMLCanvasElement = document.createElement('canvas');
         var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
         var div: HTMLDivElement = this.div;
-        var button: HTMLDivElement = document.createElement('div');
+        var button: HTMLButtonElement;
 
         this.onShow = function () {
             var canvas: HTMLCanvasElement = this._canvas;
@@ -52,8 +52,8 @@ class FormationEditor extends Editor {
                 width: columns,
                 height: rows,
                 tileSide: tileSide,
-                leftMargin: (canvas.width - tileSide * columns) / 2,
-                topMargin: (canvas.height - tileSide * rows) / 2,
+                leftPadding: (canvas.width - tileSide * columns) / 2,
+                topPadding: (canvas.height - tileSide * rows) / 2,
                 canvas: canvas
             });
             this.currentFormation = new Formation(columns, rows);
@@ -72,7 +72,7 @@ class FormationEditor extends Editor {
                     hideRadialMenu();
                 }
                 if (clickCoordinates.isInsideGridArea(self._grid)) {
-                    var selectedTileCoordinates = clickCoordinates.toGrid(self._grid);
+                    var selectedTileCoordinates = clickCoordinates.toTileCoordinates(self._grid);
                     self._selectedTile =
                         self._grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
                     var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
@@ -126,11 +126,6 @@ class FormationEditor extends Editor {
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 2;
-        button.addEventListener('click', () => {
-            console.log(self.currentFormation);
-            self._player.formation = self.currentFormation;
-            game.show(game.deckEditor);
-        });
         this._canvas = canvas;
         this._ctx = ctx;
         this._rows = 2;
@@ -152,6 +147,15 @@ class FormationEditor extends Editor {
             );
         };
         div.appendChild(canvas);
-        div.appendChild(button);
+        button = GameComponent.createButton({
+            parent: div,
+            eventListener: () => {
+                console.log(self.currentFormation);
+                self._player.formation = self.currentFormation;
+                game.show(game.deckEditor);
+            },
+            label: 'Confirm'
+        });
+        button.style.alignSelf = 'flex-end';
     }
 }

@@ -42,8 +42,8 @@ class MatchScreen extends GameComponent {
                 width: level.width,
                 height: rows,
                 tileSide: tileSide,
-                leftMargin: (canvas.width - tileSide * level.width) / 2,
-                topMargin: (canvas.height - tileSide * rows) / 2,
+                leftPadding: (canvas.width - tileSide * level.width) / 2,
+                topPadding: (canvas.height - tileSide * rows) / 2,
                 canvas: canvas
             });
         };

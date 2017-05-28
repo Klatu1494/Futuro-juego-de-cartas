@@ -11,7 +11,7 @@ interface IGridArguments {
     width: number;
     height: number;
     tileSide: number;
-    leftMargin: number;
-    topMargin: number;
+    leftPadding: number;
+    topPadding: number;
     canvas: HTMLCanvasElement;
 }

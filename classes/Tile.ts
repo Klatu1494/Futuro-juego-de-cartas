@@ -26,9 +26,7 @@ abstract class Tile {
     var grid = this.grid;
     var ctx = grid.ctx;
     var tileSide = grid.tileSide;
-    var leftMargin = grid.leftMargin;
-    var topMargin = grid.topMargin;
-    var boundingSquare = this.coordinates.toScreen();
+    var boundingSquare = this.coordinates.toCanvas();
     ctx.fillRect(boundingSquare.left, boundingSquare.top, boundingSquare.horizontalSize, boundingSquare.verticalSize);
     ctx.strokeRect(boundingSquare.left, boundingSquare.top, boundingSquare.horizontalSize, boundingSquare.verticalSize);
   }

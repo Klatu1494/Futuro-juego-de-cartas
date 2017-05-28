@@ -8,12 +8,23 @@ class TileCoordinates extends Coords {
     }
   }
 
-  toScreen() {
+  toScreen(): Square {
     var grid: Grid = this.grid;
     return new Square(
       new ScreenCoordinates(
-        grid.leftMargin + this.x * grid.tileSide,
-        grid.topMargin + this.y * grid.tileSide
+        grid.leftMargin + grid.leftPadding + this.x * grid.tileSide,
+        grid.topMargin + grid.topPadding + this.y * grid.tileSide
+      ),
+      grid.tileSide
+    );
+  }
+
+  toCanvas(): Square {
+    var grid: Grid = this.grid;
+    return new Square(
+      new ScreenCoordinates(
+        grid.leftPadding + this.x * grid.tileSide,
+        grid.topPadding + this.y * grid.tileSide
       ),
       grid.tileSide
     );

@@ -11,14 +11,15 @@ class ScreenCoordinates extends Coords {
    * @param {Grid} grid Grid used to transform the coordinates.
    * @return {TileCoordinates}
    */
-  toGrid(grid: Grid) {
-    var leftMargin: number = grid.leftMargin;
-    var topMargin: number = grid.topMargin;
+  toTileCoordinates(grid: Grid) {
+    var gridX: number = grid.leftMargin + grid.leftPadding;
+    var gridY: number = grid.topMargin + grid.topPadding;
     var tileSide: number = grid.tileSide;
-    var gridX: number = Math.floor((this.x - leftMargin) / tileSide);
-    var gridY: number = Math.floor((this.y - topMargin) / tileSide);
-
-    return new TileCoordinates(gridX, gridY, grid);
+    return new TileCoordinates(
+      Math.floor((this.x - gridX) / tileSide),
+      Math.floor((this.y - gridY) / tileSide),
+      grid
+    );
   }
 
   /**
