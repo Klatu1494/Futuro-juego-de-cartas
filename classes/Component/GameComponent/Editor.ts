@@ -4,13 +4,13 @@
  */
 
 /**
- * The deck editor.
+ * An editor.
  * @class
  */
 abstract class Editor extends GameComponent {
     protected _player: Player;
     /**
-     * Creates the deck editor.
+     * Creates an editor.
      */
     constructor(game: Game, optionalArguments: IGameComponentOptionalArguments) {
         super(game, optionalArguments);

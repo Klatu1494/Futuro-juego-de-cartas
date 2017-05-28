@@ -9,8 +9,6 @@
  */
 class Component {
   private _div: HTMLDivElement;
-  static width: number = innerWidth;
-  static height: number = innerHeight;
   /**
    * Creates a component.
    * @param {HTMLElement} parent The parent of this component's div.
@@ -34,5 +32,13 @@ class Component {
 
   get div(): HTMLDivElement {
     return this._div;
+  }
+
+  static get width(): number {
+    return innerWidth;
+  }
+
+  static get height(): number {
+    return innerHeight;
   }
 }

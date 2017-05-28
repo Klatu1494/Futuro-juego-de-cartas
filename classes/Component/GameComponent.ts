@@ -8,7 +8,8 @@
  * @class
  */
 abstract class GameComponent extends Component {
-    onEscapePress: Function;
+    private _game: Game;
+    onShow: () => void;
     /**
      * Creates a game component.
      */
@@ -19,7 +20,13 @@ abstract class GameComponent extends Component {
         var { onResize = doNothing, onEscapePress = doNothing, isHiddenOnCreation = true } = args;
         var div: HTMLDivElement = game.div;
         super(div, isHiddenOnCreation);
+        this._game = game;
         this.div.addEventListener('keydown', onEscapePress || doNothing)
         window.addEventListener('resize', onResize || doNothing);
+        this.onShow = this.onShow || doNothing;
+    }
+
+    get game(): Game {
+        return this._game;
     }
 }

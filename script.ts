@@ -33,15 +33,6 @@ window.addEventListener('load', async function () {
     currentDeckTemplate: DeckTemplate,
     selectedFormationEditorTile: FormationEditorTile = null;
 
-  function setTileUnitType(event: MouseEvent) {
-    hideRadialMenu();
-    if (currentFormation.getAvailableUnits(this)) {
-      currentFormation.setUnitType(selectedFormationEditorTile.coordinates, this);
-      if (this) selectedFormationEditorTile.drawUnitType(this);
-    }
-    selectedFormationEditorTile = null;
-  }
-
   function hideRadialMenu() {
     for (var unitType of game.unitTypes) {
       var radialMenuItem: HTMLImageElement = unitType.radialMenuItem;

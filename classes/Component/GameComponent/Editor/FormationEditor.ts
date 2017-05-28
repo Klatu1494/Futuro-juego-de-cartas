@@ -8,7 +8,6 @@
  * @class
  */
 class FormationEditor extends Editor {
-    createGrid: (level: Level) => void;
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _grid: FormationEditorGrid;
@@ -16,6 +15,7 @@ class FormationEditor extends Editor {
     private _radialMenuItemSize: number;
     private _selectedTile: FormationEditorTile;
     currentFormation: Formation;
+    addEventListeners: (unitTypes: ReadonlyArray<UnitType>) => void;
     /**
      * Creates the game.
      */
@@ -27,21 +27,43 @@ class FormationEditor extends Editor {
             }
         });
 
-        function hideRadialMenu() {
-            for (var unitType of game.unitTypes)
-                unitType.radialMenuItem.style.display = 'none';
-        }
-
-        function onConfirm() {
-            self._player.formation = self.currentFormation;
-            game.show(game.deckEditor);
-        };
-
-        //Formation editor initialization;
+        //Formation editor initialization
         var TWO_PI = Math.PI * 2;
         var self: FormationEditor = this;
         var canvas: HTMLCanvasElement = document.createElement('canvas');
         var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+        var div: HTMLDivElement = this.div;
+        var button: HTMLDivElement = document.createElement('div');
+
+        function hideRadialMenu() {
+            for (var unitType of self.game.unitTypes)
+                unitType.radialMenuItem.style.display = 'none';
+        }
+
+        this.onShow = function () {
+            var canvas: HTMLCanvasElement = this._canvas;
+            var level: Level = this.game.currentLevel;
+            var columns: number = level.width;
+            var rows: number = this._rows;
+            var tileSide: number = Math.min(
+                canvas.width / columns,
+                canvas.height / rows
+            );
+            this._grid = new FormationEditorGrid({
+                width: columns,
+                height: rows,
+                tileSide: tileSide,
+                leftMargin: (canvas.width - tileSide * columns) / 2,
+                topMargin: (canvas.height - tileSide * rows) / 2,
+                canvas: canvas
+            });
+            this.currentFormation = new Formation(columns, rows);
+            /**
+             * @todo: Restore formation.
+             */
+        };
+        canvas.width = Math.min(Component.width, Component.height);
+        canvas.height = Math.min(Component.width, Component.height);
         canvas.addEventListener(
             'click',
             e => {
@@ -50,8 +72,9 @@ class FormationEditor extends Editor {
                 if (self._selectedTile !== null) {
                     if (self._selectedTile.coordinates.toScreen().contains(clickCoordinates)) return;
                     hideRadialMenu();
+                    self._selectedTile = null;
                 }
-                if (clickCoordinates.isInsideGridArea(self._grid)) {
+                else if (clickCoordinates.isInsideGridArea(self._grid)) {
                     //TODO: split next line into multiple lines because it is too large
                     self._selectedTile = self._grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
                     var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
@@ -71,7 +94,7 @@ class FormationEditor extends Editor {
                     //move items to the center of the radial menu
                     for (var unitType of unitTypesBeingShown) {
                         var style = unitType.radialMenuItem.style;
-                        style.visibility = 'visible';
+                        style.display = 'block';
                         style.left = centerX + 'px';
                         style.top = centerY + 'px';
                         style.width = '0';
@@ -105,28 +128,32 @@ class FormationEditor extends Editor {
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 2;
-        this.createGrid = function (level: Level) {
-            var canvas: HTMLCanvasElement = this.canvas;
-            var columns: number = level.width;
-            var rows: number = this.rows;
-            var tileSide: number = Math.min(
-                canvas.width / columns,
-                canvas.height / rows
-            );
-
-            this.grid = new FormationEditorGrid({
-                width: level.width,
-                height: rows,
-                tileSide: tileSide,
-                leftMargin: (canvas.width - tileSide * level.width) / 2,
-                topMargin: (canvas.height - tileSide * rows) / 2,
-                canvas: canvas
-            });
-        };
+        button.addEventListener('click', () => {
+            console.log(self.currentFormation);
+            self._player.formation = self.currentFormation;
+            game.show(game.deckEditor);
+        });
         this._canvas = canvas;
         this._ctx = ctx;
         this._rows = 2;
         this._radialMenuItemSize = 0.75;
         this._selectedTile = null;
+        this.addEventListeners = (unitTypes: ReadonlyArray<UnitType>) => {
+            function setTileUnitType(event: MouseEvent) {
+                hideRadialMenu();
+                if (self.currentFormation.getAvailableUnits(this)) {
+                    self.currentFormation.setUnitType(self._selectedTile.coordinates, this);
+                    if (this) self._selectedTile.drawUnitType(this);
+                }
+                self._selectedTile = null;
+            }
+            var self = this;
+            for (var unitType of unitTypes) unitType.radialMenuItem.addEventListener(
+                'click',
+                setTileUnitType.bind(unitType)
+            );
+        };
+        div.appendChild(canvas);
+        div.appendChild(button);
     }
 }

@@ -11,6 +11,7 @@ class Game extends Component {
     cardTypes: ReadonlyArray<CardType>;
     unitTypes: ReadonlyArray<UnitType>;
     secondPlayer: Player;
+    private _currentLevelIndex: number;
     private _loadingScreen: LoadingScreen;
     private _menu: Menu;
     private _formationEditor: FormationEditor;
@@ -18,6 +19,7 @@ class Game extends Component {
     private _matchScreen: MatchScreen;
     private _firstPlayer: HumanPlayer;
     private _divsOfComponents: ReadonlyArray<HTMLDivElement>;
+    private _levels: ReadonlyArray<Level>;
     static wasInstantiated: boolean;
     /**
      * Creates the game.
@@ -29,6 +31,7 @@ class Game extends Component {
     }
 
     initialize() {
+        var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
         this.cardTypes = [
             new CardType({
                 name: 'First action',
@@ -60,11 +63,17 @@ class Game extends Component {
                 initialQuantity: 2 //just testing
             })
         ];
+        this._levels = [
+            new Level({ width: 5, height: 5 })
+        ];
+        this._currentLevelIndex = 0;
         this._menu = new Menu(this);
         this._formationEditor = new FormationEditor(this);
         this._deckEditor = new DeckEditor(this);
         this._matchScreen = new MatchScreen(this);
         this.setComponents(this._loadingScreen, this.menu, this.formationEditor, this.deckEditor, this.matchScreen);
+        for (var unitType of this.unitTypes) unitTypesImagesLoaders.push(unitType.imageLoader);
+        Promise.all(unitTypesImagesLoaders).then(images => this.formationEditor.addEventListeners(this.unitTypes));
     }
 
     private setComponents(...array: Array<GameComponent>) {
@@ -73,9 +82,14 @@ class Game extends Component {
         this._divsOfComponents = divsArray;
     };
 
-    show(component: Component) {
+    show(component: GameComponent) {
         for (var div of this._divsOfComponents) div.style.display = 'none';
         component.div.style.display = '';
+        component.onShow();
+    }
+
+    completeLevel() {
+        this._currentLevelIndex++;
     }
 
     async executeLengthyFunction(asyncFunc: Function, showThisAfter?: GameComponent) {
@@ -106,5 +120,9 @@ class Game extends Component {
 
     get matchScreen() {
         return this._matchScreen;
+    }
+
+    get currentLevel() {
+        return this._levels[this._currentLevelIndex];
     }
 }
