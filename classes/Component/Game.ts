@@ -33,6 +33,24 @@ class Game extends Component {
 
     async initialize() {
         var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
+        GameComponent.buttonWidth = 118;
+        GameComponent.buttonHeight = 35;
+        GameComponent.margin = 8;
+        GameComponent.createButton = function (
+            { parent, eventListener = doNothing, label }: { parent: HTMLElement, eventListener: EventListener, label: string }
+        ) {
+            var button: HTMLButtonElement = document.createElement('button');
+            var style: CSSStyleDeclaration = button.style;
+            button.innerText = label;
+            button.className = 'button';
+            style.width = this.buttonWidth + 'px';
+            style.height = this.buttonHeight + 'px';
+            style.lineHeight = this.buttonHeight + 'px';
+            style.margin = this.margin + 'px';
+            button.addEventListener('click', eventListener);
+            parent.appendChild(button);
+            return button;
+        }
         this.completeLevel = function () {
             this._currentLevelIndex++;
         }

@@ -1,3 +1,12 @@
+/*
+Required browser version:
+  Firefox: 29;
+  Safari: 9;
+  Chrome: 29;
+  IE: 11;
+  Opera: 12.1;
+*/
+
 body,
 html {
   margin: 0;
@@ -43,12 +52,14 @@ canvas {
   background-color: #0075d8;
   color: white;
   display: inline-block;
-  height: 124px;
-  line-height: 124px;
-  width: 184px;
-  /* 184px = 200px - (margin-left + margin-right) * 2 */
-  margin: 8px;
+  box-sizing: content-box;
+  border: none;
+  outline: none;
   cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1186e9;
 }
 
 .card-type-adder {

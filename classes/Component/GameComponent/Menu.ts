@@ -14,17 +14,12 @@ class Menu extends GameComponent {
     constructor(game: Game) {
         super(game, {});
 
-        function addButton(label: string, eventListener: EventListener) {
-            var button = document.createElement('div');
-            button.innerText = label;
-            button.className = 'button';
-            button.addEventListener('click', eventListener);
-            self.div.appendChild(button);
-        }
-
-        var self: Menu = this;
-        addButton('Single player', () => {
-            game.show(game.formationEditor);
+        GameComponent.createButton({
+            label: 'Single player',
+            eventListener: () => {
+                game.show(game.formationEditor);
+            },
+            parent: this.div
         });
     }
 }

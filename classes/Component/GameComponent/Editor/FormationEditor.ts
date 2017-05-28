@@ -1,10 +1,10 @@
 /**
- * @fileoverview Contains the Game class declaration and
+ * @fileoverview Contains the FormationEditor class declaration and
  *     can contain definitions of the class' prototype's properties.
  */
 
 /**
- * The game.
+ * The formation editor.
  * @class
  */
 class FormationEditor extends Editor {
@@ -17,7 +17,7 @@ class FormationEditor extends Editor {
     currentFormation: Formation;
     addEventListeners: (unitTypes: ReadonlyArray<UnitType>) => void;
     /**
-     * Creates the game.
+     * Creates the formation editor if it's not already created, else throws an error.
      */
     constructor(game: Game) {
         super(game, {
@@ -27,18 +27,17 @@ class FormationEditor extends Editor {
             }
         });
 
-        //Formation editor initialization
+        function hideRadialMenu() {
+            for (var unitType of game.unitTypes)
+                unitType.radialMenuItem.style.display = 'none';
+        }
+
         var TWO_PI = Math.PI * 2;
         var self: FormationEditor = this;
         var canvas: HTMLCanvasElement = document.createElement('canvas');
         var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
         var div: HTMLDivElement = this.div;
         var button: HTMLDivElement = document.createElement('div');
-
-        function hideRadialMenu() {
-            for (var unitType of game.unitTypes)
-                unitType.radialMenuItem.style.display = 'none';
-        }
 
         this.onShow = function () {
             var canvas: HTMLCanvasElement = this._canvas;
