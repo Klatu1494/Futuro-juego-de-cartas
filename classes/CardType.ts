@@ -36,7 +36,7 @@ class CardType {
     button = document.createElement('div');
     button.className = 'take-out';
     element.appendChild(button);
-    document.getElementById('card-adder').appendChild(element);
+    //document.getElementById('card-adder').appendChild(element);
     this._name = name;
     this._onUse = onUse;
     this._element = element;

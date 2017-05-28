@@ -21,9 +21,8 @@ abstract class Grid {
    * @param {GridArguments} args An object that has
    *     information about the grid being created.
    */
-  constructor(args: IGridArguments) {
+  constructor({ width, height, canvas, tileSide, leftMargin, topMargin }: IGridArguments) {
     //TODO: replace arrays but the not yet implemented fixed length arrays
-    var { width, height, canvas, tileSide, leftMargin, topMargin, canvas } = args;
     this.width = width;
     this.height = height;
     this.ctx = canvas.getContext('2d');

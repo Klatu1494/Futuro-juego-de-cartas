@@ -8,50 +8,26 @@
  * @class
  */
 class DeckEditor extends Editor {
-    protected _instance: IDeckEditorInstance;
+    setDeckTemplate: (deckTemplate: DeckTemplate) => void;
     /**
      * Creates the deck editor.
      */
     constructor(game: Game) {
-        var div: HTMLDivElement;
         super(game);
-        DeckEditor.prototype._instance = this.newInstance(game);
-    }
 
-    protected newInstance(game: Game): IDeckEditorInstance {
-        var instance: IDeckEditorInstance = {
-            player: null,
-            game: game,
-            div: this.newDiv(),
-            onConfirm: function () {
-                var game: IGameInstance = this.game.instance;
-                if (this.player === game.secondPlayer ||
-                    (game.secondPlayer instanceof AIPlayer)
-                ) {
-                    game.executeLengthyFunction(() => {
-                        game.show(game.matchScreen);
-                    });
-                }
-                else {
-                    game.executeLengthyFunction(() => {
-                        game.show(game.formationEditor);
-                    });
-                }
-            },
-            onEscapePress: function () {
-                var game: IGameInstance = this.game.instance;
-                game.executeLengthyFunction(() => {
-                    game.show(game.formationEditor);
-                });
-            },
-            setDeckTemplate: function (player: Player, deckTemplate: DeckTemplate) {
-                player.deckTemplate = deckTemplate;
-            }
+        function onConfirm() {
+            if (this.player === game.secondPlayer ||
+                (game.secondPlayer instanceof AIPlayer)
+            ) game.show(game.matchScreen);
+            else game.show(game.formationEditor);
         }
-        return instance;
-    }
 
-    get instance(): IDeckEditorInstance {
-        return this._instance;
+        function onEscapePress() {
+            game.show(game.formationEditor);
+        }
+
+        this.setDeckTemplate = function (deckTemplate: DeckTemplate) {
+            this.player.deckTemplate = deckTemplate;
+        };
     }
 }

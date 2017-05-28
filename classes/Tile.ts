@@ -16,8 +16,7 @@ abstract class Tile {
    * @param {ITileArguments} args An object that has
    *     information about the tile being created.
    */
-  constructor(args: ITileArguments) {
-    var { grid, coordinates } = args;
+  constructor({ grid, coordinates }: ITileArguments) {
     this.coordinates = coordinates;
     this.grid = grid;
     this.draw();

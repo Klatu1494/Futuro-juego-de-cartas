@@ -8,11 +8,11 @@
  * @class
  */
 abstract class GameComponent extends Component {
-    protected instance: IGameComponentInstance;
+    onEscapePress: Function;
     /**
      * Creates a game component.
      */
-    constructor(game: Game) {
-        super();
+    constructor(game: Game, id?: string, isHiddenOnCreation: boolean = true) {
+        super(game.div, id, isHiddenOnCreation);
     }
 }

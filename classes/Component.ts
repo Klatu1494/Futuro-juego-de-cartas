@@ -7,39 +7,32 @@
  * Each of the fullscreen divs of the game (including the game itself).
  * @class
  */
-abstract class Component {
-  protected instance: IComponentInstance;
-  protected _width: number = innerWidth;
-  protected _height: number = innerHeight;
+class Component {
+  private _div: HTMLDivElement;
+  static width: number = innerWidth;
+  static height: number = innerHeight;
   /**
    * Creates a component.
+   * @param {HTMLElement} parent The parent of this component's div.
+   * @param {string?} parent The id of this component's div.
    */
-  constructor() {
-    if (this.instance) this.throwError();
+  constructor(parent: HTMLElement, id?: string, isHiddenOnCreation: boolean = true) {
+    if (this.wasInstantiated) throw new Error('This component already exists.');
+    var div = document.createElement('div');
+    var style = div.style;
+    this._div = div;
+    if (id) div.id = id;
+    if (isHiddenOnCreation) style.display = 'none';
+    style.width = '100%';
+    style.height = '100%';
+    parent.appendChild(div);
   }
 
-  protected throwError(error?: string) {
-    new Error(error || 'Components can only be instantiated once.');
+  get wasInstantiated() {
+    return false; //since there can be multiple components
   }
 
-  protected newDiv() {
-    var div: HTMLDivElement = document.createElement('div');
-    var divStyle: CSSStyleDeclaration;
-    divStyle = div.style;
-    divStyle.width = this._width + 'px';
-    divStyle.height = this._height + 'px';
-    return div;
-  }
-
-  protected get div(): HTMLDivElement {
-    return this.instance.div || this.newDiv();
-  }
-
-  protected get width() {
-    return this._width;
-  }
-
-  protected get height() {
-    return this._height;
+  get div(): HTMLDivElement {
+    return this._div;
   }
 }

@@ -1,5 +1,12 @@
 window.addEventListener('load', async function () {
-  var game: IGameInstance = new Game().instance;
+  var game: Game = new Game();
+
+  game.executeLengthyFunction(async function () {
+    game.initialize();
+    game.show(game.menu);
+  });
+
+  /*var game: IGameInstance = new Game().instance;
 
   var HAND_POSITION: string = game.height < game.width ? 'right' : 'bottom';
   var HAND_HEIGHT_OR_WIDTH: number =
@@ -244,5 +251,5 @@ window.addEventListener('load', async function () {
         hideRadialMenu();
       }
     );
-  });
+  });*/
 });

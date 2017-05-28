@@ -1,62 +1,51 @@
 /**
- * @fileoverview Contains the Game class declaration and
+ * @fileoverview Contains the MatchScreen class declaration and
  *     can contain definitions of the class' prototype's properties.
  */
 
 /**
- * The game.
+ * The match screen.
  * @class
  */
 class MatchScreen extends GameComponent {
-    protected _instance: IMatchScreenInstance;
+    createGrid: (level: Level) => void;
+    private _canvas: HTMLCanvasElement;
+    private _ctx: CanvasRenderingContext2D;
+    private _grid: FormationEditorGrid;
     /**
-     * Creates the game.
+     * Creates the match screen.
      */
     constructor(game: Game) {
-        var div: HTMLDivElement;
-        super(game);
-        MatchScreen.prototype._instance = this.newInstance(game);
-    }
+        super(game, 'match-screen');
 
-    protected newInstance(game: Game): IMatchScreenInstance {
+        function onEscapePress() {
+            game.show(game.menu);
+        };
+
         var canvas: HTMLCanvasElement = document.createElement('canvas');
         var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-        var instance: IMatchScreenInstance = {
-            grid: null,
-            canvas: canvas,
-            ctx: ctx,
-            onEscapePress: function () {
-                var game: IGameInstance = this.game.instance;
-                game.show(game.menu);
-            },
-            game: game,
-            div: this.newDiv(),
-            createGrid: function (level: Level) {
-                var canvas: HTMLCanvasElement = this.canvas;
-                var columns: number = level.width;
-                var rows: number = level.height;
-                var tileSide: number = Math.min(
-                    canvas.width / columns,
-                    canvas.height / rows
-                );
-
-                this.grid = new MatchGrid({
-                    width: level.width,
-                    height: rows,
-                    tileSide: tileSide,
-                    leftMargin: (canvas.width - tileSide * level.width) / 2,
-                    topMargin: (canvas.height - tileSide * rows) / 2,
-                    canvas: canvas
-                });
-            },
-        }
+        this._canvas = canvas;
+        this._ctx = ctx;
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 2;
-        return instance;
-    }
+        this.createGrid = function (level: Level) {
+            var canvas: HTMLCanvasElement = this.canvas;
+            var columns: number = level.width;
+            var rows: number = level.height;
+            var tileSide: number = Math.min(
+                canvas.width / columns,
+                canvas.height / rows
+            );
 
-    get instance(): IMatchScreenInstance {
-        return this._instance;
+            this.grid = new MatchGrid({
+                width: level.width,
+                height: rows,
+                tileSide: tileSide,
+                leftMargin: (canvas.width - tileSide * level.width) / 2,
+                topMargin: (canvas.height - tileSide * rows) / 2,
+                canvas: canvas
+            });
+        };
     }
 }

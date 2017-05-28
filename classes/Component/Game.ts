@@ -8,91 +8,103 @@
  * @class
  */
 class Game extends Component {
-    protected _instance: IGameInstance;
+    cardTypes: ReadonlyArray<CardType>;
+    unitTypes: ReadonlyArray<UnitType>;
+    secondPlayer: Player;
+    private _loadingScreen: LoadingScreen;
+    private _menu: Menu;
+    private _formationEditor: FormationEditor;
+    private _deckEditor: DeckEditor;
+    private _matchScreen: MatchScreen;
+    private _firstPlayer: HumanPlayer;
+    private _divsOfComponents: ReadonlyArray<HTMLDivElement>;
+    static wasInstantiated: boolean;
     /**
      * Creates the game.
      */
     constructor() {
-        var div: HTMLDivElement;
-        var instance: IGameInstance;
-        super();
-        Game.prototype._instance = this.newInstance();
+        super(document.body, 'game', false);
+        this._loadingScreen = new LoadingScreen(this);
+        this.setComponents(this._loadingScreen);
     }
 
-    protected newInstance(): IGameInstance {
-        var div: HTMLDivElement;
-        var loadingScreen: IComponentInstance = new LoadingScreen().instance;
-        var instance: IGameInstance = {
-            width: this.width,
-            height: this.height,
-            cardTypes: new Set().
-                add(new CardType({
-                    name: 'First action',
-                    onUse: () => {
+    initialize() {
+        this.cardTypes = [
+            new CardType({
+                name: 'First action',
+                onUse: () => {
 
-                    }
-                })).
-                add(new CardType({
-                    name: 'Second action',
-                    onUse: () => {
+                }
+            }),
+            new CardType({
+                name: 'Second action',
+                onUse: () => {
 
-                    }
-                })),
-            unitTypes: new Set().
-                add(new UnitType({
-                    name: 'Zombie',
-                    imgSrc: 'images/shambling-zombie.png',
-                    initialQuantity: 2
-                })).
-                add(new UnitType({
-                    name: 'Farmer',
-                    imgSrc: 'images/unit1.png',
-                    initialQuantity: 2 //just testing
-                })).
-                add(new UnitType({
-                    name: 'Warrior',
-                    imgSrc: 'images/unit2.png',
-                    initialQuantity: 2 //just testing
-                })),
-            firstPlayer: new HumanPlayer({ name: null, color: null }),
-            secondPlayer: null,
-            addComponent: function (component: IGameComponentInstance) {
-                var div = component.div;
-                this.componentsDivs.push(div);
-                this.div.appendChild(div);
-            },
-            componentsDivs: [],
-            div: this.newDiv(),
-            show: function (component: IComponentInstance) {
-                for (var div of this.componentsDivs) div.style.display = 'none';
-                component.div.style.display = 'flex';
-            },
-            menu: new Menu(this).instance,
-            formationEditor: new FormationEditor(this).instance,
-            deckEditor: new DeckEditor(this).instance,
-            matchScreen: new MatchScreen(this).instance,
-            executeLengthyFunction: async function (asyncFunc: Function) {
-                var gameComponentsStyle = this.div.style;
-                var loadingScreenStyle = loadingScreen.div.style;
-                gameComponentsStyle.display = 'none';
-                loadingScreenStyle.display = 'block';
-                await asyncFunc();
-                loadingScreenStyle.display = 'none';
-                gameComponentsStyle.display = 'block';
-            }
-        }
-        instance.addComponent(instance.menu);
-        instance.addComponent(instance.formationEditor);
-        instance.addComponent(instance.deckEditor);
-        instance.addComponent(instance.matchScreen);
-        div = this.div;
-        div.id = 'game';
-        instance.show(instance.menu);
-        document.body.appendChild(div);
-        return instance;
+                }
+            })
+        ];
+        this.unitTypes = [
+            new UnitType({
+                name: 'Zombie',
+                imgSrc: 'images/shambling-zombie.png',
+                initialQuantity: 2
+            }),
+            new UnitType({
+                name: 'Farmer',
+                imgSrc: 'images/unit1.png',
+                initialQuantity: 2 //just testing
+            }),
+            new UnitType({
+                name: 'Warrior',
+                imgSrc: 'images/unit2.png',
+                initialQuantity: 2 //just testing
+            })
+        ];
+        this._menu = new Menu(this);
+        this._formationEditor = new FormationEditor(this);
+        this._deckEditor = new DeckEditor(this);
+        this._matchScreen = new MatchScreen(this);
+        this.setComponents(this._loadingScreen, this.menu, this.formationEditor, this.deckEditor, this.matchScreen);
     }
 
-    get instance(): IGameInstance {
-        return this._instance;
+    private setComponents(...array: Array<GameComponent>) {
+        var divsArray: Array<HTMLDivElement> = []
+        for (var component of array) divsArray.push(component.div);
+        this._divsOfComponents = divsArray;
+    };
+
+    show(component: Component) {
+        for (var div of this._divsOfComponents) div.style.display = 'none';
+        component.div.style.display = '';
+    }
+
+    async executeLengthyFunction(asyncFunc: Function, showThisAfter?: GameComponent) {
+        this.show(this._loadingScreen);
+        await asyncFunc();
+        if (showThisAfter) this.show(showThisAfter);
+    }
+
+    get wasInstantiated(): boolean {
+        return Game.wasInstantiated;
+    }
+
+    get firstPlayer(): HumanPlayer {
+        return this._firstPlayer;
+    }
+
+    get menu() {
+        return this._menu;
+    }
+
+    get formationEditor() {
+        return this._formationEditor;
+    }
+
+    get deckEditor() {
+        return this._deckEditor;
+    }
+
+    get matchScreen() {
+        return this._matchScreen;
     }
 }
