@@ -30,7 +30,7 @@ class Game extends Component {
         this.setComponents(this._loadingScreen);
     }
 
-    initialize() {
+    async initialize() {
         var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
         this.cardTypes = [
             new CardType({
@@ -73,7 +73,7 @@ class Game extends Component {
         this._matchScreen = new MatchScreen(this);
         this.setComponents(this._loadingScreen, this.menu, this.formationEditor, this.deckEditor, this.matchScreen);
         for (var unitType of this.unitTypes) unitTypesImagesLoaders.push(unitType.imageLoader);
-        Promise.all(unitTypesImagesLoaders).then(images => this.formationEditor.addEventListeners(this.unitTypes));
+        await Promise.all(unitTypesImagesLoaders).then(images => this.formationEditor.addEventListeners(this.unitTypes));
     }
 
     private setComponents(...array: Array<GameComponent>) {
