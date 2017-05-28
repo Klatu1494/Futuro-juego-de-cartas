@@ -51,6 +51,8 @@ class Game extends Component {
             parent.appendChild(button);
             return button;
         }
+        this._firstPlayer = new HumanPlayer({ color: null, name: 'Karv' });
+        this.secondPlayer = new HumanPlayer({ color: null, name: 'Klatu' });
         this.completeLevel = function () {
             this._currentLevelIndex++;
         }

@@ -8,7 +8,7 @@
  * @class
  */
 abstract class Editor extends GameComponent {
-    protected _player: Player;
+    player: Player;
     /**
      * Creates an editor.
      */

@@ -22,7 +22,7 @@ class FormationEditor extends Editor {
     constructor(game: Game) {
         super(game, {
             onEscapePress: (e: KeyboardEvent) => {
-                if (self._player === game.firstPlayer) game.show(game.menu);
+                if (self.player === game.firstPlayer) game.show(game.menu);
                 else game.show(game.deckEditor);
             }
         });
@@ -63,7 +63,7 @@ class FormationEditor extends Editor {
         };
         canvas.width = Math.min(Component.width, Component.height);
         canvas.height = Math.min(Component.width, Component.height);
-        canvas.addEventListener(
+        div.addEventListener(
             'click',
             e => {
                 var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
@@ -150,8 +150,7 @@ class FormationEditor extends Editor {
         button = GameComponent.createButton({
             parent: div,
             eventListener: () => {
-                console.log(self.currentFormation);
-                self._player.formation = self.currentFormation;
+                self.player.formation = self.currentFormation;
                 game.show(game.deckEditor);
             },
             label: 'Confirm'

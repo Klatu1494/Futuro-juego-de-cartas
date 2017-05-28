@@ -17,6 +17,7 @@ class Menu extends GameComponent {
         GameComponent.createButton({
             label: 'Single player',
             eventListener: () => {
+                game.formationEditor.player = game.firstPlayer;
                 game.show(game.formationEditor);
             },
             parent: this.div
