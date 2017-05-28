@@ -36,7 +36,7 @@ class FormationEditor extends Editor {
         var button: HTMLDivElement = document.createElement('div');
 
         function hideRadialMenu() {
-            for (var unitType of self.game.unitTypes)
+            for (var unitType of game.unitTypes)
                 unitType.radialMenuItem.style.display = 'none';
         }
 
@@ -68,15 +68,14 @@ class FormationEditor extends Editor {
             'click',
             e => {
                 var clickCoordinates = new ScreenCoordinates(e.clientX, e.clientY);
-                var selectedTileCoordinates = clickCoordinates.toGrid(self._grid);
                 if (self._selectedTile !== null) {
                     if (self._selectedTile.coordinates.toScreen().contains(clickCoordinates)) return;
                     hideRadialMenu();
-                    self._selectedTile = null;
                 }
-                else if (clickCoordinates.isInsideGridArea(self._grid)) {
-                    //TODO: split next line into multiple lines because it is too large
-                    self._selectedTile = self._grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
+                if (clickCoordinates.isInsideGridArea(self._grid)) {
+                    var selectedTileCoordinates = clickCoordinates.toGrid(self._grid);
+                    self._selectedTile =
+                        self._grid.tiles[selectedTileCoordinates.x][selectedTileCoordinates.y];
                     var selectedTileBoundingSquare: Square = selectedTileCoordinates.toScreen();
                     var center: Coords = selectedTileBoundingSquare.center;
                     var centerX: number = center.x;
@@ -84,9 +83,8 @@ class FormationEditor extends Editor {
                     var tileSide: number = self._grid.tileSide;
                     var unitTypesBeingShown: Array<UnitType> = [];
                     for (var unitType of game.unitTypes)
-                        if (unitType.availableUnits) {
+                        if (self.currentFormation.getAvailableUnits(unitType))
                             unitTypesBeingShown.push(unitType);
-                        }
                     var length = unitTypesBeingShown.length;
                     var itemRadius = tileSide / 2;
                     var polygonRadius = (tileSide - itemRadius) / 2;
@@ -94,6 +92,7 @@ class FormationEditor extends Editor {
                     //move items to the center of the radial menu
                     for (var unitType of unitTypesBeingShown) {
                         var style = unitType.radialMenuItem.style;
+                        style.transition = 'all 0s linear';
                         style.display = 'block';
                         style.left = centerX + 'px';
                         style.top = centerY + 'px';
