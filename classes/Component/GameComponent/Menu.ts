@@ -13,10 +13,10 @@ class Menu extends GameComponent {
      * Creates the game.
      */
     constructor(game: Game) {
-        super(game, 'menu');
-        this.newMatch = function () {
+        super(game, { id: 'menu' });
+
+        function newMatch() {
             game.show(game.formationEditor);
-        };
-        this.onEscapePress = () => { };
+        }
     }
 }

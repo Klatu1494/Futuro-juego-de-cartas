@@ -13,7 +13,7 @@ class DeckEditor extends Editor {
      * Creates the deck editor.
      */
     constructor(game: Game) {
-        super(game);
+        super(game, {});
 
         function onConfirm() {
             if (this.player === game.secondPlayer ||

@@ -20,7 +20,12 @@ class FormationEditor extends Editor {
      * Creates the game.
      */
     constructor(game: Game) {
-        super(game);
+        super(game, {
+            onEscapePress: (e: KeyboardEvent) => {
+                if (self._player === game.firstPlayer) game.show(game.menu);
+                else game.show(game.deckEditor);
+            }
+        });
 
         function hideRadialMenu() {
             for (var unitType of game.unitTypes)
@@ -28,13 +33,8 @@ class FormationEditor extends Editor {
         }
 
         function onConfirm() {
-            self.player.formation = self.currentFormation;
+            self._player.formation = self.currentFormation;
             game.show(game.deckEditor);
-        };
-
-        function onEscapePress(e: KeyboardEvent) {
-            if (self.player === game.firstPlayer) game.show(game.menu);
-            else game.show(game.deckEditor);
         };
 
         //Formation editor initialization;

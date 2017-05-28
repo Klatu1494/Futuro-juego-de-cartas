@@ -8,12 +8,11 @@
  * @class
  */
 abstract class Editor extends GameComponent {
-    player: Player;
-    onConfirm: Function;
+    protected _player: Player;
     /**
      * Creates the deck editor.
      */
-    constructor(game: Game, id?: string) {
-        super(game, id);
+    constructor(game: Game, optionalArguments: IGameComponentOptionalArguments) {
+        super(game, optionalArguments);
     }
 }

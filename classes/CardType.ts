@@ -17,7 +17,7 @@ class CardType {
   constructor({ name, onUse, imgSrc }: { name: string, onUse?: Function, imgSrc?: string }) {
     imgSrc = imgSrc || 'help.png';
 
-    //these images will never be used, they just preload the image file
+    //these images will never be used, they only preload the image file
     this._imageLoader = new Promise(resolve => {
       var image: HTMLImageElement = new Image()
       image.src = 'images/' + imgSrc;
