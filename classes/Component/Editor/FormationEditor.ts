@@ -61,8 +61,8 @@ class FormationEditor extends Editor {
              * @todo: Restore formation.
              */
         };
-        canvas.width = Math.min(Component.width, Component.height);
-        canvas.height = Math.min(Component.width, Component.height);
+        canvas.width = Math.min(game.width, game.height);
+        canvas.height = Math.min(game.width, game.height);
         div.addEventListener(
             'click',
             e => {
@@ -147,7 +147,7 @@ class FormationEditor extends Editor {
             );
         };
         div.appendChild(canvas);
-        button = GameComponent.createButton({
+        button = game.createButton({
             parent: div,
             eventListener: () => {
                 self.player.formation = self.currentFormation;

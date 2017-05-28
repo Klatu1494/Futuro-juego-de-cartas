@@ -7,7 +7,7 @@
  * The loading screen.
  * @class
  */
-class LoadingScreen extends GameComponent {
+class LoadingScreen extends Component {
     /**
      * Creates a screen that will be shown while a lengthy function is executed.
      */
@@ -15,10 +15,10 @@ class LoadingScreen extends GameComponent {
         super(game, {
             isHiddenOnCreation: false,
             onResize: () => {
-                style.lineHeight = Component.height + 'px';
+                style.lineHeight = game.height + 'px';
             }
         });
         var style: CSSStyleDeclaration = this.div.style;
-        style.lineHeight = Component.height + 'px';
+        style.lineHeight = game.height + 'px';
     }
 }

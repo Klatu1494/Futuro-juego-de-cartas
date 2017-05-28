@@ -7,36 +7,49 @@
  * The game.
  * @class
  */
-class Game extends Component {
+class Game {
+    show: (component: Component) => void;
+    createButton: ({ parent, eventListener, label }: {
+        parent: HTMLElement;
+        eventListener: EventListener;
+        label: string;
+    }) => HTMLButtonElement;
     completeLevel: () => void;
     cardTypes: ReadonlyArray<CardType>;
     unitTypes: ReadonlyArray<UnitType>;
+    components: ReadonlyMap<Function, Component> = new Map();
     secondPlayer: Player;
+    width: number = innerWidth;
+    height: number = innerHeight;
     private _currentLevelIndex: number;
-    private _loadingScreen: LoadingScreen;
-    private _menu: Menu;
-    private _formationEditor: FormationEditor;
-    private _deckEditor: DeckEditor;
-    private _matchScreen: MatchScreen;
     private _firstPlayer: HumanPlayer;
     private _divsOfComponents: ReadonlyArray<HTMLDivElement>;
     private _levels: ReadonlyArray<Level>;
-    static wasInstantiated: boolean;
+    private _buttonWidth: number;
+    private _buttonHeight: number;
+    private _margin: number;
+    private _matchScreen: MatchScreen;
+    private _deckEditor: DeckEditor;
+    private _formationEditor: FormationEditor;
+    private _menu: Menu;
     /**
      * Creates the game.
      */
     constructor() {
-        super(document.body, false, 'game');
-        this._loadingScreen = new LoadingScreen(this);
-        this.setComponents(this._loadingScreen);
+        this.setComponents(new LoadingScreen(this));
+        this.show = function (component: Component) {
+            for (var div of this._divsOfComponents) div.style.display = 'none';
+            component.div.style.display = '';
+            component.onShow();
+        };
     }
 
     async initialize() {
         var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
-        GameComponent.buttonWidth = 118;
-        GameComponent.buttonHeight = 35;
-        GameComponent.margin = 8;
-        GameComponent.createButton = function (
+        this.buttonWidth = 118;
+        this.buttonHeight = 35;
+        this.margin = 8;
+        this.createButton = function (
             { parent, eventListener = doNothing, label }: { parent: HTMLElement, eventListener: EventListener, label: string }
         ) {
             var button: HTMLButtonElement = document.createElement('button');
@@ -94,32 +107,26 @@ class Game extends Component {
         this._menu = new Menu(this);
         this._formationEditor = new FormationEditor(this);
         this._deckEditor = new DeckEditor(this);
-        this._matchScreen = new MatchScreen(this);
-        this.setComponents(this._loadingScreen, this.menu, this.formationEditor, this.deckEditor, this.matchScreen);
+        this._matchScreen = new MatchScreen(this)
+        this.setComponents(this.components.get(LoadingScreen), this.formationEditor, this.menu, this.deckEditor, this.matchScreen);
         for (var unitType of this.unitTypes) unitTypesImagesLoaders.push(unitType.imageLoader);
         await Promise.all(unitTypesImagesLoaders).then(images => this.formationEditor.addEventListeners(this.unitTypes));
     }
 
-    private setComponents(...array: Array<GameComponent>) {
-        var divsArray: Array<HTMLDivElement> = []
-        for (var component of array) divsArray.push(component.div);
+    private setComponents(...array: Array<Component>) {
+        var divsArray: Array<HTMLDivElement> = [];
+        var mapArray: Array<[Function, Component]> = [];
+        for (var component of array) {
+            divsArray.push(component.div);
+            mapArray.push([component.constructor, component]);
+        }
         this._divsOfComponents = divsArray;
+        this.components = new Map(mapArray);
     };
 
-    show(component: GameComponent) {
-        for (var div of this._divsOfComponents) div.style.display = 'none';
-        component.div.style.display = '';
-        component.onShow();
-    }
-
-    async executeLengthyFunction(asyncFunc: Function, showThisAfter?: GameComponent) {
-        this.show(this._loadingScreen);
+    async executeLengthyFunction(asyncFunc: Function) {
+        this.show(this.components.get(LoadingScreen));
         await asyncFunc();
-        if (showThisAfter) this.show(showThisAfter);
-    }
-
-    get wasInstantiated(): boolean {
-        return Game.wasInstantiated;
     }
 
     get firstPlayer(): HumanPlayer {
@@ -144,5 +151,32 @@ class Game extends Component {
 
     get currentLevel() {
         return this._levels[this._currentLevelIndex];
+    }
+
+    get buttonWidth(): number {
+        return this._buttonWidth;
+    }
+
+    set buttonWidth(value: number) {
+        if (this._buttonWidth) throw new Error('The buttons width is already set.');
+        this._buttonWidth = value;
+    }
+
+    get buttonHeight(): number {
+        return this._buttonHeight;
+    }
+
+    set buttonHeight(value: number) {
+        if (this._buttonHeight) throw new Error('The buttons height is already set.');
+        this._buttonHeight = value;
+    }
+
+    get margin(): number {
+        return this._margin;
+    }
+
+    set margin(value: number) {
+        if (this._margin) throw new Error('The margin is already set.');
+        this._margin = value;
     }
 }

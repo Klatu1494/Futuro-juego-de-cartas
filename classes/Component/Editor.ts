@@ -7,7 +7,7 @@
  * An editor.
  * @class
  */
-abstract class Editor extends GameComponent {
+abstract class Editor extends Component {
     player: Player;
     /**
      * Creates an editor.

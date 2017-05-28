@@ -4,41 +4,38 @@
  */
 
 /**
- * Each of the fullscreen divs of the game (including the game itself).
+ * An object whose div is a child of the document's body.
  * @class
  */
-class Component {
-  private _div: HTMLDivElement;
-  /**
-   * Creates a component.
-   * @param {HTMLElement} parent The parent of this component's div.
-   * @param {string?} parent The id of this component's div.
-   */
-  constructor(parent: HTMLElement, isHiddenOnCreation: boolean = true, id?: string) {
-    if (this.wasInstantiated) throw new Error('This component already exists.');
-    var div = document.createElement('div');
-    var style = div.style;
-    this._div = div;
-    if (id) div.id = id;
-    if (isHiddenOnCreation) style.display = 'none';
-    style.width = '100%';
-    style.height = '100%';
-    parent.appendChild(div);
-  }
+abstract class Component {
+    private _div: HTMLDivElement;
+    private _game: Game;
+    static createButton: ({ parent, eventListener, label }: { parent: HTMLElement, eventListener: EventListener, label: string }) => HTMLButtonElement;
+    onShow: () => void;
+    /**
+     * Creates a game component if it's not already created, else throws an error.
+     */
+    constructor(game: Game, args?: IGameComponentOptionalArguments) {
+        if (game.components.get(this.constructor)) throw new Error('This component already exists.');
+        var { onResize = doNothing, onEscapePress = doNothing, isHiddenOnCreation = true } = args;
+        var div = document.createElement('div');
+        var style = div.style;
+        this._div = div;
+        if (isHiddenOnCreation) style.display = 'none';
+        style.width = '100%';
+        style.height = '100%';
+        document.body.appendChild(div);
+        this._game = game;
+        this.div.addEventListener('keydown', onEscapePress || doNothing)
+        window.addEventListener('resize', onResize || doNothing);
+        this.onShow = this.onShow || doNothing;
+    }
 
-  get wasInstantiated() {
-    return false; //since there can be multiple components
-  }
+    get game(): Game {
+        return this._game;
+    }
 
-  get div(): HTMLDivElement {
-    return this._div;
-  }
-
-  static get width(): number {
-    return innerWidth;
-  }
-
-  static get height(): number {
-    return innerHeight;
-  }
+    get div(): HTMLDivElement {
+        return this._div;
+    }
 }

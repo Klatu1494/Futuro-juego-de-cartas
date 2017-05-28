@@ -7,14 +7,13 @@
  * The game.
  * @class
  */
-class Menu extends GameComponent {
+class Menu extends Component {
     /**
      * Creates the game.
      */
     constructor(game: Game) {
         super(game, {});
-
-        GameComponent.createButton({
+        game.createButton({
             label: 'Single player',
             eventListener: () => {
                 game.formationEditor.player = game.firstPlayer;

@@ -7,7 +7,7 @@
  * The match screen.
  * @class
  */
-class MatchScreen extends GameComponent {
+class MatchScreen extends Component {
     createGrid: (level: Level) => void;
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
