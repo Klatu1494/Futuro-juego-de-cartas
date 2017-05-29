@@ -31,8 +31,8 @@ class FormationEditorTile extends Tile {
   drawUnitType(unitType: UnitType) {
     this.grid.ctx.drawImage(
       unitType.radialMenuItem,
-      this.coordinates.toScreen().left,
-      this.coordinates.toScreen().top,
+      this.coordinates.toCanvas().left,
+      this.coordinates.toCanvas().top,
       this.grid.tileSide,
       this.grid.tileSide
     );
