@@ -8,7 +8,8 @@
  * @class
  */
 class DeckEditor extends Editor {
-    setDeckTemplate: (deckTemplate: DeckTemplate) => void;
+    setDeckTemplate: () => void;
+    currentDeckTemplate: DeckTemplate;
     /**
      * Creates the deck editor.
      */
@@ -16,18 +17,21 @@ class DeckEditor extends Editor {
         super(game, {});
 
         function onConfirm() {
-            if (this.player === game.secondPlayer ||
+            if (
+                self.player === game.secondPlayer ||
                 (game.secondPlayer instanceof AIPlayer)
             ) game.show(game.matchScreen);
             else game.show(game.formationEditor);
+            self.setDeckTemplate();
         }
 
         function onEscapePress() {
             game.show(game.formationEditor);
         }
 
-        this.setDeckTemplate = function (deckTemplate: DeckTemplate) {
-            this.player.deckTemplate = deckTemplate;
+        var self = this;
+        this.setDeckTemplate = function () {
+            this.player.deckTemplate = this.currentDeckTemplate;
         };
     }
 }
