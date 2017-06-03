@@ -20,6 +20,7 @@ abstract class Component {
         var { onResize = doNothing, onEscapePress = doNothing, isHiddenOnCreation = true } = args;
         var div = document.createElement('div');
         var style = div.style;
+        div.className = 'centered-flex';
         this._div = div;
         if (isHiddenOnCreation) style.display = 'none';
         style.width = '100%';

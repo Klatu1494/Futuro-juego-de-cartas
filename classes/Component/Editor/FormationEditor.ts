@@ -98,7 +98,7 @@ class FormationEditor extends Editor {
                         style.width = '0';
                         style.height = '0';
                     }
-                    document.body.offsetLeft; //force reflow
+                    forceReflow();
                     //move items away from the center
                     for (var i = 0; i < length; i++) {
                         var style = unitTypesBeingShown[i].radialMenuItem.style;

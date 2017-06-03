@@ -31,10 +31,11 @@ html {
   text-align: center;
 }
 
-body>div {
+.centered-flex {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .button {
@@ -61,30 +62,6 @@ body>div {
 
 .action:nth-child(even) {
   background-color: #ddd;
-}
-
-.add,
-.take-out {
-  background-color: #0075d8;
-  border-radius: 13px;
-  color: white;
-  cursor: pointer;
-  display: block;
-  font-weight: bold;
-  height: 26px;
-  line-height: 26px;
-  margin: 7px;
-  width: 26px;
-  text-align: center;
-  float: right;
-}
-
-.add:before {
-  content: '+';
-}
-
-.take-out:before {
-  content: '-';
 }
 
 .confirm:before {
