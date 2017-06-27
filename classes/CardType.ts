@@ -8,6 +8,7 @@ class CardType {
   private _onUse: Function;
   private _div: HTMLDivElement;
   private _imageLoader: Promise<HTMLImageElement>;
+  amountInDeck: number;
 
   constructor({ name, condition = (() => true), onUse = (() => {
 
@@ -33,7 +34,8 @@ class CardType {
     this._onUse = onUse;
     this._condition = condition;
     this._div = div;
-    this._imgSrc = imgSrc;
+    this._imgSrc = 'images/' + imgSrc;
+    this.amountInDeck = 0;
   }
 
   get name(): string {

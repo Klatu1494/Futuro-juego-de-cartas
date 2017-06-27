@@ -34,6 +34,24 @@ class DeckEditor extends Editor {
             }
         }
 
+        function updateDeckDiv() {
+            var currentCard: number = 0;
+            for (var card of cards) {
+                card.style.backgroundImage = '';
+                card.style.backgroundColor = '';
+            }
+            for (var cardTypePair of game.cardTypes) {
+                var cardType: CardType = cardTypePair[1];
+                if (cardType.condition() && game.formationEditor.player.formation.hasCard(cardType)) {
+                    for (var i: number = 0; i < cardType.amountInDeck; i++) {
+                        cards[currentCard].style.backgroundImage = 'url(' + cardType.imgSrc + ')';
+                        cards[currentCard].style.backgroundColor = 'black';
+                        currentCard++;
+                    }
+                }
+            }
+        }
+
         var CARDS_PER_ROW = 12;
         var ROWS = 4;
         var CURRENT_DECK_DIV_WIDTH_PERCENTAGE: number = 75;
@@ -82,7 +100,6 @@ class DeckEditor extends Editor {
             for (var j = 0; j < CARDS_PER_ROW; j++) {
                 var cardDiv: HTMLDivElement = document.createElement('div');
                 cardDiv.style.position = 'absolute';
-                cardDiv.style.background = 'url(images/shambling-zombie.png), black';
                 cardDiv.style.backgroundSize = '100% 75%';
                 cardDiv.style.backgroundPositionY = '50%';
                 cardDiv.style.backgroundRepeat = 'no-repeat';
@@ -99,6 +116,14 @@ class DeckEditor extends Editor {
         buttonDiv.className = 'centered-flex';
         this.div.appendChild(cardTypesDiv);
         this.div.appendChild(buttonDiv);
-        for (var cardType of game.cardTypes) cardTypesDiv.appendChild(cardType[1].div);
+        for (var cardTypePair of game.cardTypes) {
+            var cardType: CardType = cardTypePair[1];
+            var div: HTMLDivElement = cardType.div;
+            div.addEventListener('click', (function () {
+                this.amountInDeck++;
+                updateDeckDiv();
+            }).bind(cardType));
+            cardTypesDiv.appendChild(div);
+        }
     }
 }
