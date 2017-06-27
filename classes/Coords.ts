@@ -1,11 +1,5 @@
 /**
- * @fileoverview Contains the Coordinates class declaration and
- *     can contain definitions of the class' prototype's properties.
- */
-
-/**
  * A 2D pair of coordinates.
- * @class
  */
 class Coords { //can't be named Coordinates because of the TS Coordinates class
   private _x: number;
@@ -38,5 +32,9 @@ class Coords { //can't be named Coordinates because of the TS Coordinates class
       Object.defineProperty(clone, key, desc);
     });
     return clone;
+  }
+
+  distanceTo(coordinates: Coords) {
+    return Math.sqrt(Math.pow(this.x - coordinates.x, 2) + Math.pow(this.y - coordinates.y, 2));
   }
 }

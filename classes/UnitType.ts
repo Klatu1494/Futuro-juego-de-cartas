@@ -1,27 +1,24 @@
 /**
- * @fileoverview Contains the Player class declaration and can
- *     contain definitions of the class' prototype's properties.
- */
-
-/**
  * A unit type.
- * @todo Comment constructor.
- * @class
  */
 class UnitType {
+  private _skills: Set<CardType>;
+  private _life: number;
+  private _attack: number;
   private _radialMenuItem: HTMLImageElement;
   private _imageLoader: Promise<HTMLElement>;
   private _name: string;
   private _imgSrc: string;
+  private _range: number;
   availableUnits: number;
 
   constructor(
-    { name, imgSrc, initialQuantity = 0 }: { name: string, imgSrc: string, initialQuantity: number }
+    { name, imgSrc, initialQuantity = 0, attack = 0, life = 0, skills = new Set() }: { name: string, imgSrc: string, initialQuantity: number, attack: number, life: number, skills: Set<CardType> }
   ) {
     var self: UnitType = this;
     this._imageLoader = new Promise(resolve => {
       var image = new Image();
-      image.src = imgSrc;
+      image.src = 'images/' + imgSrc;
       image.className = 'unit-type';
       document.body.appendChild(image);
       image.addEventListener('load', () => resolve(image));
@@ -29,6 +26,9 @@ class UnitType {
     this.availableUnits = initialQuantity;
     this._name = name;
     this._imgSrc = imgSrc;
+    this._attack = attack;
+    this._life = life;
+    this._skills = skills;
   }
 
   get radialMenuItem(): HTMLImageElement {
@@ -43,7 +43,23 @@ class UnitType {
     return this._name;
   }
 
+  get attack(): number {
+    return this._attack;
+  }
+
+  get range(): number {
+    return this._range;
+  }
+
+  get life(): number {
+    return this._life;
+  }
+
   get imgSrc(): string {
     return this._imgSrc;
+  }
+
+  get skills(): Set<CardType> {
+    return new Set(this._skills);
   }
 }

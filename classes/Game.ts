@@ -15,8 +15,8 @@ class Game {
         label: string;
     }) => HTMLButtonElement;
     completeLevel: () => void;
-    cardTypes: ReadonlyArray<CardType>;
-    unitTypes: ReadonlyArray<UnitType>;
+    cardTypes: Map<string, CardType>;
+    unitTypes: Map<string, UnitType>;
     components: ReadonlyMap<Function, Component> = new Map();
     secondPlayer: Player;
     width: number = innerWidth;
@@ -45,7 +45,20 @@ class Game {
     }
 
     async initialize() {
+        async function askForUnit(condition: Function): Promise<Unit> {
+            var promise: Promise<Unit> = new Promise(resolve => {
+                for (var unit of this.matchScreen.units) {
+                    if (condition(unit))
+                        unit.div.addEventListener('click', (function () {
+                            resolve(this);
+                        }).bind(unit));
+                }
+            });
+            return promise;
+        }
+
         var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
+        var self: Game = this;
         this.buttonWidth = 118;
         this.buttonHeight = 35;
         this.margin = 8;
@@ -69,37 +82,38 @@ class Game {
         this.completeLevel = function () {
             this._currentLevelIndex++;
         }
-        this.cardTypes = [
-            new CardType({
-                name: 'First action',
-                onUse: () => {
-
-                }
-            }),
-            new CardType({
-                name: 'Second action',
-                onUse: () => {
-
-                }
-            })
-        ];
-        this.unitTypes = [
-            new UnitType({
+        this.cardTypes = new Map([
+            ['attack', new CardType({
+                name: 'Attack',
+                onUse: async function () {
+                    var user: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
+                    var target: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= user.range);
+                    self.matchScreen.damageUnit(target, user.attack);
+                },
+                imgSrc: 'attack.png',
+                description: 'One of your units attack an enemy, subtracting your unit\'s attack from the enemy\'s health. The enemy must be within your unit\'s range.'
+            })],
+            ['bite', new CardType({
+                name: 'Bite',
+                onUse: async function () {
+                    var user: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
+                    var target: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= 1);
+                    self.matchScreen.damageUnit(target, user.attack / 2);
+                },
+                imgSrc: 'sharp-lips.png',
+                description: 'One of your zombies bites an enemy, subtracting half your zombie\'s attack (rounding down) from the enemy\'s health, and transimiting her a random disease. The enemy must be within melee range.'
+            })]
+        ]);
+        this.unitTypes = new Map([
+            ['zombie', new UnitType({
                 name: 'Zombie',
-                imgSrc: 'images/shambling-zombie.png',
-                initialQuantity: 2
-            }),
-            new UnitType({
-                name: 'Farmer',
-                imgSrc: 'images/unit1.png',
-                initialQuantity: 2 //just testing
-            }),
-            new UnitType({
-                name: 'Warrior',
-                imgSrc: 'images/unit2.png',
-                initialQuantity: 2 //just testing
-            })
-        ];
+                imgSrc: 'shambling-zombie.png',
+                initialQuantity: 2,
+                attack: 2,
+                life: 4,
+                skills: new Set([this.cardTypes.get('attack'), this.cardTypes.get('bite')])
+            })]
+        ]);
         this._levels = [
             new Level({ width: 5, height: 5 })
         ];
@@ -109,7 +123,7 @@ class Game {
         this._deckEditor = new DeckEditor(this);
         this._matchScreen = new MatchScreen(this)
         this.setComponents(this.components.get(LoadingScreen), this.formationEditor, this.menu, this.deckEditor, this.matchScreen);
-        for (var unitType of this.unitTypes) unitTypesImagesLoaders.push(unitType.imageLoader);
+        for (var unitType of this.unitTypes) unitTypesImagesLoaders.push(unitType[1].imageLoader);
         await Promise.all(unitTypesImagesLoaders).then(images => this.formationEditor.addEventListeners(this.unitTypes));
     }
 

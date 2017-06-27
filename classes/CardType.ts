@@ -1,45 +1,38 @@
 /**
- * @fileoverview Contains the CardType class declaration and
- *     can contain definitions of the class' prototype's properties.
- */
-
-/**
  * Represents a card type
- * @class
  */
 class CardType {
+  private _condition: Function;
   private _imgSrc: string;
   private _name: string;
   private _onUse: Function;
-  private _element: HTMLDivElement;
+  private _div: HTMLDivElement;
   private _imageLoader: Promise<HTMLImageElement>;
 
-  constructor({ name, onUse, imgSrc }: { name: string, onUse?: Function, imgSrc?: string }) {
-    imgSrc = imgSrc || 'help.png';
+  constructor({ name, condition = (() => true), onUse = (() => {
 
-    //these images will never be used, they only preload the image file
+  }), imgSrc = 'help.png', description = '' }: { name: string, condition?: Function, onUse?: Function, imgSrc?: string, description?: string }) {
+    var image: HTMLImageElement;
     this._imageLoader = new Promise(resolve => {
-      var image: HTMLImageElement = new Image()
+      image = new Image()
       image.src = 'images/' + imgSrc;
       image.addEventListener('load', () => resolve(image));
     });
-    onUse = onUse || (() => {
-
-    });
-
-    var element = document.createElement('div');
-    element.className = 'card-type-adder';
-    element.innerText = name;
-    var button: HTMLDivElement = document.createElement('div');
-    button.className = 'add';
-    element.appendChild(button);
-    button = document.createElement('div');
-    button.className = 'take-out';
-    element.appendChild(button);
-    //document.getElementById('card-adder').appendChild(element);
+    var div: HTMLDivElement = document.createElement('div');
+    var header: HTMLDivElement = document.createElement('div');
+    var descriptionDiv: HTMLDivElement = document.createElement('div');
+    div.className = 'card-type-adder';
+    header.style.lineHeight = '40px';
+    header.appendChild(image);
+    header.appendChild(document.createTextNode(name));
+    descriptionDiv.innerText = description;
+    descriptionDiv.className = 'description';
+    div.appendChild(header);
+    div.appendChild(descriptionDiv);
     this._name = name;
     this._onUse = onUse;
-    this._element = element;
+    this._condition = condition;
+    this._div = div;
     this._imgSrc = imgSrc;
   }
 
@@ -51,11 +44,19 @@ class CardType {
     return this._onUse;
   }
 
+  get condition(): Function {
+    return this._condition;
+  }
+
   get imageLoader(): Promise<HTMLElement> {
     return this._imageLoader;
   }
 
   get imgSrc(): string {
     return this._imgSrc;
+  }
+
+  get div(): HTMLDivElement {
+    return this._div;
   }
 }

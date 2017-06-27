@@ -56,4 +56,15 @@ class Formation {
         if (this.getAvailableUnits(unitType))
             this.unitTypes[x][y] = unitType;
     }
+
+    /**
+     * Returns true if any of the units in the formation has the passed card
+     * type related skill.
+     * @param cardType The card being checked.
+     */
+    hasCard(cardType: CardType) {
+        for (var row of this.unitTypes) for (var unitType of row)
+            if (unitType && unitType.skills.has(cardType)) return true;
+        return false;
+    }
 }

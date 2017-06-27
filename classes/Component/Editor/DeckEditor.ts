@@ -1,11 +1,5 @@
 /**
- * @fileoverview Contains the Game class declaration and
- *     can contain definitions of the class' prototype's properties.
- */
-
-/**
  * The deck editor.
- * @class
  */
 class DeckEditor extends Editor {
     setDeckTemplate: () => void;
@@ -14,7 +8,7 @@ class DeckEditor extends Editor {
      * Creates the deck editor.
      */
     constructor(game: Game) {
-        super(game, { onEscapePress: () => game.show(game.formationEditor) });
+        super(game, { onEscapePress: () => game.show(game.formationEditor), onResize: onResize });
 
         function onConfirm() {
             if (
@@ -25,8 +19,23 @@ class DeckEditor extends Editor {
             self.setDeckTemplate();
         }
 
-        var CARDS_PER_ROW = 12; //(?)
-        var ROWS = 4; //(?)
+        function onResize() {
+            var currentDisplay: string = style.display;
+            style.display = '';
+            var currentDeckDivBoundingRect: ClientRect = currentDeckDiv.getBoundingClientRect();
+            var currentDeckDivWidth: number = currentDeckDivBoundingRect.width;
+            var cardHeight: number = currentDeckDivBoundingRect.height / ROWS * 0.9;
+            var cardWidth: number = cardHeight * 0.75;
+            for (var i = 0; i < cards.length; i++) {
+                var card: HTMLDivElement = cards[i];
+                card.style.left = ((i % 12) / 11 * (currentDeckDivWidth - cardWidth)) + 'px';
+                card.style.width = cardWidth + 'px';
+                card.style.height = cardHeight + 'px';
+            }
+        }
+
+        var CARDS_PER_ROW = 12;
+        var ROWS = 4;
         var CURRENT_DECK_DIV_WIDTH_PERCENTAGE: number = 75;
         var CARD_TYPES_DIV_WIDTH_PERCENTAGE: number = 100 - CURRENT_DECK_DIV_WIDTH_PERCENTAGE;
         var BUTTON_DIV_HEIGHT_PERCENTAGE: number = 10;
@@ -46,10 +55,18 @@ class DeckEditor extends Editor {
         var currentDeckDivStyle: CSSStyleDeclaration = currentDeckDiv.style;
         var cardTypesDivStyle: CSSStyleDeclaration = cardTypesDiv.style;
         var buttonDivStyle: CSSStyleDeclaration = buttonDiv.style;
-        var self = this;
+        var self: DeckEditor = this;
+        var cards: Array<HTMLDivElement> = [];
         this.setDeckTemplate = function () {
             this.player.deckTemplate = this.currentDeckTemplate;
         };
+        this.onShow = function () {
+            for (var cardType of game.cardTypes) {
+                if (cardType[1].condition() && game.formationEditor.player.formation.hasCard(cardType[1]))
+                    cardType[1].div.style.display = '';
+                else cardType[1].div.style.display = 'none';
+            }
+        }
         currentDeckDivStyle.width = CURRENT_DECK_DIV_WIDTH_PERCENTAGE + '%';
         currentDeckDivStyle.height = OTHER_DIVS_HEIGHT_PERCENTAGE + '%';
         currentDeckDiv.className = 'centered-flex';
@@ -62,23 +79,19 @@ class DeckEditor extends Editor {
             currentDivStyle.height = 100 / ROWS + '%';
             currentDivStyle.position = 'relative';
             currentDeckDiv.appendChild(div);
-            style.display = '';
-            var cardHeight: number = div.clientHeight * 0.9;
-            var cardWidth: number = cardHeight * 0.75;
-            style.display = 'none';
             for (var j = 0; j < CARDS_PER_ROW; j++) {
-                var testDiv: HTMLDivElement = document.createElement('div');
-                testDiv.style.left = 100 * j / CARDS_PER_ROW + '%';
-                testDiv.style.position = 'absolute';
-                testDiv.style.width = cardWidth + 'px';
-                testDiv.style.height = cardHeight + 'px';
-                testDiv.style.background = 'url(images/shambling-zombie.png), black';
-                testDiv.style.backgroundSize = '100% 75%';
-                testDiv.style.backgroundPositionY = '50%';
-                testDiv.style.backgroundRepeat = 'no-repeat';
-                div.appendChild(testDiv);
+                var cardDiv: HTMLDivElement = document.createElement('div');
+                cardDiv.style.position = 'absolute';
+                cardDiv.style.background = 'url(images/shambling-zombie.png), black';
+                cardDiv.style.backgroundSize = '100% 75%';
+                cardDiv.style.backgroundPositionY = '50%';
+                cardDiv.style.backgroundRepeat = 'no-repeat';
+                div.appendChild(cardDiv);
+                cards.push(cardDiv);
             }
         }
+        addEventListener('resize', onResize);
+        onResize();
         cardTypesDivStyle.width = CARD_TYPES_DIV_WIDTH_PERCENTAGE + '%';
         cardTypesDivStyle.height = OTHER_DIVS_HEIGHT_PERCENTAGE + '%';
         buttonDivStyle.width = '100%';
@@ -86,5 +99,6 @@ class DeckEditor extends Editor {
         buttonDiv.className = 'centered-flex';
         this.div.appendChild(cardTypesDiv);
         this.div.appendChild(buttonDiv);
+        for (var cardType of game.cardTypes) cardTypesDiv.appendChild(cardType[1].div);
     }
 }

@@ -15,7 +15,7 @@ class FormationEditor extends Editor {
     private _radialMenuItemSize: number;
     private _selectedTile: FormationEditorTile;
     currentFormation: Formation;
-    addEventListeners: (unitTypes: ReadonlyArray<UnitType>) => void;
+    addEventListeners: (unitTypes: Map<string, UnitType>) => void;
     /**
      * Creates the formation editor if it's not already created, else throws an error.
      */
@@ -29,7 +29,7 @@ class FormationEditor extends Editor {
 
         function hideRadialMenu() {
             for (var unitType of game.unitTypes)
-                unitType.radialMenuItem.style.display = 'none';
+                unitType[1].radialMenuItem.style.display = 'none';
         }
 
         var TWO_PI = Math.PI * 2;
@@ -81,9 +81,9 @@ class FormationEditor extends Editor {
                     var centerY: number = center.y;
                     var tileSide: number = self._grid.tileSide;
                     var unitTypesBeingShown: Array<UnitType> = [];
-                    for (var unitType of game.unitTypes)
-                        if (self.currentFormation.getAvailableUnits(unitType))
-                            unitTypesBeingShown.push(unitType);
+                    for (var unitTypePair of game.unitTypes)
+                        if (self.currentFormation.getAvailableUnits(unitTypePair[1]))
+                            unitTypesBeingShown.push(unitTypePair[1]);
                     var length = unitTypesBeingShown.length;
                     var itemRadius = tileSide / 2;
                     var polygonRadius = (tileSide - itemRadius) / 2;
@@ -131,7 +131,7 @@ class FormationEditor extends Editor {
         this._rows = 2;
         this._radialMenuItemSize = 0.75;
         this._selectedTile = null;
-        this.addEventListeners = (unitTypes: ReadonlyArray<UnitType>) => {
+        this.addEventListeners = (unitTypes: Map<string, UnitType>) => {
             function setTileUnitType(event: MouseEvent) {
                 hideRadialMenu();
                 if (self.currentFormation.getAvailableUnits(this)) {
@@ -141,9 +141,9 @@ class FormationEditor extends Editor {
                 self._selectedTile = null;
             }
             var self = this;
-            for (var unitType of unitTypes) unitType.radialMenuItem.addEventListener(
+            for (var unitType of unitTypes) unitType[1].radialMenuItem.addEventListener(
                 'click',
-                setTileUnitType.bind(unitType)
+                setTileUnitType.bind(unitType[1])
             );
         };
         div.appendChild(canvas);

@@ -53,11 +53,37 @@ html {
 }
 
 .card-type-adder {
-  background-color: #F5F5F6;
-  height: 40px;
-  line-height: 40px;
+  background-color: white;
   text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 4px;
+}
+
+.card-type-adder:nth-child(even) {
+  background-color: #ddd;
+}
+
+.card-type-adder>.description {
+  transition: 0.5s all;
+  font-size: 0;
+  font-weight: normal;
+}
+
+.card-type-adder:hover>.description {
+  font-size: 15px;
+}
+
+.card-type-adder>div>img {
+  transition: 0.5s all;
+  width: 0;
   vertical-align: middle;
+  margin-right: 0;
+}
+
+.card-type-adder:hover>div>img {
+  width: 40px;
+  margin-right: 4px;
 }
 
 .action:nth-child(even) {

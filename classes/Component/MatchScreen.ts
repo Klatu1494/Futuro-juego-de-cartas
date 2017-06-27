@@ -1,17 +1,13 @@
 /**
- * @fileoverview Contains the MatchScreen class declaration and
- *     can contain definitions of the class' prototype's properties.
- */
-
-/**
  * The match screen.
- * @class
  */
 class MatchScreen extends Component {
     createGrid: (level: Level) => void;
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _grid: FormationEditorGrid;
+    private _units: Set<Unit>;
+    turnOf: Player;
     /**
      * Creates the match screen.
      */
@@ -47,5 +43,14 @@ class MatchScreen extends Component {
                 canvas: canvas
             });
         };
+    }
+
+    get units(): Set<Unit> {
+        return new Set(this._units);
+    }
+
+    damageUnit(target: Unit, damage: number): void {
+        target.currentLife -= Math.floor(damage);
+        if (target.currentLife <= 0) this._units.delete(target);
     }
 }
