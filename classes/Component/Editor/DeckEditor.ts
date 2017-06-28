@@ -10,15 +10,6 @@ class DeckEditor extends Editor {
     constructor(game: Game) {
         super(game, { onEscapePress: () => game.show(game.formationEditor), onResize: onResize });
 
-        function onConfirm() {
-            if (
-                self.player === game.secondPlayer ||
-                (game.secondPlayer instanceof AIPlayer)
-            ) game.show(game.matchScreen);
-            else game.show(game.formationEditor);
-            self.setDeckTemplate();
-        }
-
         function onResize() {
             var currentDisplay: string = style.display;
             style.display = '';
@@ -32,6 +23,7 @@ class DeckEditor extends Editor {
                 card.style.width = cardWidth + 'px';
                 card.style.height = cardHeight + 'px';
             }
+            style.display = currentDisplay;
         }
 
         function updateDeckDiv() {
@@ -46,10 +38,17 @@ class DeckEditor extends Editor {
                     for (var i: number = 0; i < cardType.amountInDeck; i++) {
                         cards[currentCard].style.backgroundImage = 'url(' + cardType.imgSrc + ')';
                         cards[currentCard].style.backgroundColor = 'black';
+                        deckMap.set(cards[currentCard], cardType);
                         currentCard++;
                     }
                 }
             }
+        }
+
+        function removeCard() {
+            var cardType: CardType = deckMap.get(this);
+            if (cardType) cardType.amountInDeck--;
+            updateDeckDiv();
         }
 
         var CARDS_PER_ROW = 12;
@@ -66,7 +65,15 @@ class DeckEditor extends Editor {
         var button: HTMLButtonElement = game.createButton({
             parent: buttonDiv,
             eventListener: () => {
-
+                if (
+                    self.player === game.secondPlayer ||
+                    (game.secondPlayer instanceof AIPlayer)
+                ) game.show(game.matchScreen);
+                else {
+                    game.formationEditor.player = game.secondPlayer;
+                    game.show(game.formationEditor);
+                }
+                self.setDeckTemplate();
             },
             label: 'Confirm'
         });
@@ -75,6 +82,7 @@ class DeckEditor extends Editor {
         var buttonDivStyle: CSSStyleDeclaration = buttonDiv.style;
         var self: DeckEditor = this;
         var cards: Array<HTMLDivElement> = [];
+        var deckMap: Map<HTMLDivElement, CardType> = new Map();
         this.setDeckTemplate = function () {
             this.player.deckTemplate = this.currentDeckTemplate;
         };
@@ -103,6 +111,7 @@ class DeckEditor extends Editor {
                 cardDiv.style.backgroundSize = '100% 75%';
                 cardDiv.style.backgroundPositionY = '50%';
                 cardDiv.style.backgroundRepeat = 'no-repeat';
+                cardDiv.addEventListener('click', removeCard);
                 div.appendChild(cardDiv);
                 cards.push(cardDiv);
             }

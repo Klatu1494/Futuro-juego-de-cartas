@@ -8,12 +8,11 @@
  * @class
  */
 class FormationEditor extends Editor {
-    private _canvas: HTMLCanvasElement;
-    private _ctx: CanvasRenderingContext2D;
     private _grid: FormationEditorGrid;
     private _rows: number;
     private _radialMenuItemSize: number;
     private _selectedTile: FormationEditorTile;
+    player: Player;
     currentFormation: Formation;
     addEventListeners: (unitTypes: Map<string, UnitType>) => void;
     /**
@@ -32,6 +31,18 @@ class FormationEditor extends Editor {
                 unitType[1].radialMenuItem.style.display = 'none';
         }
 
+        function onResize() {
+            canvas.width = Math.min(game.width, game.height);
+            canvas.height = Math.min(game.width, game.height);
+            self.onShow();
+        }
+
+        function drawCurrentFormation() {
+            for (var row of this._grid.tiles) for (var tile of row)
+                if (tile.unitType) tile.drawUnitType(tile.unitType);
+                else tile.draw();
+        }
+
         var TWO_PI = Math.PI * 2;
         var self: FormationEditor = this;
         var canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -40,7 +51,6 @@ class FormationEditor extends Editor {
         var button: HTMLButtonElement;
 
         this.onShow = function () {
-            var canvas: HTMLCanvasElement = this._canvas;
             var level: Level = this.game.currentLevel;
             var columns: number = level.width;
             var rows: number = this._rows;
@@ -56,13 +66,10 @@ class FormationEditor extends Editor {
                 topPadding: (canvas.height - tileSide * rows) / 2,
                 canvas: canvas
             });
-            this.currentFormation = new Formation(columns, rows);
-            /**
-             * @todo: Restore formation.
-             */
+            this.player = this.player || game.firstPlayer;
+            this.currentFormation = this.player.formation || new Formation(columns, rows);
+            drawCurrentFormation();
         };
-        canvas.width = Math.min(game.width, game.height);
-        canvas.height = Math.min(game.width, game.height);
         div.addEventListener(
             'click',
             e => {
@@ -126,11 +133,10 @@ class FormationEditor extends Editor {
         ctx.fillStyle = 'white';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 2;
-        this._canvas = canvas;
-        this._ctx = ctx;
         this._rows = 2;
         this._radialMenuItemSize = 0.75;
         this._selectedTile = null;
+        onResize();
         this.addEventListeners = (unitTypes: Map<string, UnitType>) => {
             function setTileUnitType(event: MouseEvent) {
                 hideRadialMenu();
@@ -151,6 +157,7 @@ class FormationEditor extends Editor {
             parent: div,
             eventListener: () => {
                 self.player.formation = self.currentFormation;
+                game.deckEditor.player = self.player;
                 game.show(game.deckEditor);
             },
             label: 'Confirm'
