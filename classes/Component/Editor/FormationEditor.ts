@@ -38,7 +38,7 @@ class FormationEditor extends Editor {
         }
 
         function drawCurrentFormation() {
-            for (var row of this._grid.tiles) for (var tile of row)
+            for (var row of self._grid.tiles) for (var tile of row)
                 if (tile.unitType) tile.drawUnitType(tile.unitType);
                 else tile.draw();
         }
