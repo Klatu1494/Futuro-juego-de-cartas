@@ -34,6 +34,9 @@ class FormationEditor extends Editor {
         function onResize() {
             canvas.width = Math.min(game.width, game.height);
             canvas.height = Math.min(game.width, game.height);
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
             self.onShow();
         }
 
@@ -130,9 +133,6 @@ class FormationEditor extends Editor {
                 }
             }
         );
-        ctx.fillStyle = 'white';
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 2;
         this._rows = 2;
         this._radialMenuItemSize = 0.75;
         this._selectedTile = null;
