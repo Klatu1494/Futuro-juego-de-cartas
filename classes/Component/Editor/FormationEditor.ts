@@ -32,8 +32,8 @@ class FormationEditor extends Editor {
         }
 
         function onResize() {
-            canvas.width = Math.min(game.width, game.height);
-            canvas.height = Math.min(game.width, game.height);
+            canvas.width = Math.min(innerWidth, innerHeight);
+            canvas.height = Math.min(innerWidth, innerHeight);
             ctx.fillStyle = 'white';
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;

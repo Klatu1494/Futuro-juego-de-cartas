@@ -15,10 +15,10 @@ class LoadingScreen extends Component {
         super(game, {
             isHiddenOnCreation: false,
             onResize: () => {
-                style.lineHeight = game.height + 'px';
+                style.lineHeight = innerHeight + 'px';
             }
         });
         var style: CSSStyleDeclaration = this.div.style;
-        style.lineHeight = game.height + 'px';
+        style.lineHeight = innerHeight + 'px';
     }
 }

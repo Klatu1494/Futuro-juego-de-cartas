@@ -19,8 +19,6 @@ class Game {
     unitTypes: Map<string, UnitType>;
     components: ReadonlyMap<Function, Component> = new Map();
     secondPlayer: Player;
-    width: number = innerWidth;
-    height: number = innerHeight;
     private _currentLevelIndex: number;
     private _firstPlayer: HumanPlayer;
     private _divsOfComponents: ReadonlyArray<HTMLDivElement>;
