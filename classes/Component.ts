@@ -1,9 +1,4 @@
 /**
- * @fileoverview Contains the Component class declaration and
- *     can contain definitions of the class' prototype's properties.
- */
-
-/**
  * An object whose div is a child of the document's body.
  * @class
  */
@@ -29,7 +24,7 @@ abstract class Component {
         this._game = game;
         this.div.addEventListener('keydown', onEscapePress || doNothing)
         window.addEventListener('resize', onResize || doNothing);
-        this.onShow = this.onShow || doNothing;
+        this.onShow = doNothing;
     }
 
     get game(): Game {

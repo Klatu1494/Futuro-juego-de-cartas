@@ -6,7 +6,7 @@ class UnitType {
   private _life: number;
   private _attack: number;
   private _radialMenuItem: HTMLImageElement;
-  private _imageLoader: Promise<HTMLElement>;
+  private _imageLoader: Promise<HTMLImageElement>;
   private _name: string;
   private _imgSrc: string;
   private _range: number;
@@ -35,7 +35,7 @@ class UnitType {
     return this._radialMenuItem;
   }
 
-  get imageLoader(): Promise<HTMLElement> {
+  get imageLoader(): Promise<HTMLImageElement> {
     return this._imageLoader;
   }
 

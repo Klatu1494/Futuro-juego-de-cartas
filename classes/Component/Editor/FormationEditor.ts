@@ -1,9 +1,4 @@
 /**
- * @fileoverview Contains the FormationEditor class declaration and
- *     can contain definitions of the class' prototype's properties.
- */
-
-/**
  * The formation editor.
  * @class
  */
@@ -23,7 +18,8 @@ class FormationEditor extends Editor {
             onEscapePress: (e: KeyboardEvent) => {
                 if (self.player === game.firstPlayer) game.show(game.menu);
                 else game.show(game.deckEditor);
-            }
+            },
+            onResize: onResize
         });
 
         function hideRadialMenu() {
@@ -61,6 +57,7 @@ class FormationEditor extends Editor {
                 canvas.width / columns,
                 canvas.height / rows
             );
+            console.log(tileSide, canvas.width / columns, canvas.height / rows);
             this._grid = new FormationEditorGrid({
                 width: columns,
                 height: rows,
