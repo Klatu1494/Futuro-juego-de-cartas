@@ -47,6 +47,7 @@ abstract class Player {
    * @type {DeckTemplate}
    */
   get deckTemplate(): DeckTemplate {
+    if (!this._deckTemplate) this._deckTemplate = new DeckTemplate();
     return this._deckTemplate;
   }
 

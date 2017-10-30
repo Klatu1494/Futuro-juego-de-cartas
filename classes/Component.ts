@@ -12,7 +12,7 @@ abstract class Component {
      */
     constructor(game: Game, args?: IGameComponentOptionalArguments) {
         if (game.components.get(this.constructor)) throw new Error('This component already exists.');
-        var { onResize = doNothing, onEscapePress = doNothing, isHiddenOnCreation = true } = args;
+        var { onResize = doNothing, onEscapePress = doNothing, onShow = doNothing, isHiddenOnCreation = true } = args;
         var div = document.createElement('div');
         var style = div.style;
         div.className = 'centered-flex';
@@ -24,7 +24,7 @@ abstract class Component {
         this._game = game;
         this.div.addEventListener('keydown', onEscapePress || doNothing)
         window.addEventListener('resize', onResize || doNothing);
-        this.onShow = doNothing;
+        this.onShow = onShow;
     }
 
     get game(): Game {

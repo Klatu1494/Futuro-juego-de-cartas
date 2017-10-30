@@ -7,7 +7,6 @@ class FormationEditor extends Editor {
     private _rows: number;
     private _radialMenuItemSize: number;
     private _selectedTile: FormationEditorTile;
-    player: Player;
     currentFormation: Formation;
     addEventListeners: (unitTypes: Map<string, UnitType>) => void;
     /**
@@ -19,7 +18,24 @@ class FormationEditor extends Editor {
                 if (self.player === game.firstPlayer) game.show(game.menu);
                 else game.show(game.deckEditor);
             },
-            onResize: onResize
+            onResize: onResize,
+            onShow: () => {
+                var level = this.game.currentLevel;
+                var columns = level.width;
+                var rows = this._rows;
+                var tileSide = Math.min(canvas.width / columns, canvas.height / rows);
+                this._grid = new FormationEditorGrid({
+                    width: columns,
+                    height: rows,
+                    tileSide: tileSide,
+                    leftPadding: (canvas.width - tileSide * columns) / 2,
+                    topPadding: (canvas.height - tileSide * rows) / 2,
+                    canvas: canvas
+                });
+                this.player = this.player || game.firstPlayer;
+                this.currentFormation = this.player.formation || new Formation(columns, rows);
+                drawCurrentFormation();
+            }
         });
 
         function hideRadialMenu() {
@@ -49,27 +65,6 @@ class FormationEditor extends Editor {
         var div: HTMLDivElement = this.div;
         var button: HTMLButtonElement;
 
-        this.onShow = function () {
-            var level: Level = this.game.currentLevel;
-            var columns: number = level.width;
-            var rows: number = this._rows;
-            var tileSide: number = Math.min(
-                canvas.width / columns,
-                canvas.height / rows
-            );
-            console.log(tileSide, canvas.width / columns, canvas.height / rows);
-            this._grid = new FormationEditorGrid({
-                width: columns,
-                height: rows,
-                tileSide: tileSide,
-                leftPadding: (canvas.width - tileSide * columns) / 2,
-                topPadding: (canvas.height - tileSide * rows) / 2,
-                canvas: canvas
-            });
-            this.player = this.player || game.firstPlayer;
-            this.currentFormation = this.player.formation || new Formation(columns, rows);
-            drawCurrentFormation();
-        };
         div.addEventListener(
             'click',
             e => {

@@ -8,7 +8,21 @@ class DeckEditor extends Editor {
      * Creates the deck editor.
      */
     constructor(game: Game) {
-        super(game, { onEscapePress: () => game.show(game.formationEditor), onResize: onResize });
+        super(game, {
+            onEscapePress: () => {
+                game.show(game.formationEditor)
+            },
+            onResize: onResize,
+            onShow: () => {
+                for (var cardType of game.cardTypes) {
+                    if (cardType[1].condition() && game.formationEditor.player.formation.hasCard(cardType[1]))
+                        cardType[1].div.style.display = '';
+                    else cardType[1].div.style.display = 'none';
+                }
+                self.currentDeckTemplate = self.player.deckTemplate;
+                updateDeckDiv();
+            }
+        });
 
         function onResize() {
             var currentDisplay: string = style.display;
@@ -34,8 +48,8 @@ class DeckEditor extends Editor {
             }
             for (var cardTypePair of game.cardTypes) {
                 var cardType: CardType = cardTypePair[1];
-                if (cardType.condition() && game.formationEditor.player.formation.hasCard(cardType)) {
-                    for (var i: number = 0; i < cardType.amountInDeck; i++) {
+                if (cardType.condition() && self.player.formation.hasCard(cardType)) {
+                    for (var i: number = 0; i < self.player.deckTemplate.amountOf(cardType); i++) {
                         cards[currentCard].style.backgroundImage = 'url(' + cardType.imgSrc + ')';
                         cards[currentCard].style.backgroundColor = 'black';
                         deckMap.set(cards[currentCard], cardType);
@@ -46,8 +60,7 @@ class DeckEditor extends Editor {
         }
 
         function removeCard() {
-            var cardType: CardType = deckMap.get(this);
-            if (cardType) cardType.amountInDeck--;
+            self.player.deckTemplate.removeCard(deckMap.get(this));
             updateDeckDiv();
         }
 
@@ -86,13 +99,6 @@ class DeckEditor extends Editor {
         this.setDeckTemplate = function () {
             this.player.deckTemplate = this.currentDeckTemplate;
         };
-        this.onShow = function () {
-            for (var cardType of game.cardTypes) {
-                if (cardType[1].condition() && game.formationEditor.player.formation.hasCard(cardType[1]))
-                    cardType[1].div.style.display = '';
-                else cardType[1].div.style.display = 'none';
-            }
-        }
         currentDeckDivStyle.width = CURRENT_DECK_DIV_WIDTH_PERCENTAGE + '%';
         currentDeckDivStyle.height = OTHER_DIVS_HEIGHT_PERCENTAGE + '%';
         currentDeckDiv.className = 'centered-flex';
@@ -129,7 +135,7 @@ class DeckEditor extends Editor {
             var cardType: CardType = cardTypePair[1];
             var div: HTMLDivElement = cardType.div;
             div.addEventListener('click', (function () {
-                this.amountInDeck++;
+                self.player.deckTemplate.addCard(this);
                 updateDeckDiv();
             }).bind(cardType));
             cardTypesDiv.appendChild(div);
