@@ -8,16 +8,16 @@
  * @class
  */
 class Formation {
-    unitTypes: Array<Array<UnitType>>;
+    private _unitTypes: Array<Array<UnitType>>;
     /**
      * Creates a formation.
      */
     constructor(width: number, height: number) {
-        this.unitTypes = [];
+        this._unitTypes = [];
         for (var i: number = 0; i < width; i++) {
-            this.unitTypes.push([]);
+            this._unitTypes.push([]);
             for (var j: number = 0; j < height; j++)
-                this.unitTypes[i].push(null);
+                this._unitTypes[i].push(null);
         }
     }
 
@@ -35,8 +35,8 @@ class Formation {
      */
     getUsedUnits(unitType: UnitType): number {
         var counter: number = 0;
-        for (var i = 0; i < this.unitTypes.length; i++) {
-            var row = this.unitTypes[i];
+        for (var i = 0; i < this._unitTypes.length; i++) {
+            var row = this._unitTypes[i];
             for (var j = 0; j < row.length; j++)
                 if (row[j] == unitType) counter++;
         }
@@ -50,11 +50,13 @@ class Formation {
      * @param coordinates The coordinates of the tile to set the unit type.
      * @param unitType The unit type to set in the tile.
      */
-    setUnitType(coordinates: TileCoordinates, unitType: UnitType) {
-        var x: number = coordinates.x;
-        var y: number = coordinates.y;
+    setUnitType(coordinates: Coords, unitType: UnitType) {
         if (this.getAvailableUnits(unitType))
-            this.unitTypes[x][y] = unitType;
+            this._unitTypes[coordinates.x][coordinates.y] = unitType;
+    }
+
+    getUnitType(coordinates: Coords): UnitType {
+        return this._unitTypes[coordinates.x][coordinates.y] || null;
     }
 
     /**
@@ -63,7 +65,7 @@ class Formation {
      * @param cardType The card being checked.
      */
     hasCard(cardType: CardType) {
-        for (var row of this.unitTypes) for (var unitType of row)
+        for (var row of this._unitTypes) for (var unitType of row)
             if (unitType && unitType.skills.has(cardType)) return true;
         return false;
     }

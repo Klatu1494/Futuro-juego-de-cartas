@@ -8,7 +8,6 @@
  * @class
  */
 class Game {
-    show: (component: Component) => void;
     createButton: ({ parent, eventListener, label }: {
         parent: HTMLElement;
         eventListener: EventListener;
@@ -30,16 +29,13 @@ class Game {
     private _deckEditor: DeckEditor;
     private _formationEditor: FormationEditor;
     private _menu: Menu;
+    private _formationHeight: number;
     /**
      * Creates the game.
      */
-    constructor() {
+    constructor(formationHeight: number) {
+        this._formationHeight = formationHeight;
         this.setComponents(new LoadingScreen(this));
-        this.show = function (component: Component) {
-            for (var div of this._divsOfComponents) div.style.display = 'none';
-            component.div.style.display = '';
-            component.onShow();
-        };
     }
 
     async initialize() {
@@ -136,9 +132,19 @@ class Game {
         this.components = new Map(mapArray);
     };
 
+    show(component: Component) {
+        for (var div of this._divsOfComponents) div.style.display = 'none';
+        component.div.style.display = '';
+        component.onShow();
+    }
+
     async executeLengthyFunction(asyncFunc: Function) {
         this.show(this.components.get(LoadingScreen));
         await asyncFunc();
+    }
+
+    get formationHeight(): number {
+        return this._formationHeight;
     }
 
     get firstPlayer(): HumanPlayer {

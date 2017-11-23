@@ -4,7 +4,6 @@
  */
 class FormationEditor extends Editor {
     private _grid: FormationEditorGrid;
-    private _rows: number;
     private _radialMenuItemSize: number;
     private _selectedTile: FormationEditorTile;
     currentFormation: Formation;
@@ -20,11 +19,11 @@ class FormationEditor extends Editor {
             },
             onResize: onResize,
             onShow: () => {
-                var level = this.game.currentLevel;
+                var level = self.game.currentLevel;
                 var columns = level.width;
-                var rows = this._rows;
+                var rows = self.game.formationHeight;
                 var tileSide = Math.min(canvas.width / columns, canvas.height / rows);
-                this._grid = new FormationEditorGrid({
+                self._grid = new FormationEditorGrid({
                     width: columns,
                     height: rows,
                     tileSide: tileSide,
@@ -32,8 +31,8 @@ class FormationEditor extends Editor {
                     topPadding: (canvas.height - tileSide * rows) / 2,
                     canvas: canvas
                 });
-                this.player = this.player || game.firstPlayer;
-                this.currentFormation = this.player.formation || new Formation(columns, rows);
+                self.player = self.player || game.firstPlayer;
+                self.currentFormation = self.player.formation || new Formation(columns, rows);
                 drawCurrentFormation();
             }
         });
@@ -125,7 +124,6 @@ class FormationEditor extends Editor {
                 }
             }
         );
-        this._rows = 2;
         this._radialMenuItemSize = 0.75;
         this._selectedTile = null;
         onResize();
