@@ -8,7 +8,7 @@ class MatchScreen extends Component {
     private _turn: number;
     private _players: ReadonlyArray<Player>
     private _level: Level;
-    units: Array<Array<Unit>>;
+    private _units: Array<Array<Unit>>;
     /**
      * Creates the match screen.
      */
@@ -18,26 +18,41 @@ class MatchScreen extends Component {
                 game.show(game.menu);
             },
             onShow: () => {
-                function loadFormation(x: number, y: number, formation: Formation) {
-
+                function loadFormation(x: number, y: number, player: Player, formation: Formation) {
+                    for (var i: number = 0; i < game.currentLevel.width; i++) {
+                        for (var j: number = 0; j < game.formationHeight; j++) {
+                            var unitType: UnitType = formation.getUnitType(new Coords(i, j));
+                            if (unitType)
+                                self._units[x + i][y + j] = new Unit(unitType, new TileCoordinates(x + i, y + j, self._grid), player);
+                        }
+                    }
                 }
 
+                var firstPlayer = game.firstPlayer;
+                var secondPlayer = game.secondPlayer;
                 var players: Array<Player> = [
-                    game.firstPlayer,
-                    game.secondPlayer
+                    firstPlayer,
+                    secondPlayer
                 ];
                 var secondPlayerFormation = new Formation(game.currentLevel.width, game.formationHeight);
+                self._units = [];
+                for (var i: number = 0; i < game.currentLevel.width; i++)
+                    self._units[i] = [];
                 for (var i: number = 0; i < game.currentLevel.width; i++) {
                     for (var j: number = 0; j < game.formationHeight; j++) {
-                        secondPlayerFormation.setUnitType(
-                            new Coords(game.currentLevel.width - i, game.formationHeight - j),
-                            game.secondPlayer.formation.getUnitType(new Coords(i, j))
-                        )
+                        var unitType: UnitType = secondPlayer.formation.getUnitType(new Coords(i, j));
+                        if (unitType)
+                            secondPlayerFormation.setUnitType(
+                                new Coords(game.currentLevel.width - 1 - i, game.formationHeight - 1 - j),
+                                unitType
+                            );
                     }
                 }
                 if (Math.random() < 0.5) players.reverse();
                 self._turn = 0;
                 self._players = players;
+                loadFormation(0, game.currentLevel.height - game.formationHeight, firstPlayer, game.firstPlayer.formation);
+                loadFormation(0, 0, secondPlayer, secondPlayerFormation);
             }
         });
 
@@ -87,6 +102,6 @@ class MatchScreen extends Component {
 
     damageUnit(target: Unit, damage: number): void {
         target.currentLife -= Math.floor(damage);
-        if (target.currentLife <= 0) this.units[target.position.x][target.position.y] = null;
+        if (target.currentLife <= 0) this._units[target.position.x][target.position.y] = null;
     }
 }

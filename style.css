@@ -23,7 +23,7 @@ html {
 }
 
 #loading-screen:before {
-  content: 'Loading...';
+  content: "Loading...";
 }
 
 #game {
@@ -91,7 +91,7 @@ html {
 }
 
 .confirm:before {
-  content: 'Confirm';
+  content: "Confirm";
 }
 
 #formation-editor {
@@ -101,9 +101,15 @@ html {
 .unit-type {
   border-radius: 50%;
   position: absolute;
-  top: 0;
-  left: 0;
   display: none;
   border: 2px solid white;
+  box-sizing: border-box;
   cursor: pointer;
+}
+
+.unit {
+  position: absolute;
+  background-size: 100% 100%;
+  border-width: 2px;
+  box-sizing: border-box;
 }

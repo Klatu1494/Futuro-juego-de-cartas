@@ -71,8 +71,8 @@ class Game {
             parent.appendChild(button);
             return button;
         }
-        this._firstPlayer = new HumanPlayer({ color: null, name: 'Karv' });
-        this.secondPlayer = new HumanPlayer({ color: null, name: 'Klatu' });
+        this._firstPlayer = new HumanPlayer({ color: "blue", name: 'Karv' });
+        this.secondPlayer = new HumanPlayer({ color: "red", name: 'Klatu' });
         this.completeLevel = function () {
             this._currentLevelIndex++;
         }
@@ -92,7 +92,7 @@ class Game {
                 onUse: async function () {
                     var user: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
                     var target: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= 1);
-                    self.matchScreen.damageUnit(target, user.attack / 2);
+                    self.matchScreen.damageUnit(target, Math.floor(user.attack / 2));
                 },
                 imgSrc: 'sharp-lips.png',
                 description: 'One of your zombies bites an enemy, subtracting half your zombie\'s attack (rounding down) from the enemy\'s health, and transimiting her a random disease. The enemy must be within melee range.'

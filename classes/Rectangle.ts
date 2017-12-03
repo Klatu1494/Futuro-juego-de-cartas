@@ -24,7 +24,7 @@ class Rectangle {
       this._topLeft = topLeftCoordinates.clone() //in case that we want to modify topLeftCoordinates later;
       this._horizontalSize = horizontalSize;
       this._verticalSize = verticalSize;
-      this._bottomRight = new Coords(this.topLeft.x + this.horizontalSize, this.topLeft.y + this.verticalSize);
+      this._bottomRight = new Coords(this.topLeft.x + this.width, this.topLeft.y + this.height);
       this._center = new Coords((this.left + this.right) / 2, (this.top + this.bottom) / 2);
     } else throw new Error("Invalid size");
   }
@@ -65,11 +65,11 @@ class Rectangle {
     return this._topLeft;
   }
 
-  get horizontalSize() {
+  get width() {
     return this._horizontalSize;
   }
 
-  get verticalSize() {
+  get height() {
     return this._verticalSize;
   }
 

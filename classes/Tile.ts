@@ -27,7 +27,7 @@ abstract class Tile {
     var ctx = grid.ctx;
     var tileSide = grid.tileSide;
     var boundingSquare = this.coordinates.toCanvas();
-    ctx.fillRect(boundingSquare.left, boundingSquare.top, boundingSquare.horizontalSize, boundingSquare.verticalSize);
-    ctx.strokeRect(boundingSquare.left, boundingSquare.top, boundingSquare.horizontalSize, boundingSquare.verticalSize);
+    ctx.fillRect(boundingSquare.left, boundingSquare.top, boundingSquare.width, boundingSquare.height);
+    ctx.strokeRect(boundingSquare.left, boundingSquare.top, boundingSquare.width, boundingSquare.height);
   }
 }
