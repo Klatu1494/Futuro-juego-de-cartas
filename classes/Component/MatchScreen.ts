@@ -14,6 +14,7 @@ class MatchScreen extends Component {
      */
     constructor(game: Game) {
         super(game, {
+            onResize: onResize,
             onEscapePress: () => {
                 game.show(game.menu);
             },
@@ -63,6 +64,9 @@ class MatchScreen extends Component {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
             self.createGrid(self.game.currentLevel);
+            if (self._units) for (var row of self._units) for (var unit of row)
+                if (unit)
+                    unit.moveTo(new TileCoordinates(unit.position.x, unit.position.y, self._grid));
         }
 
         var self: MatchScreen = this;

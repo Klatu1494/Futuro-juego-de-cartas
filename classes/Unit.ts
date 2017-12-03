@@ -23,6 +23,7 @@ class Unit {
         this._div.style.backgroundImage = "url(images/" + unitType.imgSrc + ")";
         this._div.classList.add("unit");
         this._div.style.width = this._div.style.height = containingSquare.width + "px";
+        this._div.style.borderColor = owner.color;
         this.moveTo(initialPosition);
         document.body.appendChild(this._div);
     }
