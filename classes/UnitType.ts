@@ -10,10 +10,11 @@ class UnitType {
   private _name: string;
   private _imgSrc: string;
   private _range: number;
+  private _movementCost: number;
   availableUnits: number;
 
   constructor(
-    { name, imgSrc, initialQuantity = 0, attack = 0, life = 0, skills = new Set() }: { name: string, imgSrc: string, initialQuantity: number, attack: number, life: number, skills: Set<CardType> }
+    { name, imgSrc, movementCost = 38, initialQuantity = 0, attack = 0, life, skills = new Set() }: { name: string, movementCost?: number, imgSrc: string, initialQuantity?: number, attack?: number, life: number, skills?: Set<CardType> }
   ) {
     var self: UnitType = this;
     this._imageLoader = new Promise(resolve => {
@@ -29,6 +30,7 @@ class UnitType {
     this._attack = attack;
     this._life = life;
     this._skills = skills;
+    this._movementCost = movementCost;
   }
 
   get radialMenuItem(): HTMLImageElement {
@@ -61,5 +63,9 @@ class UnitType {
 
   get skills(): Set<CardType> {
     return new Set(this._skills);
+  }
+
+  get movementCost(): number {
+    return this._movementCost;
   }
 }

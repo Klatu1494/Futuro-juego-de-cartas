@@ -39,18 +39,6 @@ class Game {
     }
 
     async initialize() {
-        async function askForUnit(condition: Function): Promise<Unit> {
-            var promise: Promise<Unit> = new Promise(resolve => {
-                for (var unit of this.matchScreen.units) {
-                    if (condition(unit))
-                        unit.div.addEventListener('click', (function () {
-                            resolve(this);
-                        }).bind(unit));
-                }
-            });
-            return promise;
-        }
-
         var unitTypesImagesLoaders: Array<Promise<HTMLImageElement>> = [];
         var self: Game = this;
         this.buttonWidth = 118;
@@ -80,8 +68,8 @@ class Game {
             ['attack', new CardType({
                 name: 'Attack',
                 onUse: async function () {
-                    var user: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
-                    var target: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= user.range);
+                    var user: Unit = await self.matchScreen.askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
+                    var target: Unit = await self.matchScreen.askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= user.range);
                     self.matchScreen.damageUnit(target, user.attack);
                 },
                 imgSrc: 'attack.png',
@@ -90,8 +78,8 @@ class Game {
             ['bite', new CardType({
                 name: 'Bite',
                 onUse: async function () {
-                    var user: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
-                    var target: Unit = await askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= 1);
+                    var user: Unit = await self.matchScreen.askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf);
+                    var target: Unit = await self.matchScreen.askForUnit((unit: Unit) => unit.owner === self.matchScreen.turnOf && unit.position.distanceTo(user.position) <= 1);
                     self.matchScreen.damageUnit(target, Math.floor(user.attack / 2));
                 },
                 imgSrc: 'sharp-lips.png',
@@ -109,7 +97,7 @@ class Game {
             })]
         ]);
         this._levels = [
-            new Level({ width: 5, height: 5 })
+            new Level({ width: 5, height: 10 })
         ];
         this._currentLevelIndex = 0;
         this._menu = new Menu(this);
@@ -151,23 +139,23 @@ class Game {
         return this._firstPlayer;
     }
 
-    get menu() {
+    get menu(): Menu {
         return this._menu;
     }
 
-    get formationEditor() {
+    get formationEditor(): FormationEditor {
         return this._formationEditor;
     }
 
-    get deckEditor() {
+    get deckEditor(): DeckEditor {
         return this._deckEditor;
     }
 
-    get matchScreen() {
+    get matchScreen(): MatchScreen {
         return this._matchScreen;
     }
 
-    get currentLevel() {
+    get currentLevel(): Level {
         return this._levels[this._currentLevelIndex];
     }
 

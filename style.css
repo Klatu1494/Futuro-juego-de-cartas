@@ -113,4 +113,5 @@ html {
   border-width: 2px;
   border-style: solid;
   box-sizing: border-box;
+  transition: 1s all;
 }

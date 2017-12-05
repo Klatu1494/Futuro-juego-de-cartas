@@ -8,7 +8,7 @@ class MatchScreen extends Component {
     private _turn: number;
     private _players: ReadonlyArray<Player>
     private _level: Level;
-    private _units: Array<Array<Unit>>;
+    private _listeners: Map<string, Set<EventListener>>
     /**
      * Creates the match screen.
      */
@@ -24,7 +24,7 @@ class MatchScreen extends Component {
                         for (var j: number = 0; j < game.formationHeight; j++) {
                             var unitType: UnitType = formation.getUnitType(new Coords(i, j));
                             if (unitType)
-                                self._units[x + i][y + j] = new Unit(unitType, new TileCoordinates(x + i, y + j, self._grid), player);
+                                self._grid.tiles[x + i][y + j].unit = new Unit(unitType, new TileCoordinates(x + i, y + j, self._grid), player);
                         }
                     }
                 }
@@ -36,9 +36,6 @@ class MatchScreen extends Component {
                     secondPlayer
                 ];
                 var secondPlayerFormation = new Formation(game.currentLevel.width, game.formationHeight);
-                self._units = [];
-                for (var i: number = 0; i < game.currentLevel.width; i++)
-                    self._units[i] = [];
                 for (var i: number = 0; i < game.currentLevel.width; i++) {
                     for (var j: number = 0; j < game.formationHeight; j++) {
                         var unitType: UnitType = secondPlayer.formation.getUnitType(new Coords(i, j));
@@ -54,6 +51,15 @@ class MatchScreen extends Component {
                 self._players = players;
                 loadFormation(0, game.currentLevel.height - game.formationHeight, firstPlayer, game.firstPlayer.formation);
                 loadFormation(0, 0, secondPlayer, secondPlayerFormation);
+                this.forEachUnit((unit: Unit) => {
+                    unit.addEventListener("click", function (e: MouseEvent) {
+                        if (this.movementCost <= this.actionPoints) {
+                            self.askForTile((tile: MatchTile): boolean => {
+                                return false
+                            });
+                        }
+                    });
+                });
             }
         });
 
@@ -64,9 +70,9 @@ class MatchScreen extends Component {
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
             self.createGrid(self.game.currentLevel);
-            if (self._units) for (var row of self._units) for (var unit of row)
-                if (unit)
-                    unit.moveTo(new TileCoordinates(unit.position.x, unit.position.y, self._grid));
+            this.forEachUnit((unit: Unit) => {
+                unit.moveTo(new TileCoordinates(unit.position.x, unit.position.y, self._grid));
+            });
         }
 
         var self: MatchScreen = this;
@@ -106,6 +112,57 @@ class MatchScreen extends Component {
 
     damageUnit(target: Unit, damage: number): void {
         target.currentLife -= Math.floor(damage);
-        if (target.currentLife <= 0) this._units[target.position.x][target.position.y] = null;
+        if (target.currentLife <= 0) this._grid.tiles[target.position.x][target.position.y].unit = null;
+    }
+
+    forEachUnit(action: (unit: Unit) => void) {
+        for (var row of this._grid.tiles) for (var tile of row) {
+            var unit: Unit = tile.unit;
+            if (unit) action(unit);
+        }
+    }
+
+    async askForUnit(condition: (unit: Unit) => boolean): Promise<Unit> {
+        var self: MatchScreen = this;
+        var promise: Promise<Unit> = new Promise(resolve => {
+            self.forEachUnit((unit: Unit) => {
+                if (condition(unit))
+                    unit.addEventListener('click', function () {
+                        self.forEachUnit((unit: Unit) => {
+                            unit.removeEventListeners("click");
+                        });
+                        resolve(this);
+                    });
+            });
+        });
+        return promise;
+    }
+
+    async askForTile(condition: (tile: MatchTile) => boolean): Promise<MatchTile> {
+        var self: MatchScreen = this;
+        var promise: Promise<MatchTile> = new Promise(resolve => {
+            for (var row of self._grid.tiles) for (var tile of row)
+                self.addEventListenerToCanvas("click", (function () {
+                    self.removeEventListenersFromCanvas("click");
+                    resolve(this);
+                }).bind(tile));
+        });
+        return promise;
+    }
+
+    addEventListenerToCanvas(type: string, listener: EventListener) {
+        this._canvas.addEventListener(type, listener);
+        var listeners: Set<EventListener> = this._listeners.get(type);
+        if (!listeners) {
+            listeners = new Set();
+            this._listeners.set(type, listeners);
+        }
+        listeners.add(listener);
+    }
+
+    removeEventListenersFromCanvas(type: string) {
+        var listeners = this._listeners.get(type);
+        if (listeners) for (var listener of listeners)
+            this._canvas.removeEventListener(type, listener);
     }
 }
